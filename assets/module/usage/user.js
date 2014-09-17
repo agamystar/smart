@@ -1,9 +1,6 @@
-
-
 function undo() {
     $('#datagrid').datagrid('reload');
 }
-
 function cancelrow(target) {
     var editors = $('#datagrid').datagrid('getEditors', target);
     if (editors[0] != undefined) {
@@ -16,7 +13,6 @@ function cancelrow(target) {
     $('#datagrid').datagrid('cancelEdit', target);
     return false;
 }
-
 function start_edit(id) {
     $('#datagrid').datagrid('beginEdit', id);
 }
@@ -30,7 +26,7 @@ function getRowIndex(target) {
     var tr = $(target).closest('tr.datagrid-row');
     return parseInt(tr.attr('datagrid-row-index'));
 }
-function add_edit($action) {
+function add_edit(action) {
     $('.loading-indicator').show();
     var addnewrow = {
         name:$('#r_name').val(),
@@ -45,7 +41,7 @@ function add_edit($action) {
 
     $.post( js_var_object.current_link,
         {
-            action:$action,
+            action:action,
             row_add:JSON.stringify(addnewrow)
         }, function (result) {
             if (result.result == "success") {
@@ -64,14 +60,12 @@ function add_edit($action) {
 
 
 }
-
 function editrow(target) {
     $('#datagrid').datagrid('selectRow', target);
     $('#datagrid').datagrid('beginEdit', target);
 
     return false;
 }
-
 function _delete(index) {
     $('#datagrid').datagrid('selectRow', index);
     $.messager.confirm("delete", "delete ? ", function (r) {
@@ -104,18 +98,12 @@ function _delete(index) {
 function edit_dialog(index) {
     $('#datagrid').datagrid('selectRow', index);
     var selection = $('#datagrid').datagrid('getSelected');
-    $('#kid').val(selection.student_id);
-    $('#name').val(selection.name);
-    $('#email').val(selection.email);
-    $('#birthday').val(selection.birthday);
-    $('#address').val(selection.address);
-    $('#phone').val(selection.phone);
-    $('#sex').val(selection.sex);
-    $('#religion').val(selection.religion);
-    $('#class').val(selection.class_id);
-    $('#roll').val(selection.roll);
-    $('#father_name').val(selection.father_name);
-    $('#mother_name').val(selection.mother_name);
+$('#r_name').val(selection.name);
+$('#r_ssn').val(selection.ssn);
+$('#r_email').val(selection.email);
+$('#r_company').val(selection.company);
+$('#r_phone').val(selection.phone);
+$('#r_photo').val(selection.photo);
 
     $('#submit_add').hide();
     $('#submit_edit').show();
@@ -123,7 +111,28 @@ function edit_dialog(index) {
     $("#mymodal").dialog("open");
 
 }
-
+function activation(act,id){
+    var action;
+    if(act==1){
+        action="dis_active_user";
+    }else{
+        action="active_user";
+    }
+    $.ajax( {
+        url: js_var_object.current_link,
+        beforeSend : function() {
+            $('#change_form').addClass('active');
+            $('.loading-indicator').show();
+        }, success : function(result) {
+            toastr.success('data inserted successfully procedure ',result.rows);
+            $('#datagrid').datagrid('reload');
+        },
+        type: 'POST',
+        data: {action:'active_user',user_id:id},
+        processData: false,
+        contentType: false
+    } );
+}
 $(function () {
 
     $("#mymodal").dialog({
@@ -179,6 +188,7 @@ $(function () {
 
 
         $('#open_new_dialog').click(function (){
+         $('#reset').trigger("click");
             $('#submit_add').show();
             $('#submit_edit').hide();
             $("#mymodal").dialog("open");
@@ -195,6 +205,7 @@ $(function () {
     $('#submit_edit').click(function () {
         add_edit("edit_user");
     });
+
 
 
         $('#datagrid').datagrid({
@@ -266,16 +277,17 @@ $(function () {
                     },
                     {field:'active', align:'center', title:"Active", width:100, sortable:true,
                         formatter:function (value, row, index){
+
                             if(value==1){
 
                             // &#x2714;
                            return '<label class="pull-right inline">' +
-                               ' <input id="id-pills-stacked" checked="" type="checkbox" class="ace ace-switch ace-switch-5" />' +
+                               ' <input  checked=""  oncheck="activation('+value+','+row.id+')" type="checkbox" class="ace ace-switch ace-switch-5"  id=\'active_' + index + '\'>' +
                                ' <span class="lbl"></span> </label>';
                             }else{
                            // &#x2718;
                                 return '<label class="pull-right inline">' +
-                                    ' <input id="id-pills-stacked" checked="" type="checkbox" class="ace ace-switch ace-switch-5" />' +
+                                    ' <input id="id-pills-stack_"'+index+' type="checkbox" class="ace ace-switch ace-switch-5" />' +
                                     ' <span class="lbl"></span> </label>';
                             }
                           },
@@ -311,9 +323,9 @@ $(function () {
                 row.editing = false;
                 updateActions(index);
             }
-        });
+        })
 
-    }).datagrid('enableFilter', [
+   .datagrid('enableFilter', [
 
     {
         field:'student_id',
@@ -364,53 +376,13 @@ $(function () {
         op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
     }
 
+
+
 ]);
 
-
-function saveItem(index) {
-    var row = $('#dg').datagrid('getRows')[index];
-    var url = row.isNewRecord ? 'save_user.php' : 'update_user.php?id=' + row.id;
-    $('#datagrid').datagrid('getRowDetail', index).find('form').form('submit', {
-        url:url,
-        onSubmit:function () {
-            return $(this).form('validate');
-        },
-        success:function (data) {
-            data = eval('(' + data + ')');
-            data.isNewRecord = false;
-            $('#datagrid').datagrid('collapseRow', index);
-            $('#datagrid').datagrid('updateRow', {
-                index:index,
-                row:data
-            });
-        }
+    $('input#active_0').on('click', function(){
+        alert("ok");
     });
-}
-function cancelItem(index) {
-    var row = $('#datagrid').datagrid('getRows')[index];
-    if (row.isNewRecord) {
-        $('#datagrid').datagrid('deleteRow', index);
-    } else {
-        $('#datagrid').datagrid('collapseRow', index);
-    }
-}
-function destroyItem() {
-    var row = $('#dg').datagrid('getSelected');
-    if (row) {
-        $.messager.confirm('Confirm', 'Are you sure you want to remove this user?', function (r) {
-            if (r) {
-                var index = $('#dg').datagrid('getRowIndex', row);
-                $.post('destroy_user.php', {id:row.id}, function () {
-                    $('#datagrid').datagrid('deleteRow', index);
-                });
-            }
-        });
-    }
-}
-function newItem() {
-    $('#datagrid').datagrid('appendRow', {isNewRecord:true});
-    var index = $('#datagrid').datagrid('getRows').length - 1;
-    $('#datagrid').datagrid('expandRow', index);
-    $('#datagrid').datagrid('selectRow', index);
-}
+});
+
 

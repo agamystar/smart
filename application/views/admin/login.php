@@ -177,11 +177,11 @@
                 <div class="space-6"></div>
                 <p> Enter your details to begin: </p>
 
-                <form>
+                <form action="<?php echo SITE_LINK."/security/front_create_user"?>" method="post">
                     <fieldset>
                         <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<select type="email" class="form-control"  id="r_user_type" name="r_user_type" >
+															<select  class="form-control"  id="r_company" name="r_company" >
                                                                 <option value="student">Student</option>
                                                                 <option value="student">Teacher</option>
                                                                 <option value="student">Parents</option>
@@ -192,7 +192,21 @@
 
                         <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="email" class="form-control"  id="r_email" name="r_email" placeholder="Email" />
+															<input type="text" class="form-control"  id="r_name" name="r_name" placeholder="Name" />
+															<i class=""></i>
+														</span>
+                        </label>
+
+                        <label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="text" class="form-control"  id="r_ssn" name="r_ssn" placeholder="Social security number" />
+															<i class=""></i>
+														</span>
+                        </label>
+
+                        <label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="text" class="form-control"  id="r_email" name="r_email" placeholder="Email" />
 															<i class="icon-envelope"></i>
 														</span>
                         </label>
@@ -229,7 +243,7 @@
                                 Reset
                             </button>
 
-                            <button type="button" class="width-65 pull-right btn btn-sm btn-success">
+                            <button type="submit"  id="front_create_user" class="width-65 pull-right btn btn-sm btn-success">
                                 Register
                                 <i class="icon-arrow-right icon-on-right"></i>
                             </button>

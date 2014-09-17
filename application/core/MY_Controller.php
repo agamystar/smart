@@ -16,6 +16,18 @@ class MY_Controller extends CI_Controller {
         }
 
 
+        $identity = $this->session->userdata('identity');
+        $this->db->where("username", $identity);
+        $this->db->where('active', 1);
+        $this->db->from("users");
+        $user= $this->db->get()->row();
+        if ($user)
+        {
+            if($user->company){
+                define("USER_GROUP",$user->company);
+            }
+        }
+
     }
 
 
