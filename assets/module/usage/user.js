@@ -30,11 +30,12 @@ function add_edit(action) {
     $('.loading-indicator').show();
     var addnewrow = {
         name:$('#r_name').val(),
-        ssn:$('#r_ssn').val(),
+        national_id:$('#r_national_id').val(),
         email:$('#r_email').val(),
         company:$('#r_company').val(),
         username:$('#r_identity').val(),
-        password:$('#r_password').val()
+        password:$('#r_password').val(),
+        id:$('#user_id').val()
 
     };
 
@@ -96,18 +97,21 @@ function _delete(index) {
     return false;
 }
 function edit_dialog(index) {
-    $('#datagrid').datagrid('selectRow', index);
-    var selection = $('#datagrid').datagrid('getSelected');
+$('#datagrid').datagrid('selectRow', index);
+ var selection = $('#datagrid').datagrid('getSelected');
+$('div#password_section').hide();
+$('div#r_password_section').hide();
 $('#r_name').val(selection.name);
-$('#r_ssn').val(selection.ssn);
+$('#r_identity').val(selection.username);
+$('#r_national_id').val(selection.national_id);
 $('#r_email').val(selection.email);
 $('#r_company').val(selection.company);
 $('#r_phone').val(selection.phone);
 $('#r_photo').val(selection.photo);
+$('#user_id').val(selection.id);
 
     $('#submit_add').hide();
     $('#submit_edit').show();
-
     $("#mymodal").dialog("open");
 
 }
@@ -147,7 +151,7 @@ $(function () {
         autoOpen:false,
         modal: true,
         closed: true,
-        title:'Change password '
+        title:'Reset password '
     });
 
     $('#import').click(function(){
@@ -189,6 +193,8 @@ $(function () {
 
         $('#open_new_dialog').click(function (){
          $('#reset').trigger("click");
+            $('div#password_section').show();
+            $('div#r_password_section').show();
             $('#submit_add').show();
             $('#submit_edit').hide();
             $("#mymodal").dialog("open");
@@ -208,7 +214,7 @@ $(function () {
 
 
 
-        $('#datagrid').datagrid({
+   $('#datagrid').datagrid({
             url:js_var_object.current_link,
             singleSelect:true,
             rownumbers:false,
@@ -259,7 +265,7 @@ $(function () {
                         }
                     },
 
-                    {field:'email', align:'center', title:"Email", width:150, sortable:true,
+                    {field:'email', align:'center', title:"Email", width:180, sortable:true,
                         editor:{
                             type:'text'
 
@@ -269,13 +275,13 @@ $(function () {
                             type:'text'
 
                         }},
-                    {field:'phone', align:'center', title:"Phone", width:150, sortable:true,
+                    {field:'national_id', align:'center', title:"Phone", width:150, sortable:true,
                         editor:{
                             type:'text'
 
                         }
                     },
-                    {field:'active', align:'center', title:"Active", width:100, sortable:true,
+                    {field:'active', align:'center', title:"Active", width:80, sortable:true,
                         formatter:function (value, row, index){
 
                             if(value==1){
@@ -383,6 +389,9 @@ $(function () {
     $('input#active_0').on('click', function(){
         alert("ok");
     });
+
+
+
 });
 
 

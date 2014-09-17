@@ -12,19 +12,12 @@ include_once(
 <br/>
 <div class="row" id="row">
 <span class="col-sm-5">
-												<label class="pull-right inline">
-                                                    <small class="muted">Stacked:</small>
-
-                                                    <input id="pills-stacked" checked="" type="checkbox" class="pills-stacked ace ace-switch ace-switch-5" />
-                                                    <span class="lbl"></span>
-                                                </label>
-											</span><!-- /span -->
 
     <div id="tb">
 
         <a href="#" id="open_new_dialog" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>
         <a href="#" id="import" name="imports" class="easyui-linkbutton" plain="true">
-            <img src="./assets/img/import.png" alt=""/>Change Password</a>
+            <img src="./assets/img/import.png" alt=""/>Reset  Password</a>
         <a href="#" id="export" name="exports" class="easyui-linkbutton" plain="true">
             <img src="./assets/img/export.png" alt=""/>Export</a>
     </div>
@@ -75,7 +68,7 @@ include_once(
 
 
                         <button type="button" class="width-35 pull-right btn btn-sm btn-success">
-                            Change Password
+                            Reset Password
                             <i class="icon-arrow-right icon-on-right"></i>
                         </button>
                     </div>
@@ -96,11 +89,11 @@ include_once(
         <div class="modal-body">
 <div class="row">
     <div class="col-sm-12">
-            <form>
+            <form class="form-horizontal">
                 <fieldset>
-                    <label class="block clearfix">
-                        <span class="col-sm-3"> Account  </span>
-														<span class="col-sm-9 ">
+                    <div class="form-group">
+                        <div class="col-sm-3"> Account  </div>
+														<div class="col-sm-9 ">
 															<select class="form-control"  id="r_company" name="r_company" >
                                                                 <option value="admin">Admin</option>
                                                                 <option value="student">Student</option>
@@ -108,65 +101,55 @@ include_once(
                                                                 <option value="student">Parents</option>
                                                             </select>
 
-														</span>
-                    </label>
+														</div>
+                    </div>
 
-                    <label class="block clearfix">
-                        <span class="col-sm-3"> Name </span>
-														<span class="col-sm-9  ">
+
+                    <div class="form-group">
+                        <div class="col-sm-3"> Name </div>
+														<div class="col-sm-9  ">
 															<input type="email" class="form-control"  id="r_name" name="r_name" />
 
-														</span>
-                    </label>
+														</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-3"> Email </div>
+                        <div class="col-sm-9  ">
+                            <input type="email" class="form-control"  id="r_email" name="r_email" />
 
-                    <label class="block clearfix">
-                        <span class="col-sm-3"> Email </span>
-														<span class="col-sm-9  ">
-															<input type="email" class="form-control"  id="r_email" name="r_email" />
+                        </div>
 
-														</span>
-
-                    </label>
+                    </div>
 
 
-                    <label class="block clearfix">
-                        <span class="col-sm-3"> Username </span>
-														<span class="col-sm-9   ">
+                    <div class="form-group">
+                        <div class="col-sm-3"> Username </div>
+														<div class="col-sm-9   ">
 															<input type="text" id="r_identity" name="r_identity" class="form-control"  />
 
-														</span>
-                    </label>
+														</div>
+                    </div>
 
 
-                    <label class="block clearfix">
-                        <span class="col-sm-3"> SSN </span>
-														<span class="col-sm-9 ">
-															<input type="text" id="r_ssn" name="r_ssn" class="form-control"  />
 
-														</span>
-                    </label>
-
-                    <label class="block clearfix">
-                        <span class="col-sm-3"> Password </span>
-														<span class="col-sm-9  ">
+                    <div class="form-group" id="password_section">
+                        <div class="col-sm-3"> Password </div>
+														<div class="col-sm-9  ">
 															<input type="password" id="r_password" class="form-control" />
 
-														</span>
-                    </label>
-
-                    <label class="block clearfix">
-                        <span class="col-sm-3"> Re-Password </span>
-														<span class="col-sm-9  ">
+														</div>
+                    </div>
+                    <div class="form-group" id="r_password_section" >
+                        <div class="col-sm-3"> Re-Password </div>
+														<div class="col-sm-9  ">
 															<input type="password" id="r_r_password"  class="form-control"  />
 
-														</span>
-                    </label>
+														</div>
+                        <input type="hidden" id="user_id"/>
+                    </div>
 
-
-
-                    <div class="space-24"></div>
-
-                    <div class="clearfix">
+                    <div class="clearfix align-right">
                         <button type="button" id="submit_add" style="display: none;" class="btn btn-primary">Submit</button>
                         <button type="button" id="submit_edit" style="display: none;" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-default " id="cancel">Cancel</button>

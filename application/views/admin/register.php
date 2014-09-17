@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Login Page - Ace Admin</title>
 
     <meta name="description" content="User login page" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -48,85 +47,107 @@
     <div id="login-box" class="login-box visible widget-box no-border">
         <div class="widget-body">
             <div class="widget-main">
-                <h4 class="header blue lighter bigger">
-                    <i class="icon-coffee green"></i>
-                    Please Enter Your Information
+                <h4 class="header green lighter bigger">
+                    <i class="icon-group blue"></i>
+                    New User Registration
+
+                </h4>
+                <h4>
+                    <?php if(isset($message)){
+                    echo $message;
+                }?>
 
                 </h4>
 
                 <div class="space-6"></div>
 
-                <form action="" method="post">
+                <form action="<?php echo SITE_LINK."/security/front_create_user"?>" method="post">
                     <fieldset>
                         <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" id="identity" name="identity" placeholder="Username" />
+															<select  class="form-control"  id="r_company" name="r_company" >
+                                                                <option value="student">Student</option>
+                                                                <option value="student">Teacher</option>
+                                                                <option value="student">Parents</option>
+                                                            </select>
+
+														</span>
+                        </label>
+
+                        <label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="text" class="form-control"  id="r_name" name="r_name" placeholder="Name" />
+															<i class=""></i>
+														</span>
+                        </label>
+
+                        <label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="text" class="form-control"  id="r_national_id" name="r_national_id" placeholder="Notional Number" />
+															<i class=""></i>
+														</span>
+                        </label>
+
+                        <label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="text" class="form-control"  id="r_email" name="r_email" placeholder="Email" />
+															<i class="icon-envelope"></i>
+														</span>
+                        </label>
+
+
+                        <label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="text" id="r_identity" name="r_identity" class="form-control" placeholder="Username" />
 															<i class="icon-user"></i>
 														</span>
                         </label>
 
                         <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" id="password" name="password" placeholder="Password" />
+															<input type="password" id="r_password" name="r_password" class="form-control" placeholder="Password" />
 															<i class="icon-lock"></i>
 														</span>
                         </label>
 
-                        <div class="space"></div>
+                        <label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="password" id="r_r_password" name="r_r_password" class="form-control" placeholder="Repeat password" />
+															<i class="icon-retweet"></i>
+														</span>
+                        </label>
+
+
+
+                        <div class="space-24"></div>
 
                         <div class="clearfix">
-                            <label class="inline">
-                                <input type="checkbox" id="remember_password" name="remember_password" class="ace" />
-                                <span class="lbl"> Remember Me</span>
-                            </label>
-
-                            <button type="submit"  id="login"  name="login" class="width-35 pull-right btn btn-sm btn-primary">
-                                <i class="icon-key"></i>
-                                Login
+                            <button type="reset" class="width-30 pull-left btn btn-sm">
+                                <i class="icon-refresh"></i>
+                                Reset
                             </button>
-                        </div>
 
-                        <div class="space-4"></div>
+                            <button type="submit"  name="submit_create_user"  id="submit_create_user" class="width-65 pull-right btn btn-sm btn-success">
+                                Register
+                                <i class="icon-arrow-right icon-on-right"></i>
+                            </button>
+
+                        </div>
                     </fieldset>
                 </form>
-
-                <div class="social-or-login center">
-                    <span class="bigger-110">Or Login Using</span>
-                </div>
-
-                <div class="social-login center">
-                    <a class="btn btn-primary">
-                        <i class="icon-facebook"></i>
-                    </a>
-
-                    <a class="btn btn-info">
-                        <i class="icon-twitter"></i>
-                    </a>
-
-                    <a class="btn btn-danger">
-                        <i class="icon-google-plus"></i>
-                    </a>
-                </div>
-            </div><!-- /widget-main -->
+            </div>
 
             <div class="toolbar clearfix">
                 <div>
-                    <a href="#" onclick="show_box('forgot-box'); return false;" class="forgot-password-link">
+                    <a href="<?php echo SITE_LINK."/security/login" ?>" style="color: #FFF" class="back-to-login-link">
                         <i class="icon-arrow-left"></i>
-                        I forgot my password
+                        Back to login
                     </a>
                 </div>
 
-                <div>
-                    <a href="<?php echo SITE_LINK."/security/front_create_user" ?>"  class="user-signup-link">
-                        I want to register
-                        <i class="icon-arrow-right"></i>
-                    </a>
-                </div>
             </div>
         </div><!-- /widget-body -->
-    </div><!-- /login-box -->
-
+    </div><!-- /signup-box -->
     <div id="forgot-box" class="forgot-box widget-box no-border">
         <div class="widget-body">
             <div class="widget-main">
