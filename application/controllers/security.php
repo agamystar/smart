@@ -33,8 +33,8 @@ class Security extends MY_Controller
         $row = json_decode($this->input->post("row"));
         $ajax_data = json_decode($this->input->post("data"));
 
-        if (USER_GROUP != "admin") {
-           redirect(SITE_LINK . '/security/login', 'refresh');
+        if ($this->session->userdata("groups") != "admin") {
+        redirect(SITE_LINK . '/security/login', 'refresh');
         }
 
 
@@ -50,7 +50,7 @@ class Security extends MY_Controller
                     $this->db->where("id", $id);
                 }
                 elseif ($group) {
-                    $this->db->where("group", $group);
+                    $this->db->where("groups", $group);
                 }
                 //User filter
 
@@ -304,7 +304,7 @@ class Security extends MY_Controller
                     'photo' => $row_add->photo,
                     'phone' => $row_add->phone,
                     'username' => $row_add->username,
-                    'group' => $row_add->group,
+                    'groups' => $row_add->groups,
                     'email' => strtolower($row_add->email),
                     'password ' => $password,
                     'ip_address' => $ip_address,
@@ -312,16 +312,26 @@ class Security extends MY_Controller
                     'last_login' => date('Y/m/d h:m:s'),
                     'active' => 1
                 );
-                $this->db->insert("users", $dat);
-                if ($this->db->affected_rows() > 0) {
-                    echo json_encode(array("result" => "success"));
-                    exit;
-                }
-                else {
+                $this->db->where('national_id',$row_add->national_id);
+                $num = $this->db->count_all_results("users");//table name from drowp down
 
-                    echo json_encode(array("result" => "failed"));
-                    exit;
+                if($num>0){
+                    $this->db->where("national_id", $row_add->national_id);
+                    $this->db->update("users", $dat);
+
+                }else{
+                    $this->db->insert("users", $dat);
                 }
+
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
+                }
+                exit;
+
+
+
                 exit;
             }
 
@@ -349,7 +359,7 @@ class Security extends MY_Controller
                     'photo' => $row_add->photo,
                     'phone' => $row_add->phone,
                     'username' => $row_add->username,
-                    'group' => $row_add->group,
+                    'groups' => $row_add->groups,
                     'email' => strtolower($row_add->email),
 
                 );
@@ -476,7 +486,7 @@ class Security extends MY_Controller
                     'name' => $this->input->post('r_name'),
                     'national_id' => $this->input->post('r_national_id'),
                     'username' => $this->input->post('r_identity'),
-                    'group' => $this->input->post('r_group'),
+                    'groups' => $this->input->post('r_group'),
                     'email' => strtolower($this->input->post('r_email')),
                     'password ' => $password,
                     'ip_address' => $ip_address,
@@ -489,8 +499,9 @@ class Security extends MY_Controller
                 $num = $this->db->count_all_results("users");//table name from drowp down
 
                 if($num>0){
-                    $this->db->insert("users", $dat);
-                    if ($this->db->affected_rows() > 0) {
+                    $this->db->where("national_id", $this->input->post('r_national_id'));
+                    $this->db->update("users", $dat);
+                    if ($this->db->affected_rows() > 0||$this->db->affected_rows() == 0) {
                         $message = "Registration Success . ";
                         redirect(SITE_LINK."/security/login","refresh");
                     }
@@ -500,7 +511,7 @@ class Security extends MY_Controller
 
                 }else{
 
-                    $message ="national number not exist in school database";
+                    $message ="National No.  Not Exist in Your  School Database";
                 }
 
 
@@ -532,129 +543,6 @@ class Security extends MY_Controller
     //change password
 
 
-    // create a new group
-    function create_group()
-    {
-        $this->data['title'] = $this->lang->line('create_group_title');
-
-        if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
-            redirect(SITE_LINK . '/security/login', 'refresh');
-        }
-
-        //validate form input
-        $this->form_validation->set_rules('group_name', $this->lang->line('create_group_validation_name_label'), 'required|alpha_dash|xss_clean');
-        $this->form_validation->set_rules('description', $this->lang->line('create_group_validation_desc_label'), 'xss_clean');
-
-        if ($this->form_validation->run() == TRUE) {
-            $new_group_id = $this->ion_auth->create_group($this->input->post('group_name'), $this->input->post('description'));
-            if ($new_group_id) {
-                // check to see if we are creating the group
-                // redirect them back to the admin page
-                $this->session->set_flashdata('message', $this->ion_auth->messages());
-                redirect(SITE_LINK . '/security/login', 'refresh');
-            }
-        }
-        else {
-            //display the create group form
-            //set the flash data error message if there is one
-            $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-
-            $this->data['group_name'] = array(
-                'name' => 'group_name',
-                'id' => 'group_name',
-                'type' => 'text',
-                'value' => $this->form_validation->set_value('group_name'),
-            );
-            $this->data['description'] = array(
-                'name' => 'description',
-                'id' => 'description',
-                'type' => 'text',
-                'value' => $this->form_validation->set_value('description'),
-            );
-
-            $this->_render_page('security/create_group', $this->data);
-        }
-    }
-
-    //edit a group
-    function edit_group($id)
-    {
-        // bail if no group id given
-        if (!$id || empty($id)) {
-            redirect('security', 'refresh');
-        }
-
-        $this->data['title'] = $this->lang->line('edit_group_title');
-
-        if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
-            redirect('security', 'refresh');
-        }
-
-        $group = $this->ion_auth->group($id)->row();
-
-        //validate form input
-        $this->form_validation->set_rules('group_name', $this->lang->line('edit_group_validation_name_label'), 'required|alpha_dash|xss_clean');
-        $this->form_validation->set_rules('group_description', $this->lang->line('edit_group_validation_desc_label'), 'xss_clean');
-
-        if (isset($_POST) && !empty($_POST)) {
-            if ($this->form_validation->run() === TRUE) {
-                $group_update = $this->ion_auth->update_group($id, $_POST['group_name'], $_POST['group_description']);
-
-                if ($group_update) {
-                    $this->session->set_flashdata('message', $this->lang->line('edit_group_saved'));
-                }
-                else {
-                    $this->session->set_flashdata('message', $this->ion_auth->errors());
-                }
-                redirect("security", 'refresh');
-            }
-        }
-
-        //set the flash data error message if there is one
-        $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-
-        //pass the user to the view
-        $this->data['group'] = $group;
-
-        $this->data['group_name'] = array(
-            'name' => 'group_name',
-            'id' => 'group_name',
-            'type' => 'text',
-            'value' => $this->form_validation->set_value('group_name', $group->name),
-        );
-        $this->data['group_description'] = array(
-            'name' => 'group_description',
-            'id' => 'group_description',
-            'type' => 'text',
-            'value' => $this->form_validation->set_value('group_description', $group->description),
-        );
-
-        $this->_render_page('security/edit_group', $this->data);
-    }
-
-
-    function _get_csrf_nonce()
-    {
-        $this->load->helper('string');
-        $key = random_string('alnum', 8);
-        $value = random_string('alnum', 20);
-        $this->session->set_flashdata('csrfkey', $key);
-        $this->session->set_flashdata('csrfvalue', $value);
-
-        return array($key => $value);
-    }
-
-    function _valid_csrf_nonce()
-    {
-        if ($this->input->post($this->session->flashdata('csrfkey')) !== FALSE &&
-            $this->input->post($this->session->flashdata('csrfkey')) == $this->session->flashdata('csrfvalue')
-        ) {
-            return TRUE;
-        }
-        else {
-            return FALSE;
-        }
-    }
 
     function _render_page($view, $data = null, $render = false)
     {
@@ -673,8 +561,9 @@ class Security extends MY_Controller
         $objPHPExcel->setActiveSheetIndex(0);
 // Initialise the Excel row number
         $rowCount = 1;
-        $query = "select name,username,email from users where group=".$x." ";
+        $query = "select name ,email, national_id,phone,address from users where groups='".$x."' ";
 
+        echo $query;
 // Execute the database query
         $result = mysql_query($query) or die(mysql_error());
 

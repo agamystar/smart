@@ -57,6 +57,7 @@
 
 
     <script  type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/js/bootstrap.min.js"></script>
+    <script  type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/js/bootbox.min.js"></script>
     <script  type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/model/assets/prettify/run_prettify.js"></script>
 
     <!-- page specific plugin scripts -->

@@ -35,7 +35,7 @@ function add_edit(action) {
         name:$('#name').val(),
         national_id:$('#national_id').val(),
         email:$('#email').val(),
-        group:$('#group').val(),
+        groups:$('#group').val(),
         username:$('#username').val(),
         password:$('#password').val(),
         id:$('#user_id').val(),
@@ -121,7 +121,7 @@ $('#birthday').val(selection.birthday);
 $('#address').val(selection.address);
 $('#blood_group').val(selection.blood_group);
 $('#email').val(selection.email);
-$('#group').val(selection.group);
+$('#group').val(selection.groups);
 $('#phone').val(selection.phone);
 $('#photo').val(selection.photo);
 $('#kid').val(selection.id);
@@ -193,23 +193,33 @@ $(function () {
         autoOpen:false,
         modal: true,
         closed: true,
+
         title:'Export Form'
     });
 
 
     $('#export').click(function(){
-        $("#export_dialog").dialog("open");
+
+        bootbox.confirm('Are You Sure you want to Export   '+'<b><span style="background-color: red ;color:#FFF; font-size: 16px " >'+$('#select_group').val()+"  ? </span></b>",function(yes){
+
+            if(yes){
+              location.href=js_var_object.current_link+"/export/"+$('#select_group').val();
+            }
+        });
+
     });
 
     $('#import').click(function(){
-        $("#import_dialog").dialog("open");
+        bootbox.confirm('Are You Sure you want to Import    '+'<b><span style="background-color: red ;color:#FFF; font-size: 16px " >'+$('#select_group').val()+"  ? </span></b>",function(yes){
+
+            if(yes){
+                $("#import_dialog").dialog("open");
+            }
+        });
+
     });
 
-    $( '#export' ).click( function( e ) {
 
-        location.href=js_var_object.current_link+"/export";
-
-    } );
     $( '#import_form' ).submit( function( e ) {
         $.ajax( {
             url: js_var_object.current_link+"/import",
@@ -247,11 +257,7 @@ $(function () {
     $('#reset_password').click(function(){
         $("#reset_dialog").dialog("open");
     });
-    $( '#export' ).click( function( e ) {
 
-        location.href=js_var_object.main_url+"export";
-
-    } );
     $( '#change_form' ).submit( function( e ) {
             var data={username:$('#username').val(),new_password:$('#password').val()};
             $.ajax( {

@@ -29,7 +29,7 @@ class Teacher extends MY_Controller
 
             $this->db->start_cache();
             $this->db->from(self::TABLE_NAME);
-            $this->db->where('group','teacher');
+            $this->db->where('groups','teacher');
             //User filter
 
             $flds_array = array(

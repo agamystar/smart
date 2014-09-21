@@ -38,7 +38,7 @@ class Parents  extends MY_Controller
             $this->db->select('*');
 
             $this->db->start_cache();
-            $this->db->where('group','parent');
+            $this->db->where('groups','parent');
             $this->db->from(self::TABLE_NAME);
             if ($index) {
                 $this->db->where("id", $index);

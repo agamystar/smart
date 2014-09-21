@@ -11,7 +11,7 @@ class User extends MY_Controller
         $this->load->library("excel");
     }
 
-    public function index()
+    public function profile()
     {
        $data=array();
         $data["js_vars"] = json_encode(array(

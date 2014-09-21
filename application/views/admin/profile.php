@@ -21,7 +21,7 @@ include_once(
 												<span class="profile-picture">
 													<img id="avatar"
                                                          class="editable img-responsive editable-click editable-empty"
-                                                         alt="Alex's Avatar" src="assets/avatars/profile-pic.jpg"></img>
+                                                         alt="Alex's Avatar" src="<?php echo SITE_LINK ?>/assets/avatars/profile-pic.jpg"></img>
 												</span>
 
         <div class="space-4"></div>
