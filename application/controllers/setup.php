@@ -30,12 +30,12 @@ class Student extends MY_Controller
             $this->db->start_cache();
             $this->db->from(self::TABLE_NAME_SUBJECT);
             //User filter
-// subject_id 	name 	class_id 	teacher_id
+// subject_id 	name 	class_id 	id
             $flds_array = array(
                 'subject_id' => array('where' => "subject_id", 'order' => "subject_id", 'val_template' => '', 'lower' => false),
                 'name' => array('where' => "name", 'order' => "name", 'val_template' => '', 'lower' => true),
                 'class_id' => array('where' => "class_id", 'order' => "class_id", 'val_template' => '', 'lower' => true),
-                'teacher_id' => array('where' => "teacher_id", 'order' => "teacher_id", 'val_template' => '', 'lower' => true),
+                'id' => array('where' => "id", 'order' => "id", 'val_template' => '', 'lower' => true),
             );
             $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
             $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 10;
@@ -46,7 +46,7 @@ class Student extends MY_Controller
                 $page = 1;
             }
             $offset = (($page - 1) * $rows) + 1;
-            $sort = isset($_GET['sort']) ? $_GET['sort'] : 'student_id';
+            $sort = isset($_GET['sort']) ? $_GET['sort'] : 'id';
             $order = isset($_GET['order']) ? $_GET['order'] : 'asc';
             $filterRules = json_decode($this->input->get('filterRules'));
             $sorting_array = explode(',', $sort);
@@ -188,7 +188,7 @@ class Student extends MY_Controller
                 'english' => $row->english,
                 'arabic' => $row->arabic
             );
-            $this->db->where("student_id", $p_id);
+            $this->db->where("id", $p_id);
             $this->db->update(self::TABLE_NAME_SUBJECT, $fields);
             if ($this->db->affected_rows() > 0) {
                 echo json_encode(array("result" => "success"));
@@ -200,7 +200,7 @@ class Student extends MY_Controller
             exit;
         }
         if ($action_post == "delete") {
-            $this->db->where("student_id", $p_id);
+            $this->db->where("id", $p_id);
             $this->db->delete(self::TABLE_NAME_SUBJECT);
             if ($this->db->affected_rows()> 0) {
                 echo json_encode(array("result" => "success"));

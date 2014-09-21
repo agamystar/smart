@@ -23,8 +23,8 @@ class MY_Controller extends CI_Controller {
         $user= $this->db->get()->row();
         if ($user)
         {
-            if($user->company){
-                define("USER_GROUP",$user->company);
+            if($user->group){
+                define("USER_GROUP",$user->group);
             }
         }
 

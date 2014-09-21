@@ -16,30 +16,27 @@ class Security extends MY_Controller
 
         $this->lang->load('auth');
         $this->load->helper('language');
+
     }
 
     //redirect if needed, otherwise display the user list
     function index()
     {
 
+
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
 
         $id = $this->input->get("id");
+        $group = $this->input->get("user_group");
         $row_add = json_decode($this->input->post("row_add"));
-
+        $row = json_decode($this->input->post("row"));
+        $ajax_data = json_decode($this->input->post("data"));
 
         if (USER_GROUP != "admin") {
-            redirect(SITE_LINK . '/security/login', 'refresh');
+           redirect(SITE_LINK . '/security/login', 'refresh');
         }
 
-
-        if (!$this->ion_auth->logged_in()) {
-            //echo SITE_LINK;
-            //  exit;
-            //redirect them to the login page
-            redirect(SITE_LINK . '/security/login', 'refresh');
-        }
 
         else {
 
@@ -52,11 +49,13 @@ class Security extends MY_Controller
                 if ($id) {
                     $this->db->where("id", $id);
                 }
-
+                elseif ($group) {
+                    $this->db->where("group", $group);
+                }
                 //User filter
 
                 $flds_array = array(
-                    'student_id' => array('where' => "student_id", 'order' => "student_id", 'val_template' => '', 'lower' => false),
+                    'id' => array('where' => "id", 'order' => "id", 'val_template' => '', 'lower' => false),
                     'name' => array('where' => "name", 'order' => "name", 'val_template' => '', 'lower' => true),
                     'birthday' => array('where' => "birthday", 'order' => "birthday", 'val_template' => '', 'lower' => true),
                     'email' => array('where' => "email", 'order' => "email", 'val_template' => '', 'lower' => true),
@@ -182,7 +181,7 @@ class Security extends MY_Controller
                 //Make limit
                 $this->db->limit($rows, $offset - 1);
                 $rs = $this->db->get();
-                //   echo $this->db->last_query();
+                //  echo $this->db->last_query();
 
                 if ($rs->num_rows() > 0) {
                     $back = array('total' => $this->db->count_all_results(), 'rows' => $rs->result_array());
@@ -193,65 +192,25 @@ class Security extends MY_Controller
                 exit;
             }
             if ($action_post == "change_password") {
-                $this->form_validation->set_rules('old', $this->lang->line('change_password_validation_old_password_label'), 'required');
-                $this->form_validation->set_rules('new', $this->lang->line('change_password_validation_new_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[new_confirm]');
-                $this->form_validation->set_rules('new_confirm', $this->lang->line('change_password_validation_new_password_confirm_label'), 'required');
-
-                if (!$this->ion_auth->logged_in()) {
-                    redirect(SITE_LINK . "/security/login", 'refresh');
-                }
-
-                $user = $this->ion_auth->user()->row();
+                $this->form_validation->set_rules('username','username', 'required');
+                $this->form_validation->set_rules('password','password' , 'required|min_length[3]|max_length[15]|matches[con_password]');
 
                 if ($this->form_validation->run() == false) {
-                    //display the form
-                    //set the flash data error message if there is one
-                    $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+                   $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+                    $password = $this->ion_auth->hash_password($ajax_data->password,'');
+                    $new_data=array(
+                        "identity"=>$ajax_data->username,
+                        "password"=>$password,
 
-                    $this->data['min_password_length'] = $this->config->item('min_password_length', 'ion_auth');
-                    $this->data['old_password'] = array(
-                        'name' => 'old',
-                        'id' => 'old',
-                        'type' => 'password',
                     );
-                    $this->data['new_password'] = array(
-                        'name' => 'new',
-                        'id' => 'new',
-                        'type' => 'password',
-                        'pattern' => '^.{' . $this->data['min_password_length'] . '}.*$',
-                    );
-                    $this->data['new_password_confirm'] = array(
-                        'name' => 'new_confirm',
-                        'id' => 'new_confirm',
-                        'type' => 'password',
-                        'pattern' => '^.{' . $this->data['min_password_length'] . '}.*$',
-                    );
-                    $this->data['user_id'] = array(
-                        'name' => 'user_id',
-                        'id' => 'user_id',
-                        'type' => 'hidden',
-                        'value' => $user->id,
-                    );
-
-                    //render
-                    $this->_render_page('security/change_password', $this->data);
+                    $this->db->where("id",$id);
+                    $this->db->update("users",$new_data);
+                    echo json_encode($this->data['message']);
                 }
                 else {
-                    $identity = $this->session->userdata('identity');
-
-                    $change = $this->ion_auth->change_password($identity, $this->input->post('old'), $this->input->post('new'));
-
-                    if ($change) {
-                        //if the password was successfully changed
-                        $this->session->set_flashdata('message', $this->ion_auth->messages());
-                        $this->logout();
-                    }
-                    else {
-                        $this->session->set_flashdata('message', $this->ion_auth->errors());
-                        redirect(SITE_LINK . "/security/change_password", 'refresh');
-                    }
+                    echo json_encode("Password Changes Successfully ");
                 }
-                echo json_encode("user created successfully ");
+                echo json_encode("Password Changes Successfully ");
                 exit;
             }
 
@@ -336,8 +295,16 @@ class Security extends MY_Controller
 
                 $dat = array(
                     'name' => $row_add->name,
+                    'address' => $row_add->address,
+                    'national_id' => $row_add->national_id,
+                    'sex' => $row_add->sex,
+                    'religion' => $row_add->religion,
+                    'birthday' => $row_add->birthday,
+                    'blood_group' => $row_add->blood_group,
+                    'photo' => $row_add->photo,
+                    'phone' => $row_add->phone,
                     'username' => $row_add->username,
-                    'company' => $row_add->company,
+                    'group' => $row_add->group,
                     'email' => strtolower($row_add->email),
                     'password ' => $password,
                     'ip_address' => $ip_address,
@@ -360,7 +327,6 @@ class Security extends MY_Controller
 
             if ($action_post == "edit_user") {
 
-                $this->data['title'] = "Create User";
 
                 if (!$this->ion_auth->logged_in()) {
                     redirect('auth', 'refresh');
@@ -374,27 +340,44 @@ class Security extends MY_Controller
 
                 $dat = array(
                     'name' => $row_add->name,
+                    'address' => $row_add->address,
+                    'national_id' => $row_add->national_id,
+                    'sex' => $row_add->sex,
+                    'religion' => $row_add->religion,
+                    'birthday' => $row_add->birthday,
+                    'blood_group' => $row_add->blood_group,
+                    'photo' => $row_add->photo,
+                    'phone' => $row_add->phone,
                     'username' => $row_add->username,
-                    'company' => $row_add->company,
+                    'group' => $row_add->group,
                     'email' => strtolower($row_add->email),
-                    'active' => 1
-                );
-                $id = $row_add->id;
-                $this->db->where("id", $id);
-                $this->db->update("users", $dat);
-                if ($this->db->affected_rows() > 0) {
-                    echo json_encode(array("result" => "success"));
-                    exit;
-                }
-                else {
 
-                    echo json_encode(array("result" => "failed"));
-                    exit;
+                );
+
+                $this->db->where("id", $row_add->id);
+                $this->db->update("users", $dat);
+             //   print_r($dat);
+              //echo   $this->db->last_query();
+
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
                 }
                 exit;
             }
-            //edit a user
 
+            if ($action_post == "delete") {
+                $this->db->where("id", $row->id);
+                $this->db->delete("users");
+                if ($this->db->affected_rows() > 0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" => "failed"));
+                }
+                // echo $this->db->last_query();
+                exit;
+            }
         }
 
 
@@ -493,7 +476,7 @@ class Security extends MY_Controller
                     'name' => $this->input->post('r_name'),
                     'national_id' => $this->input->post('r_national_id'),
                     'username' => $this->input->post('r_identity'),
-                    'company' => $this->input->post('r_company'),
+                    'group' => $this->input->post('r_group'),
                     'email' => strtolower($this->input->post('r_email')),
                     'password ' => $password,
                     'ip_address' => $ip_address,
@@ -503,7 +486,7 @@ class Security extends MY_Controller
                 );
 
                 $this->db->where('national_id',$this->input->post('r_national_id'));
-                $num = $this->db->count_all_results($this->input->post('r_company'));//table name from drowp down
+                $num = $this->db->count_all_results("users");//table name from drowp down
 
                 if($num>0){
                     $this->db->insert("users", $dat);
@@ -681,6 +664,102 @@ class Security extends MY_Controller
         $view_html = $this->load->view($view, $this->viewdata, $render);
 
         if (!$render) return $view_html;
+    }
+
+    public function export() {
+        // Instantiate a new PHPExcel object
+        $objPHPExcel = new PHPExcel();
+// Set the active Excel worksheet to sheet 0
+        $objPHPExcel->setActiveSheetIndex(0);
+// Initialise the Excel row number
+        $rowCount = 1;
+        $query = "select name,username,email from users ";
+
+// Execute the database query
+        $result = mysql_query($query) or die(mysql_error());
+
+//start of printing column names as names of MySQL fields
+        $column = 'A';
+        for ($i =0; $i < mysql_num_fields($result); $i++)
+        {
+            $objPHPExcel->getActiveSheet()->setCellValue($column.$rowCount, mysql_field_name($result,$i));
+            $column++;
+        }
+//end of adding column names
+
+//start while loop to get data
+        $rowCount = 2;
+        while($row = mysql_fetch_row($result))
+        {
+            $column = 'A';
+            for($j=0; $j<mysql_num_fields($result);$j++)
+            {
+                if(!isset($row[$j]))
+                    $value = NULL;
+                elseif ($row[$j] != "")
+                    $value = strip_tags($row[$j]);
+                else
+                    $value = "";
+
+                $objPHPExcel->getActiveSheet()->setCellValue($column.$rowCount, $value);
+                $column++;
+            }
+            $rowCount++;
+        }
+
+
+// Redirect output to a client’s web browser (Excel5)
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="simple.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+        // echo "thanks .. ";
+    }
+
+    public  function import() {
+
+        //$inputFileName = './assets/simple.xlsx';
+        $inputFileName =$_FILES['file']['tmp_name'];
+        $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
+
+        foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+
+            $cols=array();
+            $vals=array();
+
+            $worksheetTitle     = $worksheet->getTitle();
+            $highestRow         = $worksheet->getHighestRow();
+            $highestColumn      = $worksheet->getHighestColumn();
+            $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+            $nrColumns = ord($highestColumn) - 64;
+            for ($row = 1; $row <= 1; ++ $row) {
+
+                for ($col = 0; $col < $highestColumnIndex; ++ $col) {
+                    $cell = $worksheet->getCellByColumnAndRow($col, $row);
+                    $val = $cell->getValue();
+                    $cols[]=$val;
+                }
+            }
+            $table=array();
+            $one=array();
+            for ($row = 2; $row <= $highestRow; ++ $row) {
+
+                for ($col = 0; $col < $highestColumnIndex; ++ $col) {
+                    $cell = $worksheet->getCellByColumnAndRow($col, $row);
+                    $val = $cell->getValue();
+                    $one[$cols[$col]]=$val;
+                }
+                $table[]=$one;
+
+            }
+
+
+        }
+        // print_r($table);
+        $this->db->insert_batch("users",$table);
+        echo json_encode(array("rows"=>count($table)));
+        exit;
     }
 
 }

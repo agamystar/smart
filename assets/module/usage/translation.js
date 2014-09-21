@@ -179,12 +179,12 @@ $(function(){
                 formatter:function(value,row,index){
 
                     if (row.editing){
-                        var s = '<a href="javascript:void(0);" onclick="_edit('+index+')"><img src="./assets/img/save.png" alt="Save"/></a> ';
-                        var c = '<a href="javascript:void(0);" onclick="cancelrow('+index+')"><img src="./assets/img/cancel.png" alt="Cancel"/></a>';
+                        var s = '<a href="javascript:void(0);" onclick="_edit('+index+')"><img src="<?php echo SITE_LINK."/assets" ?>/img/save.png" alt="Save"/></a> ';
+                        var c = '<a href="javascript:void(0);" onclick="cancelrow('+index+')"><img src="<?php echo SITE_LINK."/assets" ?>/img/cancel.png" alt="Cancel"/></a>';
                         return "<div>"+s+c+"</div>";
                     } else {
-                        var e = '<a href="javascript:void(0);" onclick="editrow('+index+')"><img src="./assets/img/edit.png" alt="Edit"/></a> ';
-                        var d = '<a href="javascript:void(0);" onclick="_delete('+index+')"><img src="./assets/img/delete.png" alt="Delete"/></a>';
+                        var e = '<a href="javascript:void(0);" onclick="editrow('+index+')"><img src="<?php echo SITE_LINK."/assets" ?>/img/edit.png" alt="Edit"/></a> ';
+                        var d = '<a href="javascript:void(0);" onclick="_delete('+index+')"><img src="<?php echo SITE_LINK."/assets" ?>/img/delete.png" alt="Delete"/></a>';
                         return "<div>"+e+d+"</div>";
                     }}
 

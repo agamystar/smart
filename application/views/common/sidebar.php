@@ -129,7 +129,7 @@
 
     <ul class="submenu">
         <li>
-            <a href="<?php echo SITE_LINK."/"."parent" ;?>">
+            <a href="<?php echo SITE_LINK."/"."parents" ;?>">
                 <i class="icon-double-angle-right"></i>
                 All Parents
             </a>

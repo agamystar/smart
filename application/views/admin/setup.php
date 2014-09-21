@@ -22,7 +22,7 @@ include_once(
 
                 <div class="widget-toolbar">
                     <a href="#" data-action="collapse" id="open_new_dialog">
-                        <img src="./assets/img/new.png" alt="New">
+                        <img src=<?php echo SITE_LINK?>"/assets/img/new.png" alt="New">
                     </a>
 
                     </a>

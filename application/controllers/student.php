@@ -2,7 +2,7 @@
 
 class Student extends MY_Controller
 {
-    const TABLE_NAME = "student";
+    const TABLE_NAME = "users";
     private $user_frm_flag = "R";
 
     public function __construct() {
@@ -17,29 +17,6 @@ class Student extends MY_Controller
         }
     }
 
-    public function details($id)
-    {
-
-
-        $this->db->select('*');
-        $this->db->start_cache();
-        $this->db->from(self::TABLE_NAME);
-
-        $this->db->where("student_id", $id);
-
-        $rs = $this->db->get();
-        //   echo $this->db->last_query();
-        $row = $rs->result_array();
-
-        $data['row'] = $row;
-        // print_r($row);
-        //echo $this->db->last_query();
-
-
-        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'student_details', $data);
-        // exit;
-    }
-
     public function index()
     {
         $action_get = $this->input->get("action");
@@ -48,7 +25,7 @@ class Student extends MY_Controller
         $index = $this->input->get("index");
         $row = json_decode($this->input->post("row"));
         $row_add = json_decode($this->input->post("row_add"));
-        $student_id = $this->input->post("student_id");
+        $id = $this->input->post("id");
         $dataa = $this->input->post("data");
 
         if ($action_get == "get_data") {
@@ -61,15 +38,16 @@ class Student extends MY_Controller
             $this->db->select('*');
 
             $this->db->start_cache();
+            $this->db->where('group','student');
             $this->db->from(self::TABLE_NAME);
             if ($index) {
-                $this->db->where("student_id", $index);
+                $this->db->where("id", $index);
             }
 
             //User filter
 
             $flds_array = array(
-                'student_id' => array('where' => "student_id", 'order' => "student_id", 'val_template' => '', 'lower' => false),
+                'id' => array('where' => "id", 'order' => "id", 'val_template' => '', 'lower' => false),
                 'name' => array('where' => "name", 'order' => "name", 'val_template' => '', 'lower' => true),
                 'birthday' => array('where' => "birthday", 'order' => "birthday", 'val_template' => '', 'lower' => true),
                 'email' => array('where' => "email", 'order' => "email", 'val_template' => '', 'lower' => true),
@@ -87,7 +65,7 @@ class Student extends MY_Controller
                 $page = 1;
             }
             $offset = (($page - 1) * $rows) + 1;
-            $sort = isset($_GET['sort']) ? $_GET['sort'] : 'student_id';
+            $sort = isset($_GET['sort']) ? $_GET['sort'] : 'id';
             $order = isset($_GET['order']) ? $_GET['order'] : 'asc';
             $filterRules = json_decode($this->input->get('filterRules'));
             $sorting_array = explode(',', $sort);
@@ -245,19 +223,19 @@ class Student extends MY_Controller
                 'father_name' => $row_add->father_name,
                 'mother_name' => $row_add->mother_name,
             );
-            $this->db->where("student_id", $row_add->student_id);
+            $this->db->where("id", $row_add->id);
             $this->db->update(self::TABLE_NAME, $fields);
-            if ($this->db->affected_rows() > 0) {
+            if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
                 echo json_encode(array("result" => "success"));
             } else {
-                echo json_encode(array("result" => "failed"));
+                echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
             }
 
             //  echo $this->db->last_query();
             exit;
         }
         if ($action_post == "delete") {
-            $this->db->where("student_id", $row->student_id);
+            $this->db->where("id", $row->id);
             $this->db->delete(self::TABLE_NAME);
             if ($this->db->affected_rows() > 0) {
                 echo json_encode(array("result" => "success"));
@@ -285,7 +263,7 @@ class Student extends MY_Controller
 
     function import() {
 
-        //$inputFileName = './assets/simple.xlsx';
+        //$inputFileName = '<?php echo SITE_LINK."/assets" ?>/simple.xlsx';
         $inputFileName =$_FILES['file']['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 
@@ -333,16 +311,7 @@ class Student extends MY_Controller
         echo json_encode(array("rows"=>count($table)));
         exit;
     }
-    public function xport() {
-        $this->excel->setActiveSheetIndex(0);
-        // Gets all the data using MY_Model.php
-        $this->db->select('*');
-        $this->db->from(self::TABLE_NAME);
-        $rs = $this->db->get();
-        $data =  $rs->result_array();
 
-        $this->excel->stream('simple.xlsx', $data);
-    }
   public function export() {
       // Instantiate a new PHPExcel object
       $objPHPExcel = new PHPExcel();
@@ -357,7 +326,7 @@ class Student extends MY_Controller
 
 //start of printing column names as names of MySQL fields
       $column = 'A';
-      for ($i = 1; $i < mysql_num_fields($result); $i++)
+      for ($i = 0; $i < mysql_num_fields($result); $i++)
       {
           $objPHPExcel->getActiveSheet()->setCellValue($column.$rowCount, mysql_field_name($result,$i));
           $column++;
@@ -369,7 +338,7 @@ class Student extends MY_Controller
       while($row = mysql_fetch_row($result))
       {
           $column = 'A';
-          for($j=1; $j<mysql_num_fields($result);$j++)
+          for($j=0; $j<mysql_num_fields($result);$j++)
           {
               if(!isset($row[$j]))
                   $value = NULL;

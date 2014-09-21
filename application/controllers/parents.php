@@ -1,22 +1,32 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Teacher extends MY_Controller
+class Parents  extends MY_Controller
 {
     const TABLE_NAME = "users";
     private $user_frm_flag = "R";
+
+    public function __construct() {
+        parent::__construct();
+
+        $this->load->library("excel");
+
+        if (IS_USER_LOGIN)
+        {
+            redirect(SITE_LINK.'/security/login', 'refresh');
+            exit;
+        }
+    }
 
     public function index()
     {
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
+
+        $index = $this->input->get("index");
+        $row = json_decode($this->input->post("row"));
+        $row_add = json_decode($this->input->post("row_add"));
         $id = $this->input->post("id");
-        $key = $this->input->post("key");
-        $english = $this->input->post("english");
-        $arabic = $this->input->post("arabic");
-        $p_id = $this->input->post("p_id");
-        $row = json_decode($this->input->post("row_add"));
-
-
+        $dataa = $this->input->post("data");
 
         if ($action_get == "get_data") {
 
@@ -28,8 +38,12 @@ class Teacher extends MY_Controller
             $this->db->select('*');
 
             $this->db->start_cache();
+            $this->db->where('group','parent');
             $this->db->from(self::TABLE_NAME);
-            $this->db->where('group','teacher');
+            if ($index) {
+                $this->db->where("id", $index);
+            }
+
             //User filter
 
             $flds_array = array(
@@ -37,6 +51,10 @@ class Teacher extends MY_Controller
                 'name' => array('where' => "name", 'order' => "name", 'val_template' => '', 'lower' => true),
                 'birthday' => array('where' => "birthday", 'order' => "birthday", 'val_template' => '', 'lower' => true),
                 'email' => array('where' => "email", 'order' => "email", 'val_template' => '', 'lower' => true),
+                'sex' => array('where' => "sex", 'order' => "sex", 'val_template' => '', 'lower' => true),
+                'religion' => array('where' => "religion", 'order' => "religion", 'val_template' => '', 'lower' => true),
+                'address' => array('where' => "address", 'order' => "address", 'val_template' => '', 'lower' => true),
+                'phone' => array('where' => "phone", 'order' => "phone", 'val_template' => '', 'lower' => true),
             );
             $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
             $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 10;
@@ -155,27 +173,31 @@ class Teacher extends MY_Controller
             //Make limit
             $this->db->limit($rows, $offset - 1);
             $rs = $this->db->get();
+          //  echo $this->db->last_query();
 
             if ($rs->num_rows() > 0) {
                 $back = array('total' => $this->db->count_all_results(), 'rows' => $rs->result_array());
 
             }
-            // echo $this->db->last_query();
 
             echo json_encode($back);
             exit;
         }
 
         if ($action_post == "add") {
+
             $fields = array(
-                //'id' => $row->id,
-                'name' =>$row->name,
-                'birthday' => $row->birthday,
-                'sex' => $row->sex,
-                'religion' => $row->religion,
-                'address' => $row->address,
-                'phone' => $row->phone,
-                'email' => $row->email,
+                'name' => $row_add->name,
+                'birthday' => $row_add->birthday,
+                'sex' => $row_add->sex,
+                'religion' => $row_add->religion,
+                'address' => $row_add->address,
+                'phone' => $row_add->phone,
+                'email' => $row_add->email,
+                'class_id' => $row_add->class,
+                'roll' => $row_add->roll,
+                'father_name' => $row_add->father_name,
+                'mother_name' => $row_add->mother_name,
             );
             $this->db->insert(self::TABLE_NAME, $fields);
             if ($this->db->affected_rows() > 0) {
@@ -189,16 +211,19 @@ class Teacher extends MY_Controller
 
 
             $fields = array(
-                //'id' => $row->id,
-                'name' =>$row->name,
-                'birthday' => $row->birthday,
-                'sex' => $row->sex,
-                'religion' => $row->religion,
-                'address' => $row->address,
-                'phone' => $row->phone,
-                'email' => $row->email,
+                'name' => $row_add->name,
+                'birthday' => $row_add->birthday,
+                'sex' => $row_add->sex,
+                'religion' => $row_add->religion,
+                'address' => $row_add->address,
+                'phone' => $row_add->phone,
+                'email' => $row_add->email,
+                'class_id' => $row_add->class,
+                'roll' => $row_add->roll,
+                'father_name' => $row_add->father_name,
+                'mother_name' => $row_add->mother_name,
             );
-            $this->db->where("id", $row->id);
+            $this->db->where("id", $row_add->id);
             $this->db->update(self::TABLE_NAME, $fields);
             if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
                 echo json_encode(array("result" => "success"));
@@ -206,38 +231,39 @@ class Teacher extends MY_Controller
                 echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
             }
 
-      // echo $this->db->last_query();
+            //  echo $this->db->last_query();
             exit;
         }
         if ($action_post == "delete") {
-
             $this->db->where("id", $row->id);
             $this->db->delete(self::TABLE_NAME);
-            if ($this->db->affected_rows()> 0) {
+            if ($this->db->affected_rows() > 0) {
                 echo json_encode(array("result" => "success"));
             } else {
                 echo json_encode(array("result" => "failed"));
             }
-
-           //echo $this->db->last_query();
+          // echo $this->db->last_query();
             exit;
         }
         $data = array();
         $data["js_vars"] = json_encode(array(
             "user_frm_flag" => $this->user_frm_flag,
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1],
-
+            'details' => SITE_LINK . "/" . "student/" . "details/",
+            'main_url' => SITE_LINK . "/" . "student/",
 
         ));
         $data['base_url'][] = SITE_LINK;
-        $data['js'][] = "usage/teacher.js";
-        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'teacher', $data);
+        $data['js'][] = "usage/student.js";
+        $data['main_url'] =  SITE_LINK . "/" . "student/";
+        $data['use_big_model'] = "yes";
+        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'student', $data);
 
     }
 
     function import() {
 
-        //$inputFileName = '<?php echo SITE_LINK."/assets" ?>/simple.xlsx';
+        //$inputFileName = './assets/simple.xlsx';
         $inputFileName =$_FILES['file']['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 
@@ -251,6 +277,9 @@ class Teacher extends MY_Controller
             $highestColumn      = $worksheet->getHighestColumn();
             $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
             $nrColumns = ord($highestColumn) - 64;
+            //    echo "<br>The worksheet ".$worksheetTitle." has ";
+            //    echo $nrColumns . ' columns (A-' . $highestColumn . ') ';
+
             for ($row = 1; $row <= 1; ++ $row) {
 
                 for ($col = 0; $col < $highestColumnIndex; ++ $col) {
@@ -259,6 +288,7 @@ class Teacher extends MY_Controller
                     $cols[]=$val;
                 }
             }
+
             $table=array();
             $one=array();
             for ($row = 2; $row <= $highestRow; ++ $row) {
@@ -272,62 +302,65 @@ class Teacher extends MY_Controller
 
             }
 
-
+            //  echo '</table>';
         }
-       // print_r($table);
-        $this->db->insert_batch("teacher",$table);
+//print_r($cols);
+//print_r($vals);
+        $this->db->insert_batch("student",$table);
+
         echo json_encode(array("rows"=>count($table)));
         exit;
     }
 
-    public function export() {
-        // Instantiate a new PHPExcel object
-        $objPHPExcel = new PHPExcel();
+  public function export() {
+      // Instantiate a new PHPExcel object
+      $objPHPExcel = new PHPExcel();
 // Set the active Excel worksheet to sheet 0
-        $objPHPExcel->setActiveSheetIndex(0);
+      $objPHPExcel->setActiveSheetIndex(0);
 // Initialise the Excel row number
-        $rowCount = 1;
-        $query = "select name,birthday,sex,religion,blood_group,address,phone,email,national_id from teacher ";
+      $rowCount = 1;
+      $query = "select * from student ";
 
 // Execute the database query
-        $result = mysql_query($query) or die(mysql_error());
+      $result = mysql_query($query) or die(mysql_error());
 
 //start of printing column names as names of MySQL fields
-        $column = 'A';
-        for ($i = 0; $i < mysql_num_fields($result); $i++)
-        {
-            $objPHPExcel->getActiveSheet()->setCellValue($column.$rowCount, mysql_field_name($result,$i));
-            $column++;
-        }
+      $column = 'A';
+      for ($i = 0; $i < mysql_num_fields($result); $i++)
+      {
+          $objPHPExcel->getActiveSheet()->setCellValue($column.$rowCount, mysql_field_name($result,$i));
+          $column++;
+      }
 //end of adding column names
 
 //start while loop to get data
-        $rowCount = 2;
-        while($row = mysql_fetch_row($result))
-        {
-            $column = 'A';
-            for($j=0; $j<mysql_num_fields($result);$j++)
-            {
-                if(!isset($row[$j]))
-                    $value = NULL;
-                elseif ($row[$j] != "")
-                    $value = strip_tags($row[$j]);
-                else
-                    $value = "";
+      $rowCount = 2;
+      while($row = mysql_fetch_row($result))
+      {
+          $column = 'A';
+          for($j=0; $j<mysql_num_fields($result);$j++)
+          {
+              if(!isset($row[$j]))
+                  $value = NULL;
+              elseif ($row[$j] != "")
+                  $value = strip_tags($row[$j]);
+              else
+                  $value = "";
 
-                $objPHPExcel->getActiveSheet()->setCellValue($column.$rowCount, $value);
-                $column++;
-            }
-            $rowCount++;
-        }
+              $objPHPExcel->getActiveSheet()->setCellValue($column.$rowCount, $value);
+              $column++;
+          }
+          $rowCount++;
+      }
 
 
 // Redirect output to a client’s web browser (Excel5)
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="simple.xls"');
-        header('Cache-Control: max-age=0');
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save('php://output');
-        // echo "thanks .. ";
+      header('Content-Type: application/vnd.ms-excel');
+      header('Content-Disposition: attachment;filename="simple.xls"');
+      header('Cache-Control: max-age=0');
+      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+      $objWriter->save('php://output');
+    // echo "thanks .. ";
     }
+
 }

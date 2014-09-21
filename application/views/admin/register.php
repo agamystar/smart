@@ -54,7 +54,7 @@
                 </h4>
                 <h4>
                     <?php if(isset($message)){
-                    echo $message;
+                    echo '<span style="color: red ">'.$message.'</span>';
                 }?>
 
                 </h4>
@@ -65,7 +65,7 @@
                     <fieldset>
                         <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<select  class="form-control"  id="r_company" name="r_company" >
+															<select  class="form-control"  id="r_group" name="r_group" >
                                                                 <option value="student">Student</option>
                                                                 <option value="student">Teacher</option>
                                                                 <option value="student">Parents</option>

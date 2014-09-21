@@ -44,7 +44,7 @@ function add_edit($action) {
         roll:$('#roll').val(),
         father_name:$('#father_name').val(),
         mother_name:$('#mother_name').val(),
-        student_id:$('#kid').val()
+        id:$('#kid').val()
     }
     $.post(
         js_var_object.current_link,
@@ -108,7 +108,7 @@ function _delete(index) {
 function edit_dialog(index) {
     $('#datagrid').datagrid('selectRow', index);
     var selection = $('#datagrid').datagrid('getSelected');
-    $('#kid').val(selection.student_id);
+    $('#kid').val(selection.id);
     $('#name').val(selection.name);
     $('#email').val(selection.email);
     $('#birthday').val(selection.birthday);
@@ -232,20 +232,20 @@ $(function () {
                         formatter:function (value, row, index){
 
                             if (row.editing) {
-                                var s = '<a href="javascript:void(0);" onclick="_edit(' + index + ')"><img src="./assets/img/save.png" alt="Save"/></a> ';
-                                var c = '<a href="javascript:void(0);" onclick="cancelrow(' + index + ')"><img src="./assets/img/cancel.png" alt="Cancel"/></a>';
-                                var v = '<a href="javascript:void(0);" onclick="_show_details(' + index + ')"><img src="./assets/img/view.png" alt="view"/></a>';
+                                var s = '<a href="javascript:void(0);" onclick="_edit(' + index + ')"><img src="<?php echo SITE_LINK."/assets" ?>/img/save.png" alt="Save"/></a> ';
+                                var c = '<a href="javascript:void(0);" onclick="cancelrow(' + index + ')"><img src="<?php echo SITE_LINK."/assets" ?>/img/cancel.png" alt="Cancel"/></a>';
+                                var v = '<a href="javascript:void(0);" onclick="_show_details(' + index + ')"><img src="<?php echo SITE_LINK."/assets" ?>/img/view.png" alt="view"/></a>';
                                 return "<div>" +s+c+ "</div>";
                             } else {
-                                var e = '<a href="javascript:void(0);" onclick="edit_dialog(' + index + ')"><img src="./assets/img/edit.pn" alt=""/><i class="icon-pencil bigger-130"></i></a> ';
-                                var d = '<a href="javascript:void(0);" onclick="_delete(' + index + ')"><img src="./assets/img/delete.pn" alt=""/><i class="icon-trash bigger-130"></i></a>';
-                                var v = '<a href="javascript:void(0);" onclick="_show_details(' + index + ')" ><img src="./assets/img/view.png" alt="view"/></a>';
+                                var e = '<a href="javascript:void(0);" onclick="edit_dialog(' + index + ')"><img src="<?php echo SITE_LINK."/assets" ?>/img/edit.pn" alt=""/><i class="icon-pencil bigger-130"></i></a> ';
+                                var d = '<a href="javascript:void(0);" onclick="_delete(' + index + ')"><img src="<?php echo SITE_LINK."/assets" ?>/img/delete.pn" alt=""/><i class="icon-trash bigger-130"></i></a>';
+                                var v = '<a href="javascript:void(0);" onclick="_show_details(' + index + ')" ><img src="<?php echo SITE_LINK."/assets" ?>/img/view.png" alt="view"/></a>';
                                 return "<div>" + e + d + "</div>";
                             }
                         }
 
                     },
-                    {field:'student_id', title:"Id", width:100, align:'center', sortable:true},
+                    {field:'id', title:"User id ", width:100, align:'center', sortable:true},
 
                     {field:'name', title:"Name", width:200, align:'center', sortable:true,
                         editor:{
@@ -300,7 +300,7 @@ $(function () {
     }).datagrid('enableFilter', [
 
     {
-        field:'student_id',
+        field:'id',
         type:'text',
         op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
     },

@@ -184,7 +184,7 @@
             font-size: 16px !important;
             color: #FFF !important;
         }
-        .datagrid-row {
+        .datagrid-row,.datagrid-htable,.datagrid-header {
             height: 35px !important;
         }
         .window .window-header{

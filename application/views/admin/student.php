@@ -17,9 +17,9 @@ include_once(
 
         <a href="#" id="open_new_dialog" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>
         <a href="#" id="import" name="imports" class="easyui-linkbutton" plain="true">
-            <img src="./assets/img/import.png" alt=""/>Import</a>
+            <img src="<?php echo SITE_LINK."/assets" ?>/img/import.png" alt=""/>Import</a>
         <a href="#" id="export" name="exports" class="easyui-linkbutton" plain="true">
-            <img src="./assets/img/export.png" alt=""/>Export</a>
+            <img src="<?php echo SITE_LINK."/assets" ?>/img/export.png" alt=""/>Export</a>
     </div>
 
 
@@ -33,7 +33,7 @@ include_once(
 
     <div class="modal-content" id="dialog_content">
         <!-- dialog body -->
-        <div id="loading-indicator" style="display:none;" > <img src="./assets/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
+        <div id="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
         <div class="modal-body">
 
             <div class="row">
@@ -54,7 +54,7 @@ include_once(
 
 <!-- set up the modal to start hidden and fade in and out -->
 <div id="mymodal" class=" ">
-    <div class="loading-indicator" style="display:none;" > <img src="./assets/img/page-loader.gif" style="width:100px;height:50px;margin: 200px 450px " /></div>
+    <div class="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 200px 450px " /></div>
 
     <div class="modal-content">
         <!-- dialog body -->
@@ -103,46 +103,10 @@ include_once(
                             </div>
                         </div>
 
-
-                    </div>
-                    <div class="col-sm-7">
-
                         <div class="form-group">
-                            <label for="email" class="text-left col-sm-4 control-label">Father Name</label>
+                            <label for="email" class="text-left col-sm-2 control-label">Religion</label>
 
-                            <div class="col-sm-8">
-                                <input class="form-control" id="father_name" type="text">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email" class="text-left col-sm-4 control-label">Mother Name</label>
-
-                            <div class="col-sm-8">
-                                <input class="form-control" id="mother_name" type="text">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email" class="text-left col-sm-4 control-label">Roll</label>
-
-                            <div class="col-sm-8">
-                                <input class="form-control" id="roll" type="text">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="email" class="text-left col-sm-4 control-label">Class</label>
-
-                            <div class="col-sm-8">
-                                <input class="form-control" id="class" type="text">
-                            </div>
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="email" class="text-left col-sm-4 control-label">Religion</label>
-
-                            <div class="col-sm-8">
+                            <div class="col-sm-10">
                                 <select id="religion" class="text-left col-sm-8">
                                     <option id="muslim">Muslim</option>
                                     <option id="christian">Christian</option>
@@ -152,10 +116,10 @@ include_once(
 
 
                         <div class="form-group">
-                            <label for="email" class="text-left col-sm-4 control-label">Sex</label>
+                            <label for="email" class="text-left col-sm-2 control-label">Sex</label>
 
                             <div class="col-sm-8">
-                                <select class="text-left col-sm-8" id="sex">
+                                <select class="text-left col-sm-10" id="sex">
                                     <option id="male">Male</option>
                                     <option id="female">Female</option>
                                 </select>
@@ -163,7 +127,31 @@ include_once(
                         </div>
 
 
+
+
+                    </div>
+                    <div class="col-sm-7">
+
+                        <div class="form-group">
+                            <label for="email" class="text-left col-sm-4 control-label">National Number</label>
+
+                            <div class="col-sm-8">
+                                <input class="form-control" id="national_id" type="text">
+                            </div>
+                        </div>
+
+
+
+
+
                         <input type="hidden" id="kid">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="submit_add" style="display: none;" class="btn btn-primary">Submit</button>
+                        <button type="button" id="submit_edit" style="display: none;" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger " id="cancel">Cancel</button>
+
                     </div>
             </form>
         </div>
@@ -173,12 +161,7 @@ include_once(
 
 </div>
 
-<div class="modal-footer">
-    <button type="button" id="submit_add" style="display: none;" class="btn btn-primary">Submit</button>
-    <button type="button" id="submit_edit" style="display: none;" class="btn btn-primary">Submit</button>
-    <button type="button" class="btn btn-danger " id="cancel">Cancel</button>
 
-</div>
 </div>
 
 
