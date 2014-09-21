@@ -237,7 +237,7 @@ class Teacher extends MY_Controller
 
     function import() {
 
-        //$inputFileName = '<?php echo SITE_LINK."/assets" ?>/simple.xlsx';
+        //$inputFileName = './assets/simple.xlsx';
         $inputFileName =$_FILES['file']['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 

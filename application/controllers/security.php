@@ -666,14 +666,14 @@ class Security extends MY_Controller
         if (!$render) return $view_html;
     }
 
-    public function export() {
+    public function export($x='') {
         // Instantiate a new PHPExcel object
         $objPHPExcel = new PHPExcel();
 // Set the active Excel worksheet to sheet 0
         $objPHPExcel->setActiveSheetIndex(0);
 // Initialise the Excel row number
         $rowCount = 1;
-        $query = "select name,username,email from users ";
+        $query = "select name,username,email from users where group=".$x." ";
 
 // Execute the database query
         $result = mysql_query($query) or die(mysql_error());

@@ -188,6 +188,19 @@ $(function () {
         title:'Import Form'
     });
 
+    $("#export_dialog").dialog({
+        width:500,
+        autoOpen:false,
+        modal: true,
+        closed: true,
+        title:'Export Form'
+    });
+
+
+    $('#export').click(function(){
+        $("#export_dialog").dialog("open");
+    });
+
     $('#import').click(function(){
         $("#import_dialog").dialog("open");
     });

@@ -7,7 +7,7 @@ include_once(
         'header.php');
 ?>
 <style type="text/css">
-    .profile-info-row{
+    .profile-info-row {
         height: 50px !important;
     }
 </style>
@@ -19,7 +19,9 @@ include_once(
 <div class="col-xs-12 col-sm-3 center">
     <div>
 												<span class="profile-picture">
-													<img id="avatar" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" src="assets/avatars/profile-pic.jpg"></img>
+													<img id="avatar"
+                                                         class="editable img-responsive editable-click editable-empty"
+                                                         alt="Alex's Avatar" src="assets/avatars/profile-pic.jpg"></img>
 												</span>
 
         <div class="space-4"></div>
@@ -33,7 +35,7 @@ include_once(
                 </a>
 
                 <ul class="align-left dropdown-menu dropdown-caret dropdown-lighter">
-                    <li class="dropdown-header"> Change Status </li>
+                    <li class="dropdown-header"> Change Status</li>
 
                     <li>
                         <a href="#">
@@ -122,7 +124,7 @@ include_once(
 </div>
 
 <div class="col-xs-12 col-sm-9">
-<div class="center">
+    <div class="center">
 												<span class="btn btn-app btn-sm btn-light no-hover">
 													<span class="line-height-1 bigger-170 blue"> 1,411 </span>
 
@@ -164,113 +166,113 @@ include_once(
 													<br>
 													<span class="line-height-1 smaller-90"> Contacts </span>
 												</span>
-</div>
-
-<div class="space-12"></div>
-
-<div class="profile-user-info profile-user-info-striped">
-    <div class="profile-info-row">
-        <div class="profile-info-name"> Username </div>
-
-        <div class="profile-info-value">
-            <span class="editable editable-click" id="username"> <?php echo $user_data->username ?> </span>
-        </div>
     </div>
 
+    <div class="space-12"></div>
 
+    <div class="profile-user-info profile-user-info-striped">
+        <div class="profile-info-row">
+            <div class="profile-info-name"> Username</div>
 
-    <div class="profile-info-row">
-        <div class="profile-info-name"> Email</div>
-
-        <div class="profile-info-value">
-            <span class="editable editable-click" id="email"> <?php echo $user_data->email ?> </span>
+            <div class="profile-info-value">
+                <span class="editable editable-click" id="username"> <?php echo $user_data->username ?> </span>
+            </div>
         </div>
-    </div>
-    <div class="profile-info-row">
-        <div class="profile-info-name"> Phone </div>
 
-        <div class="profile-info-value">
-            <span class="editable editable-click" id="phone"> <?php echo $user_data->phone ?> </span>
+
+        <div class="profile-info-row">
+            <div class="profile-info-name"> Email</div>
+
+            <div class="profile-info-value">
+                <span class="editable editable-click" id="email"> <?php echo $user_data->email ?> </span>
+            </div>
         </div>
-    </div>
-    <div class="profile-info-row">
-        <div class="profile-info-name"> National No</div>
+        <div class="profile-info-row">
+            <div class="profile-info-name"> Phone</div>
 
-        <div class="profile-info-value">
-            <span class="editable editable-click" id="national_id"> <?php echo $user_data->national_id ?> </span>
+            <div class="profile-info-value">
+                <span class="editable editable-click" id="phone"> <?php echo $user_data->phone ?> </span>
+            </div>
         </div>
-    </div>
-    <div class="profile-info-row">
-        <div class="profile-info-name">Birthday </div>
+        <div class="profile-info-row">
+            <div class="profile-info-name"> National No</div>
 
-        <div class="profile-info-value">
-            <span class="editable editable-click" id="birthday"> <?php echo $user_data->birthday ?> </span>
+            <div class="profile-info-value">
+                <span class="editable editable-click" id="national_id"> <?php echo $user_data->national_id ?> </span>
+            </div>
         </div>
-    </div>
+        <div class="profile-info-row">
+            <div class="profile-info-name">Birthday</div>
 
-    <div class="profile-info-row">
-        <div class="profile-info-name">Religion </div>
-
-        <div class="profile-info-value">
-            <span class="editable editable-click" id="religion"> <?php echo $user_data->religion ?> </span>
+            <div class="profile-info-value">
+                <span class="editable editable-click" id="birthday"> <?php echo $user_data->birthday ?> </span>
+            </div>
         </div>
-    </div>
-    <div class="profile-info-row">
-        <div class="profile-info-name">Sex </div>
 
-        <div class="profile-info-value">
-            <span class="editable editable-click" id="sex"> <?php echo $user_data->sex ?> </span>
+        <div class="profile-info-row">
+            <div class="profile-info-name">Religion</div>
+
+            <div class="profile-info-value">
+                <span class="editable editable-click" id="religion"> <?php echo $user_data->religion ?> </span>
+            </div>
         </div>
-    </div>
+        <div class="profile-info-row">
+            <div class="profile-info-name">Sex</div>
 
-    <div class="profile-info-row">
-        <div class="profile-info-name"> Address </div>
+            <div class="profile-info-value">
+                <span class="editable editable-click" id="sex"> <?php echo $user_data->sex ?> </span>
+            </div>
+        </div>
 
-        <div class="profile-info-value">
-            <i class="icon-map-marker light-orange bigger-110"></i>
+        <div class="profile-info-row">
+            <div class="profile-info-name"> Address</div>
+
+            <div class="profile-info-value">
+                <i class="icon-map-marker light-orange bigger-110"></i>
           <span class="editable editable-click" id="address">
             <?php echo $user_data->address ?>
          </span>
+            </div>
         </div>
+
+
+        <div class="profile-info-row">
+            <div class="profile-info-name"> Last Online</div>
+
+            <div class="profile-info-value">
+                <span class=" editable-click" id="login"> <?php echo $user_data->last_login ?> </span>
+            </div>
+        </div>
+
     </div>
 
+    <div class="space-20"></div>
 
 
-    <div class="profile-info-row">
-        <div class="profile-info-name"> Last Online </div>
+    <div class="hr hr2 hr-double"></div>
 
-        <div class="profile-info-value">
-            <span class=" editable-click" id="login"> <?php echo $user_data->last_login ?> </span>
-        </div>
+    <div class="space-6"></div>
+
+    <div class="center">
+        <a href="#" id="edit_profile" class="btn btn-sm btn-primary">
+            <i class="icon-rss bigger-150 middle"></i>
+            <span class="bigger-110">Edit Profile </span>
+
+            <i class="icon-on-right icon-arrow-right"></i>
+        </a>
+
+        <a href="#" id="update_profile" style="display: none" class="btn btn-sm btn-primary">
+            <i class="icon-rss bigger-150 middle"></i>
+            <span class="bigger-110">Update Profile </span>
+
+            <i class="icon-on-right icon-arrow-right"></i>
+        </a>
+
     </div>
-
-</div>
-
-<div class="space-20"></div>
-
-
-<div class="hr hr2 hr-double"></div>
-
-<div class="space-6"></div>
-
-<div class="center">
-    <a href="#" id="edit_profile"  class="btn btn-sm btn-primary">
-        <i class="icon-rss bigger-150 middle"></i>
-        <span class="bigger-110">Edit Profile </span>
-
-        <i class="icon-on-right icon-arrow-right"></i>
-    </a>
-
-    <a href="#" id="update_profile" style="display: none"  class="btn btn-sm btn-primary">
-        <i class="icon-rss bigger-150 middle"></i>
-        <span class="bigger-110">Update Profile </span>
-
-        <i class="icon-on-right icon-arrow-right"></i>
-    </a>
-
 </div>
 </div>
-</div>
+
+
 
 <?php
 include_once(

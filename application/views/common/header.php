@@ -1,7 +1,4 @@
-<?php
 
-//echo SITE_LINK;
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,6 +89,7 @@
         ?>
         <script type="text/javascript">
 
+           var  js_site_url="<?php echo $base_url[0];?>";
 
                 <?php
                 if (isset($js_vars)) {
@@ -139,6 +137,9 @@
     <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/filter.js"></script>
 
 
+    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/multi_select_list/jquery.bootstrap-duallistbox.js"; ?>"></script>
+
+    <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/module/multi_select_list/bootstrap-duallistbox.css"/>
 
     <style type="text/css">
 
@@ -169,11 +170,7 @@
         .l-btn-plain{
             margin-top: 5px !important;
         }
-        <?php
-        if($use_big_model=="yes"){
-            echo 'div.modal-dialog{ width:950px !important;}';
-        }
-        ?>
+
         .datagrid-header,.datagrid-htable{height:35px !important;}
         .datagrid-header td ,.datagrid-htable td{border:0px}
         .datagrid-header-inner{
