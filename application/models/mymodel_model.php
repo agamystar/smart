@@ -17,14 +17,12 @@ class Mymodel_model extends CI_Model
 
 
     public function select($tb,$arr){
-        $this->db->select("*");
-        $this->db->from($tb);
-        if($arr){
-            $this->db->where($arr);
-        }
-        $rs= $this->db->get();
+        $query=$this->db->query("select * from ".$tb." where $arr ");
 
-        return $rs->result();
+
+       // echo $this->db->last_query();
+
+        return $query->result() ;
 }
 }
 
