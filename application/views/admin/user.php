@@ -18,11 +18,14 @@ include_once(
         <a href="#" id="reset_password" class="easyui-linkbutton" plain="true">
         <img src="<?php echo SITE_LINK."/assets" ?>/img/reset-icon.png" alt=""/>  Reset  password</a>
         <a href="#" id="import" name="imports" class="easyui-linkbutton" plain="true">
-            <img src="<?php echo SITE_LINK."/assets" ?>/img/import-icon.png" alt="Import"/>Import</a>
+            <img src="<?php echo SITE_LINK."/assets" ?>/img/import-icon.png" alt="Import"/>
+        <span id="import_text"></span>
+        </a>
         <a href="#" id="export" name="exports" >
-            <img src="<?php echo SITE_LINK."/assets" ?>/img/export-icon.png" alt="Export"/>Export</a>
+            <img src="<?php echo SITE_LINK."/assets" ?>/img/export-icon.png" alt="Export"/>
+            <span id="export_text"></span></a>
     <span class="widget-toolbar">
-
+  <span class="label label-danger  arrowed-right arrowed-in"> Select  User Group </span>
         <select id="select_group">
          <!--  <option value="0">All Users</option>-->
             <option value="student">Student</option>

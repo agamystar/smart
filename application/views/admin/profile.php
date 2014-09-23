@@ -10,6 +10,23 @@ include_once(
     .profile-info-row {
         height: 50px !important;
     }
+    .dropzone .dz-default.dz-message{
+        background:url("") no-repeat !important;
+        margin: 0px !important;
+        position: relative;
+        top:0px;
+        left:0px;
+        width: 428px;
+        height: 200px;
+
+    }
+    .dropzone {
+        content: 'Click to Change Image ';
+         min-height: 250px !important;
+    }
+    .dropzone .dz-default.dz-message{
+        display :none;
+    }
 </style>
 
 <?php //print_r($user_data)?>
@@ -18,12 +35,20 @@ include_once(
 <div id="user-profile-1" class="user-profile row">
 <div class="col-xs-12 col-sm-3 center">
     <div>
-												<span class="profile-picture">
+        <form class="dropzone" action="<?php echo SITE_LINK."/user/upload" ?>"  id="my-awesome-dropzone"></form>
+        <!--
+        <form action="<?php echo SITE_LINK."/user/upload" ?>" id="my-dropzone" style="" class="dropzone"  >
+            <span class="profile-picture">
 													<img id="avatar"
                                                          class="editable img-responsive editable-click editable-empty"
-                                                         alt="Alex's Avatar" src="<?php echo SITE_LINK ?>/assets/avatars/profile-pic.jpg"></img>
+                                                         alt="Alex's Avatar" src="<?php //echo SITE_LINK ?>/assets/avatars/profile-pic.jpg"></img>
 												</span>
+        </form>
 
+-->
+<!--
+
+-->
         <div class="space-4"></div>
 
         <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
@@ -31,7 +56,7 @@ include_once(
                 <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
                     <i class="icon-circle light-green middle"></i>
                     &nbsp;
-                    <span class="white"><?php echo $user_data->name ?></span>
+                    <span class="white"><?php echo $user_data->name ?>   </span>
                 </a>
 
                 <ul class="align-left dropdown-menu dropdown-caret dropdown-lighter">
@@ -172,7 +197,7 @@ include_once(
 
     <div class="profile-user-info profile-user-info-striped">
         <div class="profile-info-row">
-            <div class="profile-info-name"> Username</div>
+            <div class="profile-info-name align-center"> Username</div>
 
             <div class="profile-info-value">
                 <span class="editable editable-click" id="username"> <?php echo $user_data->username ?> </span>
@@ -181,28 +206,28 @@ include_once(
 
 
         <div class="profile-info-row">
-            <div class="profile-info-name"> Email</div>
+            <div class="profile-info-name align-center"> Email</div>
 
             <div class="profile-info-value">
                 <span class="editable editable-click" id="email"> <?php echo $user_data->email ?> </span>
             </div>
         </div>
         <div class="profile-info-row">
-            <div class="profile-info-name"> Phone</div>
+            <div class="profile-info-name align-center"> Phone</div>
 
             <div class="profile-info-value">
                 <span class="editable editable-click" id="phone"> <?php echo $user_data->phone ?> </span>
             </div>
         </div>
         <div class="profile-info-row">
-            <div class="profile-info-name"> National No</div>
+            <div class="profile-info-name align-center"> National No</div>
 
             <div class="profile-info-value">
                 <span class="editable editable-click" id="national_id"> <?php echo $user_data->national_id ?> </span>
             </div>
         </div>
         <div class="profile-info-row">
-            <div class="profile-info-name">Birthday</div>
+            <div class="profile-info-name align-center">Birthday</div>
 
             <div class="profile-info-value">
                 <span class="editable editable-click" id="birthday"> <?php echo $user_data->birthday ?> </span>
@@ -210,14 +235,14 @@ include_once(
         </div>
 
         <div class="profile-info-row">
-            <div class="profile-info-name">Religion</div>
+            <div class="profile-info-name align-center">Religion</div>
 
             <div class="profile-info-value">
                 <span class="editable editable-click" id="religion"> <?php echo $user_data->religion ?> </span>
             </div>
         </div>
         <div class="profile-info-row">
-            <div class="profile-info-name">Sex</div>
+            <div class="profile-info-name align-center">Sex</div>
 
             <div class="profile-info-value">
                 <span class="editable editable-click" id="sex"> <?php echo $user_data->sex ?> </span>
@@ -225,7 +250,7 @@ include_once(
         </div>
 
         <div class="profile-info-row">
-            <div class="profile-info-name"> Address</div>
+            <div class="profile-info-name align-center"> Address</div>
 
             <div class="profile-info-value">
                 <i class="icon-map-marker light-orange bigger-110"></i>
@@ -237,7 +262,7 @@ include_once(
 
 
         <div class="profile-info-row">
-            <div class="profile-info-name"> Last Online</div>
+            <div class="profile-info-name align-center"> Last Online</div>
 
             <div class="profile-info-value">
                 <span class=" editable-click" id="login"> <?php echo $user_data->last_login ?> </span>

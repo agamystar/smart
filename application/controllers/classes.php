@@ -10,10 +10,8 @@ class classes extends MY_Controller
 
         $this->load->library("excel");
         $this->load->model("mymodel_model");
-
     }
-
-
+        public function index(){}
     public function all_classes($x=''){
 
 
@@ -44,6 +42,7 @@ class classes extends MY_Controller
         if($action_post=="distribute_students"){
 
              $no="";
+            $message="";
             $big_st_ids=array();
             foreach($ajax_data->students_inclass as $st){
                 $big_st_ids[]=array("class_id"=>$ajax_data->class,"student_id"=>$st);
@@ -55,7 +54,7 @@ class classes extends MY_Controller
             $this->db->delete("class_students");
 
 
-
+        if(!empty($big_st_ids)){
             $this->db->insert_batch("class_students",$big_st_ids);
             if($this->db->affected_rows()>0){
               $no =$this->db->affected_rows();
@@ -63,6 +62,7 @@ class classes extends MY_Controller
                 }else{
                     $message="failed  ";
                 }
+        }
            // echo $this->db->last_query();
 
             echo  json_encode(array("message"=>$message,"no"=>$no));
@@ -72,6 +72,7 @@ class classes extends MY_Controller
 
         $data["js_vars"] = json_encode(array(
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1]. "/" . $this->uri->segments[2],
+            'controller_link' => SITE_LINK . "/" . $this->uri->segments[1],
             'details' => SITE_LINK . "/" . "student/" . "details/",
             'main_url' => SITE_LINK . "/" . "security/",
 
@@ -84,29 +85,18 @@ class classes extends MY_Controller
         $data['js'][] = "usage/class.js";
        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'class', $data);
     }
-
-
     public function export($x='') {
-        // Instantiate a new PHPExcel object
         $objPHPExcel = new PHPExcel();
-// Set the active Excel worksheet to sheet 0
         $objPHPExcel->setActiveSheetIndex(0);
-// Initialise the Excel row number
         $rowCount = 1;
         $query = "select student_name as 'Name' from v_class_students where class_id= $x ";
-// Execute the database query
         $result = mysql_query($query) or die(mysql_error());
-
-//start of printing column names as names of MySQL fields
         $column = 'A';
         for ($i =0; $i < mysql_num_fields($result); $i++)
         {
             $objPHPExcel->getActiveSheet()->setCellValue($column.$rowCount, mysql_field_name($result,$i));
             $column++;
         }
-//end of adding column names
-
-//start while loop to get data
         $rowCount = 2;
         while($row = mysql_fetch_row($result))
         {
@@ -126,17 +116,13 @@ class classes extends MY_Controller
             $rowCount++;
         }
 
-
-// Redirect output to a client’s web browser (Excel5)
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="simple.xls"');
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
-        // echo "thanks .. ";
     }
-
-    public  function import() {
+    public function import($x) {
 
         //$inputFileName = './assets/simple.xlsx';
         $inputFileName =$_FILES['file']['tmp_name'];
@@ -168,6 +154,7 @@ class classes extends MY_Controller
                     $cell = $worksheet->getCellByColumnAndRow($col, $row);
                     $val = $cell->getValue();
                     $one[$cols[$col]]=$val;
+                    $one['class_id']=$x;
                 }
                 $table[]=$one;
 
@@ -175,8 +162,9 @@ class classes extends MY_Controller
 
 
         }
-        // print_r($table);
-        $this->db->insert_batch("users",$table);
+        $this->db->insert_batch("class_students",$table);
+
+        echo $this->db->last_query();
         echo json_encode(array("rows"=>count($table)));
         exit;
     }

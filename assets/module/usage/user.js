@@ -81,8 +81,10 @@ function editrow(target) {
 }
 function _delete(index) {
     $('#datagrid').datagrid('selectRow', index);
+    bootbox.confirm('Are you sure you want to delete this Record ? ',function(yes){
+        if(yes){
     $.messager.confirm("delete", "Are you sure you want to delete this Record ? ", function (r) {
-        if (r) {
+
             var selection = $('#datagrid').datagrid('getSelected');
             $('#datagrid').datagrid('deleteRow', index);
 
@@ -103,10 +105,12 @@ function _delete(index) {
                     $('#datagrid').datagrid("reload");
                 }, 'json'
             );
-        }
-    });
+
 
     return false;
+})
+}}
+);
 }
 function edit_dialog(index) {
 $('#datagrid').datagrid('selectRow', index);
@@ -200,29 +204,23 @@ $(function () {
 
     $('#export').click(function(){
 
-        bootbox.confirm('Are You Sure you want to Export   '+'<b><span style="background-color: red ;color:#FFF; font-size: 16px " >'+$('#select_group').val()+"  ? </span></b>",function(yes){
 
-            if(yes){
               location.href=js_var_object.current_link+"/export/"+$('#select_group').val();
-            }
-        });
+
 
     });
 
     $('#import').click(function(){
-        bootbox.confirm('Are You Sure you want to Import    '+'<b><span style="background-color: red ;color:#FFF; font-size: 16px " >'+$('#select_group').val()+"  ? </span></b>",function(yes){
 
-            if(yes){
                 $("#import_dialog").dialog("open");
-            }
-        });
+
 
     });
 
 
     $( '#import_form' ).submit( function( e ) {
         $.ajax( {
-            url: js_var_object.current_link+"/import",
+            url: js_var_object.current_link+"/import/"+$('#select_group').val(),
             beforeSend : function() {
                 $('#import_form').addClass('active');
                 $('.loading-indicator').show();
@@ -416,6 +414,8 @@ $(function () {
             },
             onLoadSuccess:function (data) {
 
+                $('#import_text').text("Import  "+$('#select_group option:selected').text());
+                $('#export_text').text("Export  "+$('#select_group option:selected').text());
 
             }, onDblClickRow:function (rowIndex, rowData) {
 

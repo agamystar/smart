@@ -118,6 +118,7 @@
     <link href="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.min.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.css" rel="stylesheet" type="text/css" />
 
+
     <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/jquery-ui.js"></script>
 
@@ -141,6 +142,12 @@
     <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/multi_select_list/jquery.bootstrap-duallistbox.js"; ?>"></script>
 
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/module/multi_select_list/bootstrap-duallistbox.css"/>
+
+
+    <link href="<?php echo SITE_LINK . "/assets/css"; ?>/dropzone.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/js/dropzone.min.js"; ?>"></script>
+
 
     <style type="text/css">
 
@@ -196,6 +203,8 @@
             width: auto !important;
 
         }
+
+
     </style>
 
 

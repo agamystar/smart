@@ -51,106 +51,11 @@
 </li>
 
 <li>
-    <a href="" class="dropdown-toggle">
-        <i class="icon-briefcase "></i>
-        <span class="menu-text"> Students </span>
-
-        <b class="arrow icon-angle-down"></b>
-    </a>
-
-    <ul class="submenu">
-        <li>
-            <a href="<?php echo SITE_LINK."/"."student" ;?>">
-                <i class="icon-double-angle-right"></i>
-                All Students
-            </a>
-        </li>
-
-
-        <li>
-            <a href="jquery-ui.html">
-                <i class="icon-double-angle-right"></i>
-               Import
-            </a>
-        </li>
-
-        <li>
-            <a href="nestable-list.html">
-                <i class="icon-double-angle-right"></i>
-              Export
-            </a>
-        </li>
-
-    </ul>
-</li>
-<li>
-    <a href="" class="dropdown-toggle">
-        <i class="icon-book "></i>
-        <span class="menu-text"> Teachers </span>
-
-        <b class="arrow icon-angle-down"></b>
+    <a href="<?php echo SITE_LINK."/"."user/profile" ;?>">
+        <i class="icon-cog "></i>
+        <span class="menu-text"> Profile</span>
 
     </a>
-
-    <ul class="submenu">
-        <li>
-            <a href="<?php echo SITE_LINK."/"."teacher" ;?>">
-                <i class="icon-double-angle-right"></i>
-                All Teachers
-            </a>
-        </li>
-
-
-        <li>
-            <a href="jquery-ui.html">
-                <i class="icon-double-angle-right"></i>
-                Import
-            </a>
-        </li>
-
-        <li>
-            <a href="nestable-list.html">
-                <i class="icon-double-angle-right"></i>
-                Export
-            </a>
-        </li>
-
-    </ul>
-</li>
-
-<li>
-    <a href="" class="dropdown-toggle">
-        <i class="icon-book "></i>
-        <span class="menu-text"> Parents </span>
-
-        <b class="arrow icon-angle-down"></b>
-
-    </a>
-
-    <ul class="submenu">
-        <li>
-            <a href="<?php echo SITE_LINK."/"."parents" ;?>">
-                <i class="icon-double-angle-right"></i>
-                All Parents
-            </a>
-        </li>
-
-
-        <li>
-            <a href="jquery-ui.html">
-                <i class="icon-double-angle-right"></i>
-                Import
-            </a>
-        </li>
-
-        <li>
-            <a href="nestable-list.html">
-                <i class="icon-double-angle-right"></i>
-                Export
-            </a>
-        </li>
-
-    </ul>
 </li>
 
 <li>
@@ -163,7 +68,7 @@
 
     <ul class="submenu">
         <li>
-            <a href="<?php echo SITE_LINK."/"."user" ;?>">
+            <a href="<?php echo SITE_LINK."/"."security" ;?>">
                 <i class="icon-double-angle-right"></i>
                 All Users
             </a>
@@ -187,6 +92,33 @@
     </ul>
 </li>
 
+
+<li>
+    <a href="" class="dropdown-toggle">
+        <i class="icon-exchange "></i>
+        <span class="menu-text"> Class </span>
+
+        <b class="arrow icon-angle-down"></b>
+    </a>
+
+    <ul class="submenu">
+        <li>
+            <a href="<?php echo SITE_LINK."/"."classes/all_classes" ;?>">
+                <i class="icon-double-angle-right"></i>
+                All Classes
+            </a>
+        </li>
+
+
+        <li>
+            <a href="nestable-list.html">
+                <i class="icon-double-angle-right"></i>
+                Export
+            </a>
+        </li>
+
+    </ul>
+</li>
 
 <li>
     <a href="" class="dropdown-toggle">

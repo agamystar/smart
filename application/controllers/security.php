@@ -555,28 +555,18 @@ class Security extends MY_Controller
     }
 
     public function export($x='') {
-        // Instantiate a new PHPExcel object
         $objPHPExcel = new PHPExcel();
-// Set the active Excel worksheet to sheet 0
         $objPHPExcel->setActiveSheetIndex(0);
-// Initialise the Excel row number
         $rowCount = 1;
         $query = "select name ,email, national_id,phone,address from users where groups='".$x."' ";
 
-        echo $query;
-// Execute the database query
         $result = mysql_query($query) or die(mysql_error());
-
-//start of printing column names as names of MySQL fields
         $column = 'A';
         for ($i =0; $i < mysql_num_fields($result); $i++)
         {
             $objPHPExcel->getActiveSheet()->setCellValue($column.$rowCount, mysql_field_name($result,$i));
             $column++;
         }
-//end of adding column names
-
-//start while loop to get data
         $rowCount = 2;
         while($row = mysql_fetch_row($result))
         {
@@ -596,19 +586,15 @@ class Security extends MY_Controller
             $rowCount++;
         }
 
-
-// Redirect output to a client’s web browser (Excel5)
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="simple.xls"');
+        header('Content-Disposition: attachment;filename="file.xls"');
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
-        // echo "thanks .. ";
     }
 
-    public  function import() {
+    public  function import($group="") {
 
-        //$inputFileName = './assets/simple.xlsx';
         $inputFileName =$_FILES['file']['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 
@@ -638,6 +624,7 @@ class Security extends MY_Controller
                     $cell = $worksheet->getCellByColumnAndRow($col, $row);
                     $val = $cell->getValue();
                     $one[$cols[$col]]=$val;
+                    $one["groups"]=$group;
                 }
                 $table[]=$one;
 
@@ -645,7 +632,6 @@ class Security extends MY_Controller
 
 
         }
-        // print_r($table);
         $this->db->insert_batch("users",$table);
         echo json_encode(array("rows"=>count($table)));
         exit;
