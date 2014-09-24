@@ -69,6 +69,24 @@ class Bus extends MY_Controller
         }
 
 
+        $info=array(
+        "bus_no"=>$this->input->post("bus_no"),
+        "student_id"=>$this->input->post("student_id")
+            );
+
+        if($action_post=="register"){
+
+            $this->db->insert("bus_students",$info);
+
+            if($this->db->affected_rows()>0){
+                $message="success";
+            }else{
+                $message="faileed";
+            }
+
+            echo json_encode(array("message"=>$message));
+            exit;
+        }
         $data["js_vars"] = json_encode(array(
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1]. "/" . $this->uri->segments[2],
             'controller_link' => SITE_LINK . "/" . $this->uri->segments[1],

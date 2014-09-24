@@ -144,6 +144,13 @@
             </a>
         </li>
 
+        <li>
+            <a href="<?php echo SITE_LINK."/"."bus"."/bus_absence" ;?>">
+                <i class="icon-double-angle-right"></i>
+                Bus Registration
+            </a>
+        </li>
+
     </ul>
 </li>
 <li>
@@ -177,6 +184,122 @@
 
     </ul>
 </li>
+
+
+<li>
+    <a href="<?php echo SITE_LINK."/"."exams" ;?>" class="dropdown-toggle">
+        <i class="icon-credit-card "></i>
+        <span class="menu-text"> Finical   </span>
+
+        <b class="arrow icon-angle-down"></b>
+
+    </a>
+
+    <ul class="submenu">
+        <li>
+            <a href="#">
+                <i class="icon-double-angle-right"></i>
+                School Expenses
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="icon-double-angle-right"></i>
+                Clothes Expenses
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="icon-double-angle-right"></i>
+             Book Expenses
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="icon-double-angle-right"></i>
+                Bus Expenses
+            </a>
+        </li>
+
+    </ul>
+</li>
+
+
+<li>
+    <a href="#" class="dropdown-toggle">
+        <i class="icon-edit "></i>
+        <span class="menu-text"> Time Line  </span>
+
+        <b class="arrow icon-angle-down"></b>
+    </a>
+
+    <ul class="submenu">
+
+
+
+        <li>
+            <a href="#">
+                <i class="icon-double-angle-right"></i>
+                Time Table
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="icon-double-angle-right"></i>
+                Exams Table
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <i class="icon-double-angle-right"></i>
+                Events
+            </a>
+        </li>
+
+
+    </ul>
+</li>
+
+
+<li>
+    <a href="<?php echo SITE_LINK."/"."exams" ;?>" class="dropdown-toggle">
+        <i class="icon-credit-card "></i>
+        <span class="menu-text"> Exams </span>
+
+        <b class="arrow icon-angle-down"></b>
+
+    </a>
+
+    <ul class="submenu">
+        <li>
+            <a href="elements.html">
+                <i class="icon-double-angle-right"></i>
+                Online Exam
+            </a>
+        </li>
+        <li>
+            <a href="elements.html">
+                <i class="icon-double-angle-right"></i>
+                Home Work
+            </a>
+        </li>
+        <li>
+            <a href="elements.html">
+                <i class="icon-double-angle-right"></i>
+                Exams Result
+            </a>
+        </li>
+        <li>
+            <a href="elements.html">
+                <i class="icon-double-angle-right"></i>
+                 Numbers
+            </a>
+        </li>
+    </ul>
+</li>
 <li>
     <a href="<?php echo SITE_LINK."/"."sms" ;?>" class="dropdown-toggle">
         <i class="icon-envelope "></i>
@@ -197,13 +320,13 @@
 
     <ul class="submenu">
         <li>
-            <a href="<?php echo SITE_LINK."/"."setup"."/"."class" ;?>">
+            <a href="<?php echo SITE_LINK."/"."setup"."/"."classes" ;?>">
                 <i class="icon-double-angle-right"></i>
-              Classes
+                Classes
             </a>
         </li>
         <li>
-            <a href="<?php echo SITE_LINK."/"."setup"."/"."class" ;?>">
+            <a href="<?php echo SITE_LINK."/"."setup"."/"."buses" ;?>">
                 <i class="icon-double-angle-right"></i>
                 Buses
             </a>
@@ -219,7 +342,7 @@
         <li>
             <a href="<?php echo SITE_LINK."/"."setup"."/"."book" ;?>">
                 <i class="icon-double-angle-right"></i>
-             Books
+                Books
             </a>
         </li>
 
@@ -227,54 +350,6 @@
 
     </ul>
 </li>
-
-<li>
-    <a href="<?php echo SITE_LINK."/"."exams" ;?>" class="dropdown-toggle">
-        <i class="icon-credit-card "></i>
-        <span class="menu-text"> Finical   </span>
-
-        <b class="arrow icon-angle-down"></b>
-
-    </a>
-
-    <ul class="submenu">
-        <li>
-            <a href="elements.html">
-                <i class="icon-double-angle-right"></i>
-                Expenses of Student
-            </a>
-        </li>
-
-        <li>
-            <a href="elements.html">
-                <i class="icon-double-angle-right"></i>
-              Paid/Up paid of Student
-            </a>
-        </li>
-    </ul>
-</li>
-
-<li>
-    <a href="<?php echo SITE_LINK."/"."exams" ;?>" class="dropdown-toggle">
-        <i class="icon-credit-card "></i>
-        <span class="menu-text"> Exams </span>
-
-        <b class="arrow icon-angle-down"></b>
-
-    </a>
-
-    <ul class="submenu">
-        <li>
-            <a href="elements.html">
-                <i class="icon-double-angle-right"></i>
-                ........
-            </a>
-        </li>
-
-
-    </ul>
-</li>
-
 <li>
     <a href=" " class="dropdown-toggle">
         <i class="icon-globe"></i>
