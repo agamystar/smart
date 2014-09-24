@@ -130,7 +130,7 @@
 
     <ul class="submenu">
         <li>
-            <a href="<?php echo SITE_LINK."/"."bus" ;?>">
+            <a href="<?php echo SITE_LINK."/"."bus"."/all_buses" ;?>">
                 <i class="icon-double-angle-right"></i>
                 All Buses
             </a>
@@ -149,31 +149,26 @@
 <li>
     <a href="#" class="dropdown-toggle">
         <i class="icon-edit "></i>
-        <span class="menu-text"> Attendance </span>
+        <span class="menu-text"> Absence  </span>
 
         <b class="arrow icon-angle-down"></b>
     </a>
 
     <ul class="submenu">
-        <li>
-            <a href="elements.html">
-                <i class="icon-double-angle-right"></i>
-                All Attendance
-            </a>
-        </li>
+
 
 
         <li>
-            <a href="nestable-list.html">
+            <a href="<?php echo SITE_LINK."/"."user"."/absence/student" ;?>">
                 <i class="icon-double-angle-right"></i>
-                Export
+                Student
             </a>
         </li>
 
         <li>
-            <a href="nestable-list.html">
+            <a href="<?php echo SITE_LINK."/"."user"."/absence/staff" ;?>">
                 <i class="icon-double-angle-right"></i>
-                import
+                Staff
             </a>
         </li>
 
@@ -202,6 +197,12 @@
             <a href="<?php echo SITE_LINK."/"."setup"."/"."class" ;?>">
                 <i class="icon-double-angle-right"></i>
               Classes
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo SITE_LINK."/"."setup"."/"."class" ;?>">
+                <i class="icon-double-angle-right"></i>
+                Buses
             </a>
         </li>
         <li>
