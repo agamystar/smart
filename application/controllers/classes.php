@@ -9,7 +9,7 @@ class classes extends MY_Controller
         parent::__construct();
 
         $this->load->library("excel");
-        $this->load->model("mymodel_model");
+
     }
         public function index(){}
     public function all_classes($x=''){

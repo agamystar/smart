@@ -9,9 +9,9 @@ class Bus extends MY_Controller
         parent::__construct();
 
         $this->load->library("excel");
-        $this->load->model("mymodel_model");
+
     }
-        public function index(){}
+    public function index(){}
     public function all_buses($x=''){
 
 
@@ -166,5 +166,77 @@ class Bus extends MY_Controller
         echo json_encode(array("rows"=>count($table)));
         exit;
     }
+    public function bus_absence($x=''){
+
+
+        $action_get = $this->input->get("action");
+        $action_post = $this->input->post("action");
+        $ajax_data = json_decode($this->input->post("data"));
+
+
+        $data = array();
+
+        if(empty($x)){
+            $this->db->select("*");
+            $this->db->from("bus");
+            $this->db->limit(1);
+            $rr= $this->db->get();
+            $r_bus= $rr->row();
+            $bus=$r_bus->no;
+        }else{
+
+            $bus=$x;
+        }
+        $today=date('Y/m/d');
+
+        $buses=$this->mymodel_model->select("bus","1=1");
+        $students=$this->mymodel_model->select("v_bus_absence","bus_no='$bus' and  day='$today'");// right - selected
+        $bus_students=$this->mymodel_model->select("v_bus_students","bus_no='$bus' and student_id not in (select  student_id from v_bus_absence where  day='$today' ) ");//left
+       //print_r($students);
+       // print_r($bus_students);
+        if($action_post=="distribute"){
+            $no="";
+            $message="";
+            $big_st_ids=array();
+            foreach($ajax_data->students_inbus as $st){
+                $big_st_ids[]=array("day"=>$today,"student_id"=>$st);
+
+            }
+
+
+            $this->db->where("day",$today);
+            $this->db->delete("bus_absence");
+
+
+            if(!empty($big_st_ids)){
+                $this->db->insert_batch("bus_absence",$big_st_ids);
+                if($this->db->affected_rows()>0){
+                    $no =$this->db->affected_rows();
+                    $message="success";
+                }else{
+                    $message="failed  ";
+                }
+            }
+            // echo $this->db->last_query();
+            echo  json_encode(array("message"=>$message,"no"=>$no));
+            exit;
+        }
+
+
+        $data["js_vars"] = json_encode(array(
+            'current_link' => SITE_LINK . "/" . $this->uri->segments[1]. "/" . $this->uri->segments[2],
+            'controller_link' => SITE_LINK . "/" . $this->uri->segments[1],
+            'main_url' => SITE_LINK . "/" . "security/",
+
+        ));
+        $data['base_url'][] = SITE_LINK;
+        $data['buses'][] = $buses;
+        $data['students'][] = $students;
+        $data['p_bus'][] = $bus;
+        $data['bus_students'][] = $bus_students;
+        $data['js'][] = "usage/bus_absence.js";
+        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'bus_absence', $data);
+    }
+
 
 }

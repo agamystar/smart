@@ -138,9 +138,9 @@
 
 
         <li>
-            <a href="nestable-list.html">
+            <a href="<?php echo SITE_LINK."/"."bus"."/bus_absence" ;?>">
                 <i class="icon-double-angle-right"></i>
-                Export
+                Bus Absence
             </a>
         </li>
 
@@ -159,18 +159,21 @@
 
 
         <li>
-            <a href="<?php echo SITE_LINK."/"."user"."/absence/student" ;?>">
+            <a href="<?php echo SITE_LINK."/"."user"."/student_absence" ;?>">
                 <i class="icon-double-angle-right"></i>
                 Student
             </a>
         </li>
 
         <li>
-            <a href="<?php echo SITE_LINK."/"."user"."/absence/staff" ;?>">
+            <a href="<?php echo SITE_LINK."/"."user"."/staff_absence" ;?>">
                 <i class="icon-double-angle-right"></i>
                 Staff
             </a>
         </li>
+
+
+
 
     </ul>
 </li>
