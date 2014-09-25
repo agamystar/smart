@@ -1,20 +1,20 @@
 $(function () {
 
-  //  alert(js_var_object.current_link+"?action=load_classes");
-    var loading=false;
+var loading=false;
     $('#select_class').combotree({
         url: js_var_object.current_link+"?action=load_classes",
         editable:false,
         onSelect: function(node){
             if(node.id>0 && loading==true){
-                window.location = js_var_object.current_link + "/" +node.id;
-                // alert("select");
+               window.location = js_var_object.current_link + "/" +node.id;
+               // alert("select");
             }
         },
         onLoadSuccess:function(node){
             loading=true;
         }
     }).combotree("setValue",js_var_object.p_class);
+
 
     $('.class_students').bootstrapDualListbox({
         nonSelectedListLabel:'<span class="label label-success arrowed-in arrowed-in-right">All Students That not have classes </span>',
@@ -37,8 +37,6 @@ $(function () {
 
 
     $('#import_form').attr("action",js_var_object.controller_link+"/import/"+ $('#select_class').combotree("getValue"));
-
-
 
 
     $('a#export_class').click(function(){
@@ -90,7 +88,7 @@ $(function () {
             students_inclass.push($(this).val());
         });
 
-        var data = {class:$('#select_class').combotree("getValue"), students_inclass:students_inclass};
+        var data = {class: $('#select_class').combotree("getValue"), students_inclass:students_inclass};
         $.post(js_var_object.current_link, {
             action:'distribute_students',
             data:JSON.stringify(data)

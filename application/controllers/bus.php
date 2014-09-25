@@ -37,8 +37,10 @@ class Bus extends MY_Controller
          $buses=$this->mymodel_model->select("bus","1=1");
         $students=$this->mymodel_model->select("users",'groups="student" and id not in (select student_id from bus_students) ');
        $bus_students=$this->mymodel_model->select("v_bus_students","bus_no='$bus' ");
-      //  print_r($students);
-     // print_r($bus_students);
+        $info=array(
+            "bus_no"=>$this->input->post("bus_no"),
+            "student_id"=>$this->input->post("student_id")
+        );
         if($action_post=="distribute_students"){
 
              $no="";
@@ -69,12 +71,7 @@ class Bus extends MY_Controller
         }
 
 
-        $info=array(
-        "bus_no"=>$this->input->post("bus_no"),
-        "student_id"=>$this->input->post("student_id")
-            );
-
-        if($action_post=="register"){
+        elseif($action_post=="register"){
 
             $this->db->insert("bus_students",$info);
 

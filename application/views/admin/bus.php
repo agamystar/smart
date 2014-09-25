@@ -26,24 +26,10 @@ $selected_bus=$p_bus[0] ;?>
     <form class="form-horizontal" id="sample-form">
     <div class="form-group">
         <div class="col-sm-6">
-            <div class="col-sm-6">
-                <span class="label label-info arrowed-right arrowed-in"> Select  Bus </span>
-                <select id="select_bus" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
-                    <?php
-                    if(isset($buses[0])){
-                        foreach($buses[0] as $bus){
-                            if($selected_bus==$bus->no){
-                                echo "<option    value=\"$bus->no\" selected> " .$bus->no."</option>";
-                            }else{
-                                echo "<option   value=\"$bus->no\"> ".$bus->no."</option>";
-                            }
-                        }
-                    } ?>
-                </select>
+            <div class="col-sm-12">
+                <span class="label label-info arrowed-right arrowed-in"> Select  Bus </span>    <input id="select_class"  required="true"  value="<?php // echo $selected_class?>" style="width:250px">
             </div>
-            <div class="col-sm-6">
 
-            </div>
 
 
 

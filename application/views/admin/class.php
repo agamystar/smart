@@ -26,28 +26,15 @@ $selected_class=$p_class[0] ;?>
     <form class="form-horizontal" id="sample-form">
     <div class="form-group">
         <div class="col-sm-6">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <span class="label label-info arrowed-right arrowed-in"> Select  Class </span>
-                <select id="select_class" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
-                    <?php
-                    if(isset($classes[0])){
-                        foreach($classes[0] as $class){
-                            if($selected_class==$class->class_id){
-                                echo "<option    value=\"$class->class_id\" selected> " .$class->name."</option>";
-                            }else{
-                                echo "<option   value=\"$class->class_id\"> ".$class->name."</option>";
-                            }
-                        }
-                    } ?>
-                </select>
-            </div>
-            <div class="col-sm-6">
-                <label> Use Filter :
-                    <input id="id-pills-stacked" name="switch-field-1" class="ace ace-switch ace-switch-6" type="checkbox">
-                    <span class="lbl"></span>
-                </label>
+                <input id="select_class"  required="true"  value="<?php // echo $selected_class?>" style="width:250px">
             </div>
 
+        <!--  <label> Use Filter :
+                    <input id="id-pills-stacked" name="switch-field-1" class="ace ace-switch ace-switch-6" type="checkbox">
+                    <span class="lbl"></span>
+                </label>-->
 
             <div class="nav-pills col-sm-12" style="display: none;">
                 <span class="label label-info arrowed-right arrowed-in"> No.Students in this(Class) </span>

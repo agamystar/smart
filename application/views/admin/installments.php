@@ -17,39 +17,24 @@ include_once(
 <br/>
 
 <?php
-
-//print_r($absence);
-
 $selected_class=$p_class[0] ;?>
 
 
 
 <div class="row">
 
-    <div class="col-xs-12">
-        <div class="col-xs-2"></div>
-        <div class="col-xs-4"><img src="<?php echo SITE_LINK."/assets/img/arrows.png"?>" style=" height: 80px"/></div>
-        <div class="col-xs-4"></div>
-    </div>
-    <div class="col-xs-12">
 
+
+
+
+
+    <div class="col-xs-12">
     <form class="form-horizontal" id="sample-form">
     <div class="form-group">
         <div class="col-sm-6">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <span class="label label-info arrowed-right arrowed-in"> Select  Class </span>
-                <select id="select_class" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
-                    <?php
-                    if(isset($classes[0])){
-                        foreach($classes[0] as $class){
-                            if($selected_class==$class->class_id){
-                                echo "<option    value=\"$class->class_id\" selected> " .$class->name."</option>";
-                            }else{
-                                echo "<option   value=\"$class->class_id\"> ".$class->name."</option>";
-                            }
-                        }
-                    } ?>
-                </select>
+                <input id="select_class"    value="<?php // echo $selected_class?>" style="width:200px">
             </div>
 
 
@@ -58,11 +43,9 @@ $selected_class=$p_class[0] ;?>
 
         <div class="col-sm-6">
 
-
-
             <div class="col-sm-12">
-                <a  href="#" id="export_class"  class=" label label-warning arrowed-right ">Export Absence Sheet </a>
-                <a  href="#" id="import_class"  class=" label label-primary arrowed-left arrowed-in ">Import Absence Sheet </a>
+                <a  href="#" id="export_class"  class=" label label-warning arrowed-right ">Export This Class </a>
+                <a  href="#" id="import_class"  class=" label label-primary arrowed-left arrowed-in ">Import Students to This Class </a>
             </div>
         </div>
 
@@ -70,21 +53,20 @@ $selected_class=$p_class[0] ;?>
     <div class="col-md-12">
 
         <select style="display: none;" multiple="multiple" size="10" name="class_students" class="class_students">
-
+            <?php
+            if(isset($students[0])){
+                foreach($students[0] as $students){
+                    echo "<option value=\"$students->id\">".$students->name."</option>";
+                }
+            } ?>
 
             <?php
             if(isset($class_students[0])){
                 foreach($class_students[0] as $c_students){
-                    echo "<option value=\"$c_students->student_id\" >".$c_students->student_name."</option>";
+                    echo "<option value=\"$c_students->student_id\"  selected=\"selected\">".$c_students->student_name."</option>";
                 }
             } ?>
 
-            <?php
-            if(isset($absence[0])){
-                foreach($absence[0] as $absence){
-                    echo "<option value=\"$absence->user_id\"  selected=\"selected\">".$absence->name."</option>";
-                }
-            } ?>
         </select>
     </div>
 
