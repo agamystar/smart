@@ -20,112 +20,105 @@ include_once(
 
 //print_r($absence);
 
-$selected_class=$p_class[0] ;?>
+$selected_class = $p_class[0];?>
 
 
 
 <div class="row">
 
-    <div class="col-xs-12">
-        <div class="col-xs-2"></div>
-        <div class="col-xs-4"><img src="<?php echo SITE_LINK."/assets/img/arrows.png"?>" style=" height: 80px"/></div>
-        <div class="col-xs-4"></div>
-    </div>
+
     <div class="col-xs-12">
 
-    <form class="form-horizontal" id="sample-form">
-    <div class="form-group">
-        <div class="col-sm-6">
-            <div class="col-sm-6">
-                <span class="label label-info arrowed-right arrowed-in"> Select  Class </span>
-                <select id="select_class" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
-                    <?php
-                    if(isset($classes[0])){
-                        foreach($classes[0] as $class){
-                            if($selected_class==$class->class_id){
-                                echo "<option    value=\"$class->class_id\" selected> " .$class->name."</option>";
-                            }else{
-                                echo "<option   value=\"$class->class_id\"> ".$class->name."</option>";
+        <form class="form-horizontal" id="sample-form">
+            <div class="form-group" >
+                <div class="col-sm-4">
+                    <div class="col-sm-12">
+                        <span class="label label-info arrowed-right arrowed-in"> Select  Class </span>
+                        <input id="select_class" required="true" value="<?php // echo $selected_class?>"
+                               style="width:250px">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="col-sm-12">
+                        <a href="#" id="export_class" class=" label label-warning arrowed-right ">Export Absence
+                            Sheet </a>
+                        <a href="#" id="import_class" class=" label label-primary arrowed-left arrowed-in ">Import
+                            Absence Sheet </a>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="input-group">
+                        <input class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="dd-mm-yyyy">
+																	<span class="input-group-addon">
+																		<i class="icon-calendar bigger-110"></i>
+																	</span>
+                    </div>
+                </div>
+                </div>
+                <hr/>
+                <br/>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <ul>
+                        <?php
+
+                        if(isset($class_students[0])){
+                            foreach($class_students[0] as $c_students){
+                                $img_link="";
+                                if($c_students->sex=="male"){
+                                  $img_link= SITE_LINK . '/assets/avatars/avatar.png';
                             }
-                        }
-                    } ?>
-                </select>
-            </div>
+                                elseif($c_students->sex=="female"){
+                                    $img_link= SITE_LINK . '/assets/avatars/avatar1.png';
+                                }else{
+                                    $img_link= SITE_LINK . '/assets/avatars/avatar2.png';
+                                }
+                                // echo "<option value=\"$absence->user_id\"  selected=\"selected\">".$absence->name."</option>";
+                                echo ' <li style="height:60px;width:270px;display:inline-block;" class="itemdiv dialogdiv">
+                                <div class="user" style="width:100% !important; cursor:pointer">
+         <img alt="'.$c_students->student_name.'"  id="'.$c_students->student_id.'" src="'.$img_link.'" ><span style="margin-left:10px">'.$c_students->student_name.'</span></div></li>';
 
-
-        </div>
-
-
-        <div class="col-sm-6">
-
-
-
-            <div class="col-sm-12">
-                <a  href="#" id="export_class"  class=" label label-warning arrowed-right ">Export Absence Sheet </a>
-                <a  href="#" id="import_class"  class=" label label-primary arrowed-left arrowed-in ">Import Absence Sheet </a>
-            </div>
-        </div>
-
-
-    <div class="col-md-12">
-
-        <select style="display: none;" multiple="multiple" size="10" name="class_students" class="class_students">
-
-
-            <?php
-            if(isset($class_students[0])){
-                foreach($class_students[0] as $c_students){
-                    echo "<option value=\"$c_students->student_id\" >".$c_students->student_name."</option>";
-                }
-            } ?>
-
-            <?php
-            if(isset($absence[0])){
-                foreach($absence[0] as $absence){
-                    echo "<option value=\"$absence->user_id\"  selected=\"selected\">".$absence->name."</option>";
-                }
-            } ?>
-        </select>
-    </div>
-
-
-    </div>
-
-    <div class="form-group">
-
-        <div class="col-sm-3"> <button type="button" id="add_to_class" class="btn btn-primary"> Submit </button></div>
-
-
-
-    </div>
-   </form>
-        </div>
-</div>
-
-
-</div>
-<div id="import_dialog" class=" ">
-
-    <div class="modal-content" id="dialog_content">
-        <!-- dialog body -->
-        <div id="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
-        <div class="modal-body">
-
-            <div class="row">
-                <form class="form-horizontal" id="import_form" role="form" enctype="multipart/form-data" method="post" action="">
-
-                    <div class="col-sm-9">
-                        <input class="form-control" name="file" id="file" type="file">
+                            }
+                        } ?>
+                    </ul>
                     </div>
-                    <div class="col-sm-3">
-                        <button type="submit" id="submit_import" class="btn btn-primary"> Import</button>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6 align-right">
+                        <button type="button" id="add_to_class" class="btn btn-primary"> Submit</button>
                     </div>
 
-                </form>
+
+                </div>
+
+
             </div>
-        </div>
-    </div>
-</div>
+
+            <div id="import_dialog" class=" ">
+
+                <div class="modal-content" id="dialog_content">
+                    <!-- dialog body -->
+                    <div id="loading-indicator" style="display:none;"><img
+                        src="<?php echo SITE_LINK . "/assets" ?>/img/page-loader.gif"
+                        style="width:100px;height:50px;margin: 0px 30%; "/></div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <form class="form-horizontal" id="import_form" role="form" enctype="multipart/form-data"
+                                  method="post" action="">
+
+                                <div class="col-sm-9">
+                                    <input class="form-control" name="file" id="file" type="file">
+                                </div>
+                                <div class="col-sm-3">
+                                    <button type="submit" id="submit_import" class="btn btn-primary"> Import</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 <?php
 include_once(
     APPPATH . DIRECTORY_SEPARATOR .

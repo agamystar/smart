@@ -66,11 +66,16 @@ class classes extends MY_Controller
             $class=$x;
         }
 
-         $classes=$this->mymodel_model->select("class","1=1");
-        $students=$this->mymodel_model->select("users",'groups="student" and id not in (select student_id from class_students) ');
-        $class_students=$this->mymodel_model->select("v_class_students","class_id=$class");
-      //  print_r($students);
-     // print_r($class_students);
+
+       $q_stage=$this->db->query('select stage  from v_stage_level_class where class_id="'.$class.'" ');
+        $res_stage=$q_stage->row();
+
+        $q_level=$this->db->query('select level  from v_stage_level_class where class_id="'.$class.'" ');
+        $res=$q_level->row();
+
+        $students=$this->mymodel_model->select("users",'groups="student" and id not in (select student_id from class_students) and stage  in("'.$res_stage->stage.'") and level  in ("'.$res->level.'")  ');
+       $class_students=$this->mymodel_model->select("v_class_students","class_id=$class");
+
         if ($action_get == "load_classes") {
 
             $arr = array();
@@ -130,10 +135,10 @@ class classes extends MY_Controller
 
         ));
         $data['base_url'][] = SITE_LINK;
-        $data['classes'][] = $classes;
-        $data['students'][] = $students;
+      // $data['classes'][] = $classes;
+       $data['students'][] = $students;
         $data['p_class'][] = $class;
-        $data['class_students'][] = $class_students;
+       $data['class_students'][] = $class_students;
         $data['js'][] = "usage/class.js";
        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'class', $data);
     }

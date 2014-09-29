@@ -6,15 +6,11 @@ include_once(
         'common' . DIRECTORY_SEPARATOR .
         'header.php');
 ?>
-
-
-
 <br/>
 
-
-    <div id="tb">
-
-        <a href="#" id="open_new_dialog" class="easyui-linkbutton" plain="true"><img src="<?php echo SITE_LINK."/assets" ?>/img/add-icon.png" alt=""/> Add </a>
+  <div id="tb">
+        <a href="#" id="open_new_dialog" class="easyui-linkbutton" plain="true">
+            <img src="<?php echo SITE_LINK."/assets" ?>/img/add-icon.png" alt=""/>  <span id="add_text"></span> </a>
         <a href="#" id="reset_password" class="easyui-linkbutton" plain="true">
         <img src="<?php echo SITE_LINK."/assets" ?>/img/reset-icon.png" alt=""/>  Reset  password</a>
         <a href="#" id="import" name="imports" class="easyui-linkbutton" plain="true">
@@ -28,7 +24,7 @@ include_once(
   <span class="label label-danger  arrowed-right arrowed-in"> Select  User Group </span>
         <select id="select_group">
          <!--  <option value="0">All Users</option>-->
-            <option value="student">Student</option>
+            <option value="student" selected>Student</option>
             <option value="teacher">Teacher</option>
             <option value="parent">Parent</option>
             <option value="admin">Admin</option>
@@ -50,18 +46,7 @@ include_once(
             <form class="form-horizontal" role="form">
                 <div class="row">
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="email" class="align-left col-sm-4 control-label">Group</label>
 
-                            <div class="col-sm-8">
-                                <select class="align-left col-sm-12" id="group">
-                                    <option value="admin">Admin</option>
-                                    <option value="student">Student</option>
-                                    <option value="teacher">Teacher</option>
-                                    <option value="parent">Parent</option>
-                                </select>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label for="name" class="align-left col-sm-4 control-label">Name</label>
 
@@ -120,63 +105,82 @@ include_once(
                             </div>
                         </div>
 
+                    <div class="form-group" id="div_bus_fees">
+                        <label for="email" class="align-left col-sm-4 control-label">Bus fees </label>
 
-
-
-
-
+                        <div class="col-sm-8">
+                            <input class="form-control" id="bus_fees" type="text">
+                        </div>
                     </div>
-                    <div class="col-sm-6">
+                </div>
+
+
+                <div class="col-sm-6">
 
                         <div class="form-group align-right">
                             <label for="email" class="align-left col-sm-2 control-label"> &nbsp;</label>
 
                             <div class="col-sm-10">
-                               <img src="<?php echo SITE_LINK."/assets" ?>/avatars/avatar4.png" width="150" height="180" alt="user_img">
+                               <img src="<?php echo SITE_LINK."/assets" ?>/avatars/avatar4.png" width="100" height="130" alt="user_img">
                                 <input type="hidden" name="photo" id="photo" value="static">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="email" class="align-left col-sm-4 control-label">Username</label>
+                            <label for="email" class="align-left col-sm-3 control-label">Username</label>
 
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <input class="form-control"  id="username" type="text">
                             </div>
                         </div>
 
                         <div class="form-group" id="password_section">
-                            <label for="email" class="align-left col-sm-4 control-label">Password</label>
+                            <label for="email" class="align-left col-sm-3 control-label">Password</label>
 
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <input class="form-control" id="password" type="text">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="email" class="align-left col-sm-4 control-label">Blood Group</label>
+                            <label for="email" class="align-left col-sm-3 control-label">Blood Group</label>
 
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <input class="form-control" id="blood_group" type="text">
                             </div>
                         </div>
-
-
-
-
                         <div class="form-group">
-                            <label for="email" class="align-left col-sm-4 control-label">Sex</label>
+                            <label for="email" class="align-left col-sm-3 control-label">Sex</label>
 
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <select class="align-left col-sm-12" id="sex">
-                                    <option id="male">Male</option>
-                                    <option id="female">Female</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
                                 </select>
                             </div>
                         </div>
 
+                    <div class="form-group" id="div_for_student">
+                        <label class="align-left col-sm-3 control-label">Stage/Level</label>
 
+                        <div class="col-sm-9" >
+                            <select id="stage" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
+                                <?php
+                                if(isset($stages)){
+                                    foreach($stages as $one){
 
+                                        echo "<option    value=\"$one->stage_id\" > " .$one->stage_name."</option>";
+
+                                    }
+                                } ?>
+                            </select>
+                            &nbsp;
+                            /
+                              &nbsp; <select id="level" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
+
+                        </select>
+                        </div>
+                    </div>
 
                         <input type="hidden" id="kid">
                     </div>
@@ -224,7 +228,8 @@ include_once(
 
     <div class="modal-content" >
         <!-- dialog body -->
-        <div id="" class="loading-indicator" style="display:none;"  > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
+        <div id="" class="loading-indicator" style="display:none;"  >
+            <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
         <div class="modal-body">
 
 

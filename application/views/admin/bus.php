@@ -22,12 +22,26 @@ $selected_bus=$p_bus[0] ;?>
 
 
 <div class="row">
+    <div><marquee scrollamount="20"  direction="right"><img src="<?php echo SITE_LINK?>/assets/img/bus.gif" width="250" height="100" > </marquee> </div>
     <div class="col-xs-12">
     <form class="form-horizontal" id="sample-form">
     <div class="form-group">
         <div class="col-sm-6">
             <div class="col-sm-12">
-                <span class="label label-info arrowed-right arrowed-in"> Select  Bus </span>    <input id="select_class"  required="true"  value="<?php // echo $selected_class?>" style="width:250px">
+                <span class="label label-info arrowed-right arrowed-in"> Select  Bus </span>
+
+                <select id="select_bus" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
+                    <?php
+                    if(isset($buses[0])){
+                        foreach($buses[0] as $bus){
+                            if($selected_bus==$bus->no){
+                                echo "<option    value=\"$bus->no\" selected> " .$bus->no."</option>";
+                            }else{
+                                echo "<option   value=\"$bus->no\"> ".$bus->no."</option>";
+                            }
+                        }
+                    } ?>
+                </select>
             </div>
 
 
@@ -75,9 +89,10 @@ $selected_bus=$p_bus[0] ;?>
 
         <div class="col-sm-3"> <button type="button" id="add_to_bus" class="btn btn-primary"> Submit </button></div>
 
-
-
     </div>
+
+
+
    </form>
         </div>
 </div>

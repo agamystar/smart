@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/font-awesome.min.css"/>
 
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/font-awesome-ie7.min.css"/>
-
+    <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/fullcalendar.css" />
 
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/jquery-ui-1.10.3.full.min.css"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/datepicker.css"/>
@@ -21,6 +21,11 @@
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-rtl.min.css"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-skins.min.css"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-ie.min.css"/>
+
+
+
+
+
     <?php
     if (isset($css)) {
         foreach ($css as $css_file) {
@@ -57,32 +62,24 @@
 
 
     <script  type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/js/bootstrap.min.js"></script>
+
     <script  type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/js/bootbox.min.js"></script>
+
     <script  type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/model/assets/prettify/run_prettify.js"></script>
 
-    <!-- page specific plugin scripts -->
-
-    <script src="<?php echo SITE_LINK."/assets" ?>/js/date-time/bootstrap-datepicker.min.js"></script>
-    <script src="<?php echo SITE_LINK."/assets" ?>/js/jqGrid/jquery.jqGrid.min.js"></script>
-    <script src="<?php echo SITE_LINK."/assets" ?>/js/jqGrid/i18n/grid.locale-en.js"></script>
-
-
     <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/jquery-1.10.2.min.js"></script>
-    <script src="<?php echo SITE_LINK."/assets" ?>/js/ace-elements.min.js"></script>
-    <script src="<?php echo SITE_LINK."/assets" ?>/js/ace.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="<?php echo SITE_LINK . "/assets/module/css"; ?>/easyui.css">
-
-
-
-    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/jquery-1.10.2.min.js"></script>
-
+    <script src="<?php echo SITE_LINK ?>/assets/js/chosen.jquery.min.js"></script>
+    <script src="<?php echo SITE_LINK ?>/assets/js/jquery.autosize.min.js"></script>
+    <script src="<?php echo SITE_LINK ?>/assets/js/ace-elements.min.js"></script>
+    <script src="<?php echo SITE_LINK ?>/assets/js/ace.min.js"></script>
+    <script src="<?php echo SITE_LINK ?>/assets/js/excanvas.min.js"></script>
     <script type="text/javascript">
         try {
             ace.settings.check('navbar', 'fixed')
         } catch (e) {
         }
     </script>
+
 
     <?php
 
@@ -117,10 +114,9 @@
     <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.min.js"></script>
     <link href="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.min.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.css" rel="stylesheet" type="text/css" />
-
-
+    <link rel="stylesheet" type="text/css" href="<?php echo SITE_LINK . "/assets/module/css"; ?>/easyui.css">
     <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/jquery-ui.js"></script>
+
 
 
     <?php
@@ -146,7 +142,9 @@
 
     <link href="<?php echo SITE_LINK . "/assets/css"; ?>/dropzone.css" rel="stylesheet" type="text/css" />
 
-    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/js/dropzone.min.js"; ?>"></script>
+
+
+
 
 
     <style type="text/css">
@@ -204,7 +202,9 @@
 
         }
 
-
+       .check_person{
+           border:5px solid red !important;
+       }
 
 
     </style>

@@ -1,4 +1,9 @@
+
+
+
+
 $(function () {
+
 
   //  alert(js_var_object.current_link+"?action=load_classes");
     var loading=false;
@@ -6,10 +11,16 @@ $(function () {
         url: js_var_object.current_link+"?action=load_classes",
         editable:false,
         onSelect: function(node){
-            if(node.id>0 && loading==true){
-                window.location = js_var_object.current_link + "/" +node.id;
-                // alert("select");
+            if(loading==true){
+                if(node.id==""||node.id==null){
+                    //  alert("Select Class");
+                    $('#select_class').combotree("setValue",1);
+                }else{
+                    window.location = js_var_object.current_link + "/" +node.id;
+
+                }
             }
+
         },
         onLoadSuccess:function(node){
             loading=true;
@@ -36,10 +47,13 @@ $(function () {
     });
 
 
+
+
+
+
+
+
     $('#import_form').attr("action",js_var_object.controller_link+"/import/"+ $('#select_class').combotree("getValue"));
-
-
-
 
     $('a#export_class').click(function(){
         location.href=js_var_object.controller_link+"/export/"+ $('#select_class').combotree("getValue");

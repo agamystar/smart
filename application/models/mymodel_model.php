@@ -20,7 +20,7 @@ class Mymodel_model extends CI_Model
         $query=$this->db->query("select * from ".$tb." where $arr ");
 
 
-      // echo $this->db->last_query();
+     // echo $this->db->last_query();
 
         return $query->result() ;
 }

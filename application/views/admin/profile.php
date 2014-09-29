@@ -10,22 +10,25 @@ include_once(
     .profile-info-row {
         height: 50px !important;
     }
-    .dropzone .dz-default.dz-message{
-        background:url("") no-repeat !important;
+
+    .dropzone .dz-default.dz-message {
+        background: url("") no-repeat !important;
         margin: 0px !important;
         position: relative;
-        top:0px;
-        left:0px;
+        top: 0px;
+        left: 0px;
         width: 428px;
         height: 200px;
 
     }
+
     .dropzone {
         content: 'Click to Change Image ';
-         min-height: 250px !important;
+        min-height: 250px !important;
     }
-    .dropzone .dz-default.dz-message{
-        display :none;
+
+    .dropzone .dz-default.dz-message {
+        display: none;
     }
 </style>
 
@@ -35,20 +38,25 @@ include_once(
 <div id="user-profile-1" class="user-profile row">
 <div class="col-xs-12 col-sm-3 center">
     <div>
-        <form class="dropzone" action="<?php echo SITE_LINK."/user/upload" ?>"  id="my-awesome-dropzone"></form>
-        <!--
-        <form action="<?php echo SITE_LINK."/user/upload" ?>" id="my-dropzone" style="" class="dropzone"  >
-            <span class="profile-picture">
-													<img id="avatar"
-                                                         class="editable img-responsive editable-click editable-empty"
-                                                         alt="Alex's Avatar" src="<?php //echo SITE_LINK ?>/assets/avatars/profile-pic.jpg"></img>
-												</span>
+        <div class="loading-indicator" style="display:none;height: 200px !important">
+            <img src="<?php echo SITE_LINK . "/assets" ?>/img/page-loader.gif"
+                 style="width:50px;height:50px;margin: 50px 50px ">
+        </div>
+
+
+        <img  id="my_photo" <?php if(empty($user_data->photo)){ echo 'style="display: none;" '; }?>  src="<?php echo SITE_LINK . "/assets/uploads/".$user_data->photo?>" style="width:200px;height:200px" alt="">
+
+        <form action="" <?php if(!empty($user_data->photo)){ echo 'style="display: none;" '; }?>  method="post" enctype="multipart/form-data" id="upload_form">
+
+            <input multiple="" type="file" name="file" id="id-input-file-3"/>
+            <label>
+                <input type="checkbox" name="file-format" id="id-file-format" class="ace"/>
+
+            </label>
+            <button style="display: none;" class="btn btn-primary" type="submit" id="submit_file">upload file</button>
         </form>
 
--->
-<!--
 
--->
         <div class="space-4"></div>
 
         <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
@@ -94,9 +102,9 @@ include_once(
 
     <div class="profile-contact-info">
         <div class="profile-contact-links align-left">
-            <a class="btn btn-link" href="#">
-                <i class="icon-plus-sign bigger-120 green"></i>
-                Add as a friend
+            <a class="btn btn-link" id="change_photo" href="#">
+
+                Change Photo
             </a>
 
             <a class="btn btn-link" href="#">

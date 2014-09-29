@@ -145,7 +145,7 @@
         </li>
 
         <li>
-            <a href="<?php echo SITE_LINK."/"."bus"."/bus_absence" ;?>">
+            <a href="<?php echo SITE_LINK."/"."bus"."/bus_registration" ;?>">
                 <i class="icon-double-angle-right"></i>
                 Bus Registration
             </a>
@@ -331,13 +331,36 @@
                 Buses
             </a>
         </li>
+
+        <li>
+            <a href="<?php echo SITE_LINK."/"."setup"."/"."buses" ;?>">
+                <i class="icon-double-angle-right"></i>
+                User Group
+            </a>
+        </li>
+
+        <li>
+            <a href="<?php echo SITE_LINK."/"."setup"."/"."stages_levels" ;?>">
+                <i class="icon-double-angle-right"></i>
+                Stages&Levels
+            </a>
+        </li>
+
+
+        <li>
+            <a href="<?php echo SITE_LINK."/"."setup"."/"."expenses" ;?>">
+                <i class="icon-double-angle-right"></i>
+                Expenses
+            </a>
+        </li>
+
+
         <li>
             <a href="<?php echo SITE_LINK."/"."setup"."/"."subject" ;?>">
                 <i class="icon-double-angle-right"></i>
                 Subjects
             </a>
         </li>
-
 
         <li>
             <a href="<?php echo SITE_LINK."/"."setup"."/"."book" ;?>">

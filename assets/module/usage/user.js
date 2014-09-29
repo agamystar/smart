@@ -16,6 +16,44 @@ function cancelrow(target) {
 function start_edit(id) {
     $('#datagrid').datagrid('beginEdit', id);
 }
+function editrow(target) {
+    $('#datagrid').datagrid('selectRow', target);
+    $('#datagrid').datagrid('beginEdit', target);
+
+    return false;
+}
+function _delete(index) {
+    $('#datagrid').datagrid('selectRow', index);
+    bootbox.confirm('Are you sure you want to delete this Record ? ',function(yes){
+            if(yes){
+                    var selection = $('#datagrid').datagrid('getSelected');
+                    $('#datagrid').datagrid('deleteRow', index);
+
+                    $.post(
+                        js_var_object.current_link,
+                        {
+                            action:'delete',
+                            row:JSON.stringify(selection)
+
+                        }, function (result) {
+                            if (result.result == "success") {
+                                toastr.success('successfully procedure ');//Success Info Warning Error
+
+                            } else {
+                                toastr.error('Failed procedure ');//Success Info Warning Error
+                            }
+
+                            $('#datagrid').datagrid("reload");
+                        }, 'json'
+                    );
+
+
+                    return false;
+
+            }}
+    );
+}
+
 function updateActions(index) {
     $('#datagrid').datagrid('updateRow', {
         index:index,
@@ -26,6 +64,8 @@ function getRowIndex(target) {
     var tr = $(target).closest('tr.datagrid-row');
     return parseInt(tr.attr('datagrid-row-index'));
 }
+
+
 function add_edit(action) {
     $('#username').removeAttr("disabled");
     $('#password').removeAttr("disabled");
@@ -35,7 +75,7 @@ function add_edit(action) {
         name:$('#name').val(),
         national_id:$('#national_id').val(),
         email:$('#email').val(),
-        groups:$('#group').val(),
+        groups:$('#select_group').val(),
         username:$('#username').val(),
         password:$('#password').val(),
         id:$('#user_id').val(),
@@ -46,6 +86,9 @@ function add_edit(action) {
         religion:$('#religion').val(),
         blood_group:$('#blood_group').val(),
         address:$('#address').val(),
+        bus_fees:$('#bus_fees').val(),
+        stage:$('#stage').val(),
+        level:$('#level').val(),
         id:$('#kid').val()
 
 
@@ -58,12 +101,12 @@ function add_edit(action) {
             row_add:JSON.stringify(addnewrow)
         }, function (result) {
             if (result.result == "success") {
-                toastr.success('User Created Successfully  ');//Success Info Warning Error
+                toastr.success('Success  ');//Success Info Warning Error
 
                 $('.loading-indicator').hide();
                 $("#mymodal").dialog("close");
             } else {
-                toastr.error('Failed Process  ');//Success Info Warning Error
+                toastr.error('Failed   ');//Success Info Warning Error
 
             }
 
@@ -73,45 +116,7 @@ function add_edit(action) {
 
 
 }
-function editrow(target) {
-    $('#datagrid').datagrid('selectRow', target);
-    $('#datagrid').datagrid('beginEdit', target);
 
-    return false;
-}
-function _delete(index) {
-    $('#datagrid').datagrid('selectRow', index);
-    bootbox.confirm('Are you sure you want to delete this Record ? ',function(yes){
-        if(yes){
-    $.messager.confirm("delete", "Are you sure you want to delete this Record ? ", function (r) {
-
-            var selection = $('#datagrid').datagrid('getSelected');
-            $('#datagrid').datagrid('deleteRow', index);
-
-            $.post(
-                js_var_object.current_link,
-                {
-                    action:'delete',
-                    row:JSON.stringify(selection)
-
-                }, function (result) {
-                    if (result.result == "success") {
-                        toastr.success('successfully procedure ');//Success Info Warning Error
-
-                    } else {
-                        toastr.error('Failed procedure ');//Success Info Warning Error
-                    }
-
-                    $('#datagrid').datagrid("reload");
-                }, 'json'
-            );
-
-
-    return false;
-})
-}}
-);
-}
 function edit_dialog(index) {
 $('#datagrid').datagrid('selectRow', index);
  var selection = $('#datagrid').datagrid('getSelected');
@@ -125,9 +130,15 @@ $('#birthday').val(selection.birthday);
 $('#address').val(selection.address);
 $('#blood_group').val(selection.blood_group);
 $('#email').val(selection.email);
-$('#group').val(selection.groups);
+$('#select_group').val(selection.groups);
 $('#phone').val(selection.phone);
 $('#photo').val(selection.photo);
+$('#sex').val(selection.sex);
+$('#bus_fees').val(selection.bus_fees);
+$('#stage').val(selection.stage);
+$('#stage').trigger("change");
+$('#level').val(selection.level);
+
 $('#kid').val(selection.id);
 $('#password').val('******************');
 
@@ -160,6 +171,21 @@ function activation(act,id){
 }
 $(function () {
 
+    var loading=false;
+    $('#select_class').combotree({
+        url: js_var_object.current_link+"?action=load_classes",
+        editable:false,
+         height:30,
+        onSelect: function(node){
+            if(node.id==""||node.id==null){
+             //  alert("Select Class");
+                $('#select_class').combotree("setValue",1);
+            }
+        },
+        onLoadSuccess:function(node){
+            loading=true;
+        }
+    });
    $('#select_group').change(function(){
        var group= $(this).val();
        $('#datagrid').datagrid("reload",{
@@ -169,8 +195,10 @@ $(function () {
        });
 
    });
+
+
     $("#mymodal").dialog({
-        width:900,
+        width:950,
         autoOpen:false,
         modal: true,
         closed: true,
@@ -308,14 +336,46 @@ $(function () {
 
 
 
-   $('#datagrid').datagrid({
+
+
+
+    $('select#stage').change(function(){
+        // alert($(this).val());
+        var options='';
+        var stage=$(this).val();
+
+        var result = $.grep(js_var_object.levels, function(x){
+                return   x.stage_id===stage;
+            }
+        );
+
+
+        $.each(result,function(x,y){
+
+            options+="<option value="+y.level_id+">"+ y.level_name+"</option>";
+        });
+        ///  alert(options);
+        $('select#level').html(options)
+    });
+
+
+    $('select#stage').trigger("change");
+
+
+
+
+
+
+
+
+    $('#datagrid').datagrid({
             url:js_var_object.current_link,
             singleSelect:true,
             rownumbers:false,
             pagination:true,
             sortName:'released',
             sortOrder:'desc',
-            width:1040,
+            width:1100,
             fixed:true,
             queryParams:{
                 action:'get_data',
@@ -328,7 +388,17 @@ $(function () {
 
                 return 'height:35px;  border:2px solid #000';
 
-            }, columns:[
+            }, rowStyler:function(index,row){
+           if(row.groups=="student"){
+           if (row.class_id==""||row.class_id==null||row.class_id=="0"){
+               return 'color:red';
+           }
+           }
+           if(row.groups=="not_defined"||row.groups==""||row.groups==null){
+                   return 'color:red';
+
+           }
+       }, columns:[
                 [
                     {field:'action', title:'Action', type:'label', width:40, align:'center',
                         formatter:function (value, row, index){
@@ -361,12 +431,12 @@ $(function () {
                     },
 
 
-                    {field:'email', align:'center', title:"Email", width:130, sortable:true,
+                    {field:'email', align:'center', title:"Email", width:170, sortable:true,
                         editor:{
                             type:'text'
 
                         }},
-                    {field:'phone', align:'center', title:"Phone", width:130, sortable:true,
+                    {field:'phone', align:'center', title:"Phone", width:120, sortable:true,
                         editor:{
                             type:'text'
 
@@ -378,11 +448,12 @@ $(function () {
 
                         }
                     },
-                    {field:'last_login', align:'center', title:"last_login", width:100, sortable:true,
+                    {field:'last_login', align:'center', title:"last_login", width:120, sortable:true,
                         editor:{
                             type:'text'
 
                         }},
+
 
                     {field:'active', align:'center', title:"Active", width:80, sortable:true,
                         formatter:function (value, row, index){
@@ -416,6 +487,16 @@ $(function () {
 
                 $('#import_text').text("Import  "+$('#select_group option:selected').text());
                 $('#export_text').text("Export  "+$('#select_group option:selected').text());
+                $('#add_text').text("Add  "+$('#select_group option:selected').text());
+                if($('#select_group option:selected').val()=="student"){
+                    $('#div_for_student').show();
+                    $('#div_bus_fees').show();
+
+                }else{
+                    $('#div_for_student').hide();
+                    $('#div_bus_fees').hide();
+                }
+
 
             }, onDblClickRow:function (rowIndex, rowData) {
 

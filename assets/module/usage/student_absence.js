@@ -1,5 +1,35 @@
 $(function () {
 
+
+    $('input#date').datepicker({format:'yyyy-mm-dd' , autoclose:true})
+
+//    alert(JSON.stringify(js_var_object.absence));
+
+    $.each(js_var_object.absence,function(y,x){
+       // alert(x.user_id);
+        $('.itemdiv.dialogdiv > .user > img'+'#'+x.user_id).addClass("check_person");
+    });
+
+
+    var loading=false;
+    $('#select_class').combotree({
+        url: js_var_object.current_link+"?action=load_classes",
+        editable:false,
+        onSelect: function(node){
+            if(node.id>0 && loading==true){
+                window.location = js_var_object.current_link + "/" +node.id;
+                // alert("select");
+            }
+        },
+        onLoadSuccess:function(node){
+            loading=true;
+        }
+    }).combotree("setValue",js_var_object.p_class);
+
+
+    $('.itemdiv.dialogdiv > .user > img').click(function(){
+        $(this).toggleClass('check_person');
+    });
     $('.class_students').bootstrapDualListbox({
         nonSelectedListLabel:'<span class="label label-success arrowed-in arrowed-in-right">All Students That not have classes </span>',
         selectedListLabel:'<span class="label label-success arrowed-in arrowed-in-right">All Student in This Class</span> ',
@@ -20,16 +50,12 @@ $(function () {
     });
 
 
-    $('#import_form').attr("action",js_var_object.controller_link+"/import/"+ $('#select_class').val());
+    $('#import_form').attr("action",js_var_object.controller_link+"/import/"+ $('#select_class').combotree("getValue"));
 
-    $('#select_class').change(function () {
 
-        window.location = js_var_object.current_link + "/" + $(this).val();
-
-    });
 
     $('a#export_class').click(function(){
-        location.href=js_var_object.controller_link+"/export/"+ $('#select_class').val();
+        location.href=js_var_object.controller_link+"/export/"+ $('#select_class').combotree("getValue");
     });
 
     $('a#import_class').click(function(){
@@ -68,18 +94,16 @@ $(function () {
 
 
     $('#add_to_class').click(function () {
-        var all_student = [];
-        var students_inclass = [];
-        $.each($('select[name="class_students_helper1"] option '), function (x, y) {
-            all_student.push($(this).val());
-        });
-        $.each($('select[name="class_students_helper2"] option '), function (x, y) {
-            students_inclass.push($(this).val());
+        var student_absence = [];
+
+
+        $('.itemdiv.dialogdiv > .user > img.check_person').each(function(y,x){
+            student_absence.push($(this).attr('id'));
         });
 
-        var data = {class:$('#select_class').val(), students_inclass:students_inclass};
+        var data = {class: $('#select_class').combotree("getValue"), student_absence:student_absence};
         $.post(js_var_object.current_link, {
-            action:'distribute_students',
+            action:'set_student_absence',
             data:JSON.stringify(data)
         }, function (result) {
             if (result.message != "failed") {

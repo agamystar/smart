@@ -20,9 +20,16 @@ class Security extends MY_Controller
     }
 
     //redirect if needed, otherwise display the user list
+
+
+
     function index()
     {
 
+
+        if (!$this->ion_auth->logged_in()) {
+            redirect(SITE_LINK . "/security/login", 'refresh');
+        }
 
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
@@ -39,6 +46,9 @@ class Security extends MY_Controller
 
 
         else {
+
+            $stages=$this->mymodel_model->select("stages",'1=1');
+            $levels=$this->mymodel_model->select("levels",'1=1');
 
             if ($action_get == "get_data") {
 
@@ -191,6 +201,137 @@ class Security extends MY_Controller
                 echo json_encode($back);
                 exit;
             }
+
+            if ($action_post == "create_user") {
+
+                $bus_fees = '';
+                $salt = '';
+                $password = $this->ion_auth->hash_password($row_add->password, $salt);
+
+                if($row_add->stage){
+                   $the_stage=$row_add->stage;
+                   }
+                else{$the_stage=0;
+                }
+                if($row_add->level){
+                    $the_level=$row_add->level;
+                }
+                else{$the_level=0;
+                }
+
+                $dat = array(
+                    'name' => $row_add->name,
+                    'address' => $row_add->address,
+                    'national_id' => $row_add->national_id,
+                    'sex' => $row_add->sex,
+                    'religion' => $row_add->religion,
+                    'birthday' => $row_add->birthday,
+                    'blood_group' => $row_add->blood_group,
+                    'photo' => $row_add->photo,
+                    'phone' => $row_add->phone,
+                    'username' => $row_add->username,
+                    'groups' => $row_add->groups,
+                    'email' => strtolower($row_add->email),
+                    'password ' => $password,
+                    'bus_fees' => $row_add->bus_fees,
+                    'last_login' => date('Y/m/d h:m:s'),
+                    'stage' => $the_stage,
+                    'level' => $the_level
+                );
+
+                $this->db->where('national_id',$row_add->national_id);
+                $num = $this->db->count_all_results("users");//table name from drowp down
+
+                if($num>0){
+                    $this->db->where("national_id", $row_add->national_id);
+                    $this->db->update("users", $dat);
+
+                }else{
+                    $this->db->insert("users", $dat);
+                }
+
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
+                }
+
+             //   echo $this->db->last_query();
+                exit;
+            }
+
+            if ($action_post == "edit_user") {
+
+
+                if (!$this->ion_auth->logged_in()) {
+                    redirect(SITE_LINK . "/security/login", 'refresh');
+                }
+
+
+                $salt = '';
+                $password = $this->ion_auth->hash_password($row_add->password, $salt);
+
+                if($row_add->stage){
+                    $the_stage=$row_add->stage;
+                }
+                else{$the_stage=0;
+                }
+                if($row_add->level){
+                    $the_level=$row_add->level;
+                }
+                else{$the_level=0;
+                }
+                $dat = array(
+                    'name' => $row_add->name,
+                    'address' => $row_add->address,
+                    'national_id' => $row_add->national_id,
+                    'sex' => $row_add->sex,
+                    'religion' => $row_add->religion,
+                    'birthday' => $row_add->birthday,
+                    'blood_group' => $row_add->blood_group,
+                    'photo' => $row_add->photo,
+                    'phone' => $row_add->phone,
+                    'username' => $row_add->username,
+                    'groups' => $row_add->groups,
+                    'email' => strtolower($row_add->email),
+                    'password ' => $password,
+                    'bus_fees' => $row_add->bus_fees,
+                    'last_login' => date('Y/m/d h:m:s'),
+                    'stage' => $the_stage,
+                    'level' => $the_level
+                );
+
+                $this->db->where("id", $row_add->id);
+                $this->db->update("users", $dat);
+
+                if ($this->db->affected_rows() > 0) {
+                    echo json_encode(array("result" => "success"));
+                }
+                elseif( $this->db->affected_rows()==0){
+                    echo json_encode(array("result" => "Nothing updated"));
+                }
+                else {
+                    echo json_encode(array("result" =>"failed"));
+                }
+
+                // print_r($res);
+
+                //echo $this->db->last_query();
+                exit;
+            }
+
+            if ($action_post == "delete") {
+                $this->db->where("id", $row->id);
+                $this->db->delete("users");
+                if ($this->db->affected_rows() > 0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" => "failed"));
+                }
+                // echo $this->db->last_query();
+                exit;
+            }
+
             if ($action_post == "change_password") {
                 $this->form_validation->set_rules('username','username', 'required');
                 $this->form_validation->set_rules('password','password' , 'required|min_length[3]|max_length[15]|matches[con_password]');
@@ -245,7 +386,7 @@ class Security extends MY_Controller
                     if (empty($identity)) {
                         $this->ion_auth->set_message('forgot_password_email_not_found');
                         $this->session->set_flashdata('message', $this->ion_auth->messages());
-                        redirect("auth/forgot_password", 'refresh');
+                        redirect(SITE_LINK . "/security/login", 'refresh');
                     }
 
                     //run the forgotten password method to email an activation code to the user
@@ -278,116 +419,7 @@ class Security extends MY_Controller
             }
 
             //create a new user
-            if ($action_post == "create_user") {
-                $this->data['title'] = "Create User";
 
-                if (!$this->ion_auth->logged_in()) {
-                    redirect('auth', 'refresh');
-                }
-
-                //   $tables = $this->config->item('tables','ion_auth');
-
-                // echo $row_add->username;
-                //  exit;
-                $ip_address = '';
-                $salt = '';
-                $password = $this->ion_auth->hash_password($row_add->password, $salt);
-
-                $dat = array(
-                    'name' => $row_add->name,
-                    'address' => $row_add->address,
-                    'national_id' => $row_add->national_id,
-                    'sex' => $row_add->sex,
-                    'religion' => $row_add->religion,
-                    'birthday' => $row_add->birthday,
-                    'blood_group' => $row_add->blood_group,
-                    'photo' => $row_add->photo,
-                    'phone' => $row_add->phone,
-                    'username' => $row_add->username,
-                    'groups' => $row_add->groups,
-                    'email' => strtolower($row_add->email),
-                    'password ' => $password,
-                    'ip_address' => $ip_address,
-                    'created_on' => date('Y/m/d h:m:s'),
-                    'last_login' => date('Y/m/d h:m:s'),
-                    'active' => 1
-                );
-                $this->db->where('national_id',$row_add->national_id);
-                $num = $this->db->count_all_results("users");//table name from drowp down
-
-                if($num>0){
-                    $this->db->where("national_id", $row_add->national_id);
-                    $this->db->update("users", $dat);
-
-                }else{
-                    $this->db->insert("users", $dat);
-                }
-
-                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
-                    echo json_encode(array("result" => "success"));
-                } else {
-                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
-                }
-                exit;
-
-
-
-                exit;
-            }
-
-            if ($action_post == "edit_user") {
-
-
-                if (!$this->ion_auth->logged_in()) {
-                    redirect('auth', 'refresh');
-                }
-
-
-                $ip_address = '';
-                $salt = '';
-                $password = $this->ion_auth->hash_password($row_add->password, $salt);
-
-
-                $dat = array(
-                    'name' => $row_add->name,
-                    'address' => $row_add->address,
-                    'national_id' => $row_add->national_id,
-                    'sex' => $row_add->sex,
-                    'religion' => $row_add->religion,
-                    'birthday' => $row_add->birthday,
-                    'blood_group' => $row_add->blood_group,
-                    'photo' => $row_add->photo,
-                    'phone' => $row_add->phone,
-                    'username' => $row_add->username,
-                    'groups' => $row_add->groups,
-                    'email' => strtolower($row_add->email),
-
-                );
-
-                $this->db->where("id", $row_add->id);
-                $this->db->update("users", $dat);
-             //   print_r($dat);
-              //echo   $this->db->last_query();
-
-                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
-                    echo json_encode(array("result" => "success"));
-                } else {
-                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
-                }
-                exit;
-            }
-
-            if ($action_post == "delete") {
-                $this->db->where("id", $row->id);
-                $this->db->delete("users");
-                if ($this->db->affected_rows() > 0) {
-                    echo json_encode(array("result" => "success"));
-                } else {
-                    echo json_encode(array("result" => "failed"));
-                }
-                // echo $this->db->last_query();
-                exit;
-            }
         }
 
 
@@ -396,11 +428,15 @@ class Security extends MY_Controller
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1],
             'details' => SITE_LINK . "/" . "student/" . "details/",
             'main_url' => SITE_LINK . "/" . "security/",
+            'stages' => $stages,
+            'levels' =>$levels
 
         ));
         $data['base_url'][] = SITE_LINK;
         $data['js'][] = "usage/user.js";
         $data['main_url'] = SITE_LINK;
+        $data['stages'] = $stages;
+        $data['levels'] = $levels;
         $data['use_big_model'] = "yes";
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'user', $data);
 
@@ -461,7 +497,6 @@ class Security extends MY_Controller
         $message = "";
         if(isset($_POST['submit_create_user'])){
 
-        $ip_address = '';
         $salt = '';
             $this->form_validation->set_rules('r_name', 'r_name', 'required|xss_clean');
             $this->form_validation->set_rules('r_identity', 'r_identity', 'required|trim|xss_clean');
@@ -489,7 +524,6 @@ class Security extends MY_Controller
                     'groups' => $this->input->post('r_group'),
                     'email' => strtolower($this->input->post('r_email')),
                     'password ' => $password,
-                    'ip_address' => $ip_address,
                     'created_on' => date('y/m/d h:m:s'),
                     'last_login' => date('y/m/d h:m:s'),
                     'active' => 1

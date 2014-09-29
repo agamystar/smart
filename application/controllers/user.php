@@ -3,6 +3,7 @@
 class User extends MY_Controller
 {
     const TABLE_NAME = "users";
+    private  $image="not";
     private $user_frm_flag = "R";
 
     public function __construct() {
@@ -16,18 +17,26 @@ class User extends MY_Controller
             $tempFile = $_FILES['file']['tmp_name'];
             $fileName = $_FILES['file']['name'];
             $targetPath ='./assets/uploads/';
-            $targetFile = $targetPath . $fileName ;
+            $new_file_name=date("y-m-d-h-m-s")."_".rand(100000,90000000)."_".$fileName;
+            $targetFile = $targetPath .$new_file_name;
             move_uploaded_file($tempFile, $targetFile);
-            // if you want to save in db,where here
-            // with out model just for example
-            // $this->load->database(); // load database
-            // $this->db->insert('file_table',array('file_name' => $fileName));
+            $this->db->where("id",$this->session->userdata("user_id"));
+            $this->db->update('users',array('photo' => $new_file_name));
+
+            $this->session->set_userdata("uploaded_image",$new_file_name);
+
         }
+        exit;
     }
 
     public function profile()
     {
        $data=array();
+
+        $action_get = $this->input->get("action");
+        $action_post = $this->input->post("action");
+        $ajax_data = json_decode($this->input->post("data"));
+
         $data["js_vars"] = json_encode(array(
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1],
             'details' => SITE_LINK . "/" . "student/" . "details/",
@@ -38,20 +47,54 @@ class User extends MY_Controller
         $data['js'][] = "usage/profile.js";
         $data['main_url'] = SITE_LINK;
         $id=$this->session->userdata("user_id");
-            $this->db->select('*');
-            $this->db->from("users");
-           $this->db->where("id", $id);
-            $rs = $this->db->get();
-          $data['user_data']=$rs->row();
+        $rs = $this->mymodel_model->select("users", 'id ='.$id.' ');
+
+        $data['user_data']=$rs[0];
+
+        if($action_post=="update_profile"){
+         $this->session->userdata('uploaded_image');
+       exit;
+    }
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'profile', $data);
 
     }
+    public function get_class_children($stage, $level_id)
+    {
+        $ar = array();
+        $cl = array();
+        $que = $this->db->query("select  class_id as id , name as text from v_stage_level_class where stage=" . $stage . " and level=" . $level_id . " ");
 
+        foreach ($que->result() as $row) {
+            $ar['id'] = $row->id;
+            $ar['text'] = $row->text;
+            $cl[] = $ar;
+        }
+        // echo json_encode($cl);
+        return $cl;
+    }
+
+    public function get_level_children($stage_id)
+    {
+        $arrs = array();
+        $stage_level = array();
+        $quer = $this->db->query("select  level as id , level_name as text from v_stage_level_class where stage=" . $stage_id . " ");
+
+        foreach ($quer->result() as $row) {
+            //$arrs['id']=$row->id;
+            $arrs['text'] = $row->text;
+            $arrs['children'] = $this->get_class_children($stage_id, $row->id);
+            $stage_level[] = $arrs;
+
+        }
+        // echo json_encode( $stage_level);
+        return $stage_level;
+
+    }
     public function student_absence($x=''){
 
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
-        $ajax_data = json_decode($this->input->post("data"));
+        $ajax_data= json_decode($this->input->post("data"));
 
 
         $data = array();
@@ -67,21 +110,48 @@ class User extends MY_Controller
             $class=$x;
         }
 
+        if($this->input->get('date')){
+            $today=$this->input->get('date');
+        }else{
         $today=date('Y/m/d') ;
+        }
         $classes=$this->mymodel_model->select("class","1=1");
-        $class_students=$this->mymodel_model->select("v_class_students","class_id=$class and  student_id not in(select user_id from v_user_absence where day='$today'  )");
+      /////////old code //////  $class_students=$this->mymodel_model->select("v_class_students","class_id=$class and  student_id not in(select user_id from v_user_absence where day='$today'  ) order by student_name");
+        $class_students=$this->mymodel_model->select("v_class_students","class_id=$class  order by student_name");
         $absence=$this->mymodel_model->select("v_user_absence","groups='student' and class_id='$class' and day='$today' ");
 
-        if($action_post=="distribute_students"){
+        if ($action_get == "load_classes") {
+
+            $arr = array();
+            $stage_level_class = array();
+            $query = $this->db->query('select distinct stage as id , stage_name as text from v_stage_level_class');
+
+            foreach ($query->result() as $row) {
+                //  $arr['id']="";
+                $arr['text'] = $row->text;
+                $arr['children'] = $this->get_level_children($row->id);
+                $stage_level_class[] = $arr;
+                //    print_r($arr);
+            }
+
+
+            echo  json_encode($stage_level_class);
+            exit;
+        }
+
+        if($action_post=="set_student_absence"){
 
             $no="";
             $message="";
             $big_st_ids=array();
-            foreach($ajax_data->students_inclass as $st){
+            foreach($ajax_data->student_absence as $st){
                 $big_st_ids[]=array("day"=>$today,"user_id"=>$st);
 
             }
-            $imp= implode(",",$ajax_data->students_inclass) ;
+            $imp= implode(",",$ajax_data->student_absence) ;
+
+            $this->db->trans_begin();
+
             $this->db->where("day",$today);
             $this->db->delete("absence");
 
@@ -91,8 +161,10 @@ class User extends MY_Controller
                 if($this->db->affected_rows()>0){
                     $no =$this->db->affected_rows();
                     $message="success";
+                    $this->db->trans_commit();
                 }else{
                     $message="failed  ";
+                    $this->db->trans_rollback();
                 }
             }
            // print_r($big_st_ids);
@@ -108,6 +180,8 @@ class User extends MY_Controller
             'controller_link' => SITE_LINK . "/" . $this->uri->segments[1],
             'details' => SITE_LINK . "/" . "student/" . "details/",
             'main_url' => SITE_LINK . "/" . "security/",
+            'p_class' => $class,
+            'absence' => $absence,
 
         ));
         $data['base_url'][] = SITE_LINK;
