@@ -74,7 +74,7 @@ $selected_class = $p_class[0];?>
                                     $img_link= SITE_LINK . '/assets/avatars/avatar2.png';
                                 }
                                 // echo "<option value=\"$absence->user_id\"  selected=\"selected\">".$absence->name."</option>";
-                                echo ' <li style="height:60px;width:270px;display:inline-block;" class="itemdiv dialogdiv">
+                                echo ' <li style="height:60px;width:240px;display:inline-block;" class="itemdiv dialogdiv">
                                 <div class="user" style="width:100% !important; cursor:pointer">
          <img alt="'.$c_students->student_name.'"  id="'.$c_students->student_id.'" src="'.$img_link.'" ><span style="margin-left:10px">'.$c_students->student_name.'</span></div></li>';
 

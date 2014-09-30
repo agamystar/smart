@@ -40,61 +40,40 @@ include_once(
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label class="align-left col-sm-3 control-label">Name</label>
+                            <label class="align-left col-sm-2 control-label">Name</label>
 
-                            <div class="col-sm-9">
-                                <input class="form-control" id="name" type="text">
+                            <div class="col-sm-10">
+                                <input class="form-control" id="student_name" type="text">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="align-left col-sm-3 control-label">Name Numeric</label>
+                            <label class="align-left col-sm-2 control-label">Value</label>
 
-                            <div class="col-sm-9">
-                                <input class="form-control" id="name_numeric" type="text">
+                            <div class="col-sm-10">
+                                <input class="form-control" id="value" type="text">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="align-left col-sm-3 control-label">Stage</label>
+                            <label class="align-left col-sm-2 control-label">Discount</label>
 
-                            <div class="col-sm-9">
-                                <select id="stage" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
-                                    <?php
-                                    if(isset($stages)){
-                                        foreach($stages as $one){
-
-                                                echo "<option    value=\"$one->stage_id\" > " .$one->stage_name."</option>";
-
-                                        }
-                                    } ?>
-                                </select>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="student_discount" type="text">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="align-left col-sm-3 control-label">level</label>
+                            <label class="align-left col-sm-2 control-label">Date</label>
 
-                            <div class="col-sm-9">
-                                <select id="level" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
-
-                                </select>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="dd-mm-yyyy">
+																	<span class="input-group-addon">
+																		<i class="icon-calendar bigger-110"></i>
+																	</span>
+                                </div>
+                                
+                                <input class="easyui-datebox "  id="paid_date" value="" type="text">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="align-left col-sm-3 control-label">Teacher</label>
-
-                            <div class="col-sm-9">
-                                <select id="teacher_id" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
-                                    <?php
-                                    if(isset($teachers)){
-                                        foreach($teachers as $one){
-
-                                            echo "<option    value=\"$one->id\" > " .$one->name."</option>";
-
-                                        }
-                                    } ?>
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="modal-footer">
                             <input class="form-control" id="kid" type="hidden">
                             <button type="button" id="submit_add" style="display: none;" class="btn btn-primary">Submit</button>

@@ -8,12 +8,7 @@
     <link href="<?php echo SITE_LINK."/assets" ?>/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/font-awesome.min.css"/>
 
-    <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/font-awesome-ie7.min.css"/>
-    <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/fullcalendar.css" />
-
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/jquery-ui-1.10.3.full.min.css"/>
-    <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/datepicker.css"/>
-    <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ui.jqgrid.css"/>
 
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-fonts.css"/>
 
@@ -21,7 +16,6 @@
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-rtl.min.css"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-skins.min.css"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-ie.min.css"/>
-
 
 
 
@@ -60,11 +54,6 @@
     </script>
 
 
-
-    <script  type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/js/bootstrap.min.js"></script>
-
-    <script  type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/js/bootbox.min.js"></script>
-
     <script  type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/model/assets/prettify/run_prettify.js"></script>
 
     <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/jquery-1.10.2.min.js"></script>
@@ -94,6 +83,7 @@
                     if (!empty($js_vars)) {
                         ?>
                     var js_var_object = <?php echo $js_vars; ?>;
+                    var js_site_link = "<?php echo SITE_LINK; ?>";
                     //alert(js_var_object.current_link);
                         <?php
                     }
@@ -141,9 +131,6 @@
 
 
     <link href="<?php echo SITE_LINK . "/assets/css"; ?>/dropzone.css" rel="stylesheet" type="text/css" />
-
-
-
 
 
 

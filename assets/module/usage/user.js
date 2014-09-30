@@ -375,7 +375,7 @@ $(function () {
             pagination:true,
             sortName:'released',
             sortOrder:'desc',
-            width:1100,
+            width:1050,
             fixed:true,
             queryParams:{
                 action:'get_data',
@@ -402,59 +402,24 @@ $(function () {
                 [
                     {field:'action', title:'Action', type:'label', width:40, align:'center',
                         formatter:function (value, row, index){
-
-                            if (row.editing) {
-                                var s = '<a href="javascript:void(0);" onclick="_edit(' + index + ')"><img src="./assets/img/save.png" alt="Save"/></a> ';
-                                var c = '<a href="javascript:void(0);" onclick="cancelrow(' + index + ')"><img src="./assets/img/cancel.png" alt="Cancel"/></a>';
-                                var v = '<a href="javascript:void(0);" onclick="_show_details(' + index + ')"><img src="./assets/img/view.png" alt="view"/></a>';
-                                return "<div>" +s+c+ "</div>";
-                            } else {
-                                var e = '<a href="javascript:void(0);" onclick="edit_dialog(' + index + ')"><img src="./assets/img/edit.pn" alt=""/><i class="icon-pencil bigger-130"></i></a> ';
-                                var d = '<a href="javascript:void(0);" onclick="_delete(' + index + ')"><img src="./assets/img/delete.pn" alt=""/><i class="icon-trash bigger-130"></i></a>';
-                                var v = '<a href="javascript:void(0);" onclick="_show_details(' + index + ')" ><img src="./assets/img/view.png" alt="view"/></a>';
-                                return "<div>" + e + d + "</div>";
-                            }
+                                var e = '<a href="javascript:void(0);" onclick="edit_dialog(' + index + ')"><i class="icon-pencil bigger-130"></i></a> ';
+                                var d = '<a href="javascript:void(0);" onclick="_delete(' + index + ')"><i class="icon-trash bigger-130"></i></a>';
+                               return e+d;
                         }
 
                     },
                    // {field:'id', title:"Id", width:60, align:'center', sortable:true},
 
-                    {field:'name', title:"Name", width:180, align:'center', sortable:true,
-                        editor:{
-                            type:'text'
-                        }
+                    {field:'name', title:"Name", width:150, align:'center', sortable:true
                     },
-                    {field:'username', title:"User Name", width:150, align:'center', sortable:true,
-                        editor:{
-                            type:'text'
-                        }
+                    {field:'username', title:"User Name", width:150, align:'center', sortable:true
                     },
 
 
-                    {field:'email', align:'center', title:"Email", width:170, sortable:true,
-                        editor:{
-                            type:'text'
-
-                        }},
-                    {field:'phone', align:'center', title:"Phone", width:120, sortable:true,
-                        editor:{
-                            type:'text'
-
-                        }},
-
-                    {field:'national_id', align:'center', title:"National No", width:150, sortable:true,
-                        editor:{
-                            type:'text'
-
-                        }
-                    },
-                    {field:'last_login', align:'center', title:"last_login", width:120, sortable:true,
-                        editor:{
-                            type:'text'
-
-                        }},
-
-
+                    {field:'email', align:'center', title:"Email", width:150, sortable:true},
+                    {field:'phone', align:'center', title:"Phone", width:120, sortable:true},
+                    {field:'national_id', align:'center', title:"National No", width:150, sortable:true},
+                    {field:'last_login', align:'center', title:"last_login", width:120, sortable:true},
                     {field:'active', align:'center', title:"Active", width:80, sortable:true,
                         formatter:function (value, row, index){
 

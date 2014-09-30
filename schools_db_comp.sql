@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.7.1
+-- version 4.0.4
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Sep 30, 2014 at 09:40 AM
--- Server version: 5.6.20
--- PHP Version: 5.5.15
+-- Host: localhost
+-- Generation Time: Sep 30, 2014 at 02:53 PM
+-- Server version: 5.6.12-log
+-- PHP Version: 5.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `schools_db_comp`
 --
+CREATE DATABASE IF NOT EXISTS `schools_db_comp` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `schools_db_comp`;
 
 -- --------------------------------------------------------
 
@@ -28,7 +30,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `absence` (
   `user_id` int(11) NOT NULL,
-  `day` varchar(50) NOT NULL
+  `day` varchar(50) NOT NULL,
+  PRIMARY KEY (`day`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -36,6 +39,9 @@ CREATE TABLE IF NOT EXISTS `absence` (
 --
 
 INSERT INTO `absence` (`user_id`, `day`) VALUES
+(379, '09/30/2014'),
+(398, '09/30/2014'),
+(402, '09/30/2014'),
 (68, '2014/09/28'),
 (71, '2014/09/28'),
 (380, '2014/09/28'),
@@ -52,7 +58,9 @@ INSERT INTO `absence` (`user_id`, `day`) VALUES
 (499, '2014/09/29'),
 (503, '2014/09/29'),
 (510, '2014/09/29'),
-(528, '2014/09/29');
+(528, '2014/09/29'),
+(381, '2014/09/30'),
+(539, '2014/09/30');
 
 -- --------------------------------------------------------
 
@@ -61,11 +69,12 @@ INSERT INTO `absence` (`user_id`, `day`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `admin` (
-`admin_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `email` longtext COLLATE utf8_unicode_ci NOT NULL,
   `password` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `level` longtext COLLATE utf8_unicode_ci NOT NULL
+  `level` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`admin_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -82,13 +91,14 @@ INSERT INTO `admin` (`admin_id`, `name`, `email`, `password`, `level`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `book` (
-`book_id` int(11) NOT NULL,
+  `book_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `description` longtext COLLATE utf8_unicode_ci NOT NULL,
   `author` longtext COLLATE utf8_unicode_ci NOT NULL,
   `class_id` longtext COLLATE utf8_unicode_ci NOT NULL,
   `status` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `price` longtext COLLATE utf8_unicode_ci NOT NULL
+  `price` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`book_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -110,7 +120,8 @@ CREATE TABLE IF NOT EXISTS `bus` (
   `supervisor` varchar(100) NOT NULL,
   `path` varchar(300) NOT NULL,
   `student_fees` int(11) NOT NULL,
-  `school_fees` int(11) NOT NULL
+  `school_fees` int(11) NOT NULL,
+  PRIMARY KEY (`no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -131,7 +142,8 @@ INSERT INTO `bus` (`no`, `driver`, `supervisor`, `path`, `student_fees`, `school
 
 CREATE TABLE IF NOT EXISTS `bus_absence` (
   `student_id` int(11) NOT NULL,
-  `day` varchar(50) NOT NULL
+  `day` varchar(50) NOT NULL,
+  PRIMARY KEY (`student_id`,`day`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -142,7 +154,8 @@ CREATE TABLE IF NOT EXISTS `bus_absence` (
 
 CREATE TABLE IF NOT EXISTS `bus_students` (
   `bus_no` varchar(11) NOT NULL,
-  `student_id` int(11) NOT NULL
+  `student_id` int(11) NOT NULL,
+  PRIMARY KEY (`student_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -167,12 +180,13 @@ INSERT INTO `bus_students` (`bus_no`, `student_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `class` (
-`class_id` int(11) NOT NULL,
+  `class_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `name_numeric` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `stage` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `level` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `teacher_id` int(11) NOT NULL
+  `teacher_id` int(11) NOT NULL,
+  PRIMARY KEY (`class_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 --
@@ -193,12 +207,13 @@ INSERT INTO `class` (`class_id`, `name`, `name_numeric`, `stage`, `level`, `teac
 --
 
 CREATE TABLE IF NOT EXISTS `class_routine` (
-`class_routine_id` int(11) NOT NULL,
+  `class_routine_id` int(11) NOT NULL AUTO_INCREMENT,
   `class_id` int(11) NOT NULL,
   `subject_id` int(11) NOT NULL,
   `time_start` int(11) NOT NULL,
   `time_end` int(11) NOT NULL,
-  `day` longtext COLLATE utf8_unicode_ci NOT NULL
+  `day` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`class_routine_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
@@ -219,7 +234,8 @@ INSERT INTO `class_routine` (`class_routine_id`, `class_id`, `subject_id`, `time
 
 CREATE TABLE IF NOT EXISTS `class_students` (
   `class_id` int(11) NOT NULL,
-  `student_id` int(11) NOT NULL
+  `student_id` int(11) NOT NULL,
+  PRIMARY KEY (`student_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -277,10 +293,11 @@ INSERT INTO `class_students` (`class_id`, `student_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `dormitory` (
-`dormitory_id` int(11) NOT NULL,
+  `dormitory_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `number_of_room` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `description` longtext COLLATE utf8_unicode_ci NOT NULL
+  `description` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`dormitory_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -297,10 +314,11 @@ INSERT INTO `dormitory` (`dormitory_id`, `name`, `number_of_room`, `description`
 --
 
 CREATE TABLE IF NOT EXISTS `email_template` (
-`email_template_id` int(11) NOT NULL,
+  `email_template_id` int(11) NOT NULL AUTO_INCREMENT,
   `task` longtext COLLATE utf8_unicode_ci NOT NULL,
   `subject` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `body` longtext COLLATE utf8_unicode_ci NOT NULL
+  `body` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`email_template_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -310,10 +328,11 @@ CREATE TABLE IF NOT EXISTS `email_template` (
 --
 
 CREATE TABLE IF NOT EXISTS `exam` (
-`exam_id` int(11) NOT NULL,
+  `exam_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `date` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `comment` longtext COLLATE utf8_unicode_ci NOT NULL
+  `comment` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`exam_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -330,21 +349,23 @@ INSERT INTO `exam` (`exam_id`, `name`, `date`, `comment`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `expenses` (
-`id` int(11) NOT NULL,
-  `name` varchar(200) NOT NULL,
-  `level` int(11) NOT NULL,
-  `stage` int(11) NOT NULL,
-  `value` int(11) NOT NULL
+  `expenses_id` int(11) NOT NULL AUTO_INCREMENT,
+  `expenses_name` varchar(200) NOT NULL,
+  `expenses_level` int(11) NOT NULL,
+  `expenses_stage` int(11) NOT NULL,
+  `expenses_value` int(11) NOT NULL,
+  `expenses_discount` int(11) NOT NULL,
+  PRIMARY KEY (`expenses_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `expenses`
 --
 
-INSERT INTO `expenses` (`id`, `name`, `level`, `stage`, `value`) VALUES
-(1, 'school fees', 1, 1, 9000),
-(2, 'books fees', 1, 1, 400),
-(3, 'clothes fees', 1, 1, 700);
+INSERT INTO `expenses` (`expenses_id`, `expenses_name`, `expenses_level`, `expenses_stage`, `expenses_value`, `expenses_discount`) VALUES
+(1, 'school fees', 1, 1, 1000, 0),
+(2, 'books fees', 1, 1, 2000, 0),
+(3, 'clothes fees', 1, 1, 3000, 0);
 
 -- --------------------------------------------------------
 
@@ -354,7 +375,8 @@ INSERT INTO `expenses` (`id`, `name`, `level`, `stage`, `value`) VALUES
 
 CREATE TABLE IF NOT EXISTS `forms` (
   `form_id` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(100) DEFAULT NULL
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`form_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -373,12 +395,13 @@ INSERT INTO `forms` (`form_id`, `name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `grade` (
-`grade_id` int(11) NOT NULL,
+  `grade_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `grade_point` longtext COLLATE utf8_unicode_ci NOT NULL,
   `mark_from` int(11) NOT NULL,
   `mark_upto` int(11) NOT NULL,
-  `comment` longtext COLLATE utf8_unicode_ci NOT NULL
+  `comment` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`grade_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 --
@@ -397,10 +420,11 @@ INSERT INTO `grade` (`grade_id`, `name`, `grade_point`, `mark_from`, `mark_upto`
 --
 
 CREATE TABLE IF NOT EXISTS `groups` (
-`id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
   `description` varchar(100) NOT NULL,
-  `show_front` int(11) NOT NULL
+  `show_front` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
@@ -420,20 +444,26 @@ INSERT INTO `groups` (`id`, `name`, `description`, `show_front`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `installments` (
-`id` int(11) NOT NULL,
+  `installment_id` int(11) NOT NULL AUTO_INCREMENT,
   `expenses_id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
   `value` int(11) NOT NULL,
-  `end_date` varchar(200) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+  `end_date` varchar(200) NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `student_paid` int(11) NOT NULL,
+  `st_date_payment` varchar(22) NOT NULL,
+  `discount` int(22) NOT NULL,
+  PRIMARY KEY (`installment_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `installments`
 --
 
-INSERT INTO `installments` (`id`, `expenses_id`, `name`, `value`, `end_date`) VALUES
-(1, 1, 'installment 1', 0, '2014/09/25'),
-(2, 1, 'installment 2', 0, '2014/09/25');
+INSERT INTO `installments` (`installment_id`, `expenses_id`, `name`, `value`, `end_date`, `student_id`, `student_paid`, `st_date_payment`, `discount`) VALUES
+(1, 1, 'installment 1', 500, '2014/09/25', 71, 100, '', 0),
+(2, 1, 'installment 2', 500, '2014/09/25', 601, 500, '', 0),
+(3, 2, 'installment 1', 2000, '', 613, 200, '', 0);
 
 -- --------------------------------------------------------
 
@@ -442,7 +472,7 @@ INSERT INTO `installments` (`id`, `expenses_id`, `name`, `value`, `end_date`) VA
 --
 
 CREATE TABLE IF NOT EXISTS `invoice` (
-`invoice_id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
   `title` longtext COLLATE utf8_unicode_ci NOT NULL,
   `description` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -451,7 +481,8 @@ CREATE TABLE IF NOT EXISTS `invoice` (
   `payment_timestamp` longtext COLLATE utf8_unicode_ci NOT NULL,
   `payment_method` longtext COLLATE utf8_unicode_ci NOT NULL,
   `payment_details` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `status` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'paid or unpaid'
+  `status` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'paid or unpaid',
+  PRIMARY KEY (`invoice_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -468,7 +499,7 @@ INSERT INTO `invoice` (`invoice_id`, `student_id`, `title`, `description`, `amou
 --
 
 CREATE TABLE IF NOT EXISTS `language` (
-`phrase_id` int(11) NOT NULL,
+  `phrase_id` int(11) NOT NULL AUTO_INCREMENT,
   `phrase` longtext COLLATE utf8_unicode_ci NOT NULL,
   `english` longtext COLLATE utf8_unicode_ci NOT NULL,
   `bengali` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -490,7 +521,8 @@ CREATE TABLE IF NOT EXISTS `language` (
   `latin` longtext COLLATE utf8_unicode_ci NOT NULL,
   `indonesian` longtext COLLATE utf8_unicode_ci NOT NULL,
   `japanese` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `korean` longtext COLLATE utf8_unicode_ci NOT NULL
+  `korean` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`phrase_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=229 ;
 
 --
@@ -738,7 +770,8 @@ INSERT INTO `language` (`phrase_id`, `phrase`, `english`, `bengali`, `spanish`, 
 CREATE TABLE IF NOT EXISTS `levels` (
   `stage_id` int(11) NOT NULL,
   `level_id` int(11) NOT NULL,
-  `level_name` varchar(50) NOT NULL
+  `level_name` varchar(50) NOT NULL,
+  PRIMARY KEY (`stage_id`,`level_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -763,10 +796,11 @@ INSERT INTO `levels` (`stage_id`, `level_id`, `level_name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `login_attempts` (
-`id` int(11) unsigned NOT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ip_address` varchar(15) NOT NULL,
   `login` varchar(100) NOT NULL,
-  `time` int(11) unsigned DEFAULT NULL
+  `time` int(11) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -776,7 +810,7 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 --
 
 CREATE TABLE IF NOT EXISTS `mark` (
-`mark_id` int(11) NOT NULL,
+  `mark_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
   `subject_id` int(11) NOT NULL,
   `class_id` int(11) NOT NULL,
@@ -784,7 +818,8 @@ CREATE TABLE IF NOT EXISTS `mark` (
   `mark_obtained` int(11) NOT NULL DEFAULT '0',
   `mark_total` int(11) NOT NULL DEFAULT '100',
   `attendance` int(11) NOT NULL DEFAULT '0',
-  `comment` longtext COLLATE utf8_unicode_ci NOT NULL
+  `comment` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`mark_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -794,10 +829,11 @@ CREATE TABLE IF NOT EXISTS `mark` (
 --
 
 CREATE TABLE IF NOT EXISTS `noticeboard` (
-`notice_id` int(11) NOT NULL,
+  `notice_id` int(11) NOT NULL AUTO_INCREMENT,
   `notice_title` longtext COLLATE utf8_unicode_ci NOT NULL,
   `notice` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `create_timestamp` int(11) NOT NULL
+  `create_timestamp` int(11) NOT NULL,
+  PRIMARY KEY (`notice_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
@@ -815,9 +851,10 @@ INSERT INTO `noticeboard` (`notice_id`, `notice_title`, `notice`, `create_timest
 --
 
 CREATE TABLE IF NOT EXISTS `options` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `key` varchar(200) NOT NULL,
-  `value` varchar(200) NOT NULL
+  `value` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
@@ -825,7 +862,7 @@ CREATE TABLE IF NOT EXISTS `options` (
 --
 
 INSERT INTO `options` (`id`, `key`, `value`) VALUES
-(1, 'site_url', 'http://localhost/system'),
+(1, 'site_url', 'http://localhost/school_system'),
 (2, 'default_language', 'english');
 
 -- --------------------------------------------------------
@@ -835,10 +872,11 @@ INSERT INTO `options` (`id`, `key`, `value`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `parent` (
-`parent_id` int(11) NOT NULL,
+  `parent_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
   `relation_with_student` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `profession` longtext COLLATE utf8_unicode_ci NOT NULL
+  `profession` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -855,7 +893,7 @@ INSERT INTO `parent` (`parent_id`, `student_id`, `relation_with_student`, `profe
 --
 
 CREATE TABLE IF NOT EXISTS `payment` (
-`payment_id` int(11) NOT NULL,
+  `payment_id` int(11) NOT NULL AUTO_INCREMENT,
   `payment_type` longtext COLLATE utf8_unicode_ci NOT NULL,
   `transaction_id` longtext COLLATE utf8_unicode_ci NOT NULL,
   `invoice_id` int(11) NOT NULL,
@@ -863,7 +901,8 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `method` longtext COLLATE utf8_unicode_ci NOT NULL,
   `description` longtext COLLATE utf8_unicode_ci NOT NULL,
   `amount` int(11) NOT NULL,
-  `timestamp` int(11) NOT NULL
+  `timestamp` int(11) NOT NULL,
+  PRIMARY KEY (`payment_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -873,9 +912,10 @@ CREATE TABLE IF NOT EXISTS `payment` (
 --
 
 CREATE TABLE IF NOT EXISTS `settings` (
-`settings_id` int(11) NOT NULL,
+  `settings_id` int(11) NOT NULL AUTO_INCREMENT,
   `type` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `description` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+  `description` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
@@ -899,7 +939,8 @@ INSERT INTO `settings` (`settings_id`, `type`, `description`) VALUES
 
 CREATE TABLE IF NOT EXISTS `stages` (
   `stage_id` int(11) NOT NULL,
-  `stage_name` varchar(50) NOT NULL
+  `stage_name` varchar(50) NOT NULL,
+  PRIMARY KEY (`stage_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -917,14 +958,15 @@ INSERT INTO `stages` (`stage_id`, `stage_name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `student` (
-`student_id` int(11) NOT NULL,
+  `student_id` int(11) NOT NULL AUTO_INCREMENT,
   `father_name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `mother_name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `class_id` longtext COLLATE utf8_unicode_ci NOT NULL,
   `roll` longtext COLLATE utf8_unicode_ci NOT NULL,
   `transport_id` int(11) NOT NULL,
   `dormitory_id` int(11) NOT NULL,
-  `dormitory_room_number` longtext COLLATE utf8_unicode_ci NOT NULL
+  `dormitory_room_number` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`student_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
 
 --
@@ -952,16 +994,46 @@ CREATE TABLE IF NOT EXISTS `students_installments` (
   `installment_id` int(11) NOT NULL,
   `student_id` int(11) NOT NULL,
   `paid` int(11) NOT NULL,
-  `date_payment` varchar(50) NOT NULL
+  `date_payment` varchar(50) NOT NULL,
+  `other` varchar(11) NOT NULL,
+  PRIMARY KEY (`installment_id`,`student_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `students_installments`
 --
 
-INSERT INTO `students_installments` (`installment_id`, `student_id`, `paid`, `date_payment`) VALUES
-(1, 71, 0, '');
+INSERT INTO `students_installments` (`installment_id`, `student_id`, `paid`, `date_payment`, `other`) VALUES
+(1, 71, 0, '', '0');
 
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `student_expenses`
+--
+CREATE TABLE IF NOT EXISTS `student_expenses` (
+`expenses_name` varchar(200)
+,`expenses_level` int(11)
+,`expenses_stage` int(11)
+,`expenses_value` int(11)
+,`expenses_discount` int(11)
+,`installment_name` varchar(200)
+,`value` int(11)
+,`end_date` varchar(200)
+,`student_paid` int(11)
+,`st_date_payment` varchar(22)
+,`expenses_id` int(11)
+,`installment_id` int(11)
+,`student_name` varchar(50)
+,`student_id` int(11)
+,`email` varchar(100)
+,`groups` varchar(100)
+,`phone` varchar(20)
+,`national_id` varchar(50)
+,`photo` varchar(200)
+,`stage` varchar(50)
+,`level` varchar(50)
+);
 -- --------------------------------------------------------
 
 --
@@ -969,10 +1041,11 @@ INSERT INTO `students_installments` (`installment_id`, `student_id`, `paid`, `da
 --
 
 CREATE TABLE IF NOT EXISTS `subject` (
-`subject_id` int(11) NOT NULL,
+  `subject_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `class_id` int(11) NOT NULL,
-  `teacher_id` int(11) DEFAULT NULL
+  `teacher_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`subject_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 --
@@ -991,10 +1064,12 @@ INSERT INTO `subject` (`subject_id`, `name`, `class_id`, `teacher_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `translation` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `key` varchar(50) NOT NULL,
   `english` varchar(200) NOT NULL,
-  `arabic` varchar(200) CHARACTER SET utf8 NOT NULL
+  `arabic` varchar(200) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `key` (`key`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30 ;
 
 --
@@ -1026,11 +1101,12 @@ INSERT INTO `translation` (`id`, `key`, `english`, `arabic`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `transport` (
-`transport_id` int(11) NOT NULL,
+  `transport_id` int(11) NOT NULL AUTO_INCREMENT,
   `route_name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `number_of_vehicle` longtext COLLATE utf8_unicode_ci NOT NULL,
   `description` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `route_fare` longtext COLLATE utf8_unicode_ci NOT NULL
+  `route_fare` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`transport_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -1047,7 +1123,7 @@ INSERT INTO `transport` (`transport_id`, `route_name`, `number_of_vehicle`, `des
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
-`id` int(11) unsigned NOT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `bus_fees` int(15) NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -1071,7 +1147,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `blood_group` varchar(50) NOT NULL,
   `address` varchar(200) NOT NULL,
   `stage` varchar(50) NOT NULL DEFAULT '1',
-  `level` varchar(50) NOT NULL DEFAULT '1'
+  `level` varchar(50) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=616 ;
 
 --
@@ -1079,7 +1156,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `bus_fees`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `class_id`, `last_login`, `active`, `name`, `groups`, `phone`, `national_id`, `photo`, `birthday`, `sex`, `religion`, `blood_group`, `address`, `stage`, `level`) VALUES
-(46, 0, 'admin', '$2y$08$ofb/opJfPW/xwrK46lLChuEkbFqiYgaDKYllFeiAn4C5S8sVQoYK.', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '14', '2014/09/30 09:09:50', 1, 'mohamed gomah agamy', 'admin', '999999999', '88888888', '14-09-29-05-09-52_2876452_Desert.jpg', '1/1/1992', 'male', 'Muslim', 'o', 'fayoum,egypt', '1', '1'),
+(46, 0, 'admin', '$2y$08$ofb/opJfPW/xwrK46lLChuEkbFqiYgaDKYllFeiAn4C5S8sVQoYK.', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '14', '2014/09/30 12:09:33', 1, 'mohamed gomah agamy', 'admin', '999999999', '88888888', '14-09-29-05-09-52_2876452_Desert.jpg', '1/1/1992', 'male', 'Muslim', 'o', 'fayoum,egypt', '1', '1'),
 (59, 800, 'aaaa', '$2y$08$KP6/Oz/qLD1L1A4GE2r2VOGiVTdhmO9poVDXT79y6GSX4MJFpiHsO', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '1', '2014/09/28 08:09:15', 1, 'ali gamal mostafa', 'student', '111111111111', '111111111111111', '', '1/1/2001', 'male', 'Muslim', 'a', 'aaaaaaaaaa', '2', '2'),
 (64, 0, 'ahmed', '$2y$08$EHV2V1VbFQ.vDok/qiM4Fe9BCMyjC1RpQpbUXtt1T4daZqbRbqD02', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '14', '14/09/17 02:09:34', 1, 'ahmed gamal', 'teacher', '', '121232423', '', '1/1/2002', 'male', 'Muslim', 'e', 'giza', '1', '1'),
 (65, 0, '4444', '$2y$08$.TUrFt38TJhU7CohUasyAu9RPhbAglqn61YRjt6YXnjvfpvB2pYpy', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '14', '2014/09/29 05:09:18', 1, 'aaaaaaaa', 'parent', NULL, '4444', '14-09-29-06-09-03_14643454_Chrysanthemum.jpg', '2/2/2005', 'male', '', 'b', 'alex', '1', '1'),
@@ -1641,7 +1718,8 @@ INSERT INTO `users` (`id`, `bus_fees`, `username`, `password`, `salt`, `email`, 
 CREATE TABLE IF NOT EXISTS `users_forms` (
   `user_id` int(11) NOT NULL,
   `form_id` int(11) NOT NULL,
-  `rwx` varchar(10) NOT NULL
+  `rwx` varchar(10) NOT NULL,
+  PRIMARY KEY (`user_id`,`form_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -1658,9 +1736,13 @@ INSERT INTO `users_forms` (`user_id`, `form_id`, `rwx`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `users_groups` (
-`id` int(11) unsigned NOT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) unsigned NOT NULL,
-  `group_id` mediumint(8) unsigned NOT NULL
+  `group_id` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uc_users_groups` (`user_id`,`group_id`),
+  KEY `fk_users_groups_users1_idx` (`user_id`),
+  KEY `fk_users_groups_groups1_idx` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1714,28 +1796,6 @@ CREATE TABLE IF NOT EXISTS `v_class_students` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `v_installment_students`
---
-CREATE TABLE IF NOT EXISTS `v_installment_students` (
-`student_id` int(11)
-,`paid` int(11)
-,`expenses_id` int(11)
-,`expenses_name` varchar(200)
-,`expenses_value` int(11)
-,`level` int(11)
-,`stage` int(11)
-,`installment_id` int(11)
-,`installment_value` int(11)
-,`installment_name` varchar(200)
-,`class_name` varchar(200)
-,`date_payment` varchar(50)
-,`class_id` int(11)
-,`student_name` varchar(50)
-,`end_date` varchar(200)
-);
--- --------------------------------------------------------
-
---
 -- Stand-in structure for view `v_stage_level_class`
 --
 CREATE TABLE IF NOT EXISTS `v_stage_level_class` (
@@ -1751,6 +1811,34 @@ CREATE TABLE IF NOT EXISTS `v_stage_level_class` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `v_student_expenses`
+--
+CREATE TABLE IF NOT EXISTS `v_student_expenses` (
+`expenses_name` varchar(200)
+,`expenses_level` int(11)
+,`expenses_stage` int(11)
+,`expenses_value` int(11)
+,`expenses_discount` int(11)
+,`installment_name` varchar(200)
+,`value` int(11)
+,`end_date` varchar(200)
+,`student_paid` int(11)
+,`st_date_payment` varchar(22)
+,`expenses_id` int(11)
+,`installment_id` int(11)
+,`student_name` varchar(50)
+,`student_id` int(11)
+,`email` varchar(100)
+,`groups` varchar(100)
+,`phone` varchar(20)
+,`national_id` varchar(50)
+,`photo` varchar(200)
+,`stage` varchar(50)
+,`level` varchar(50)
+);
+-- --------------------------------------------------------
+
+--
 -- Stand-in structure for view `v_user_absence`
 --
 CREATE TABLE IF NOT EXISTS `v_user_absence` (
@@ -1762,6 +1850,15 @@ CREATE TABLE IF NOT EXISTS `v_user_absence` (
 ,`class_name` varchar(200)
 ,`class_id` int(11)
 );
+-- --------------------------------------------------------
+
+--
+-- Structure for view `student_expenses`
+--
+DROP TABLE IF EXISTS `student_expenses`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `student_expenses` AS select `expenses`.`expenses_name` AS `expenses_name`,`expenses`.`expenses_level` AS `expenses_level`,`expenses`.`expenses_stage` AS `expenses_stage`,`expenses`.`expenses_value` AS `expenses_value`,`expenses`.`expenses_discount` AS `expenses_discount`,`installments`.`name` AS `installment_name`,`installments`.`value` AS `value`,`installments`.`end_date` AS `end_date`,`installments`.`student_paid` AS `student_paid`,`installments`.`st_date_payment` AS `st_date_payment`,`installments`.`expenses_id` AS `expenses_id`,`installments`.`installment_id` AS `installment_id`,`users`.`name` AS `student_name`,`installments`.`student_id` AS `student_id`,`users`.`email` AS `email`,`users`.`groups` AS `groups`,`users`.`phone` AS `phone`,`users`.`national_id` AS `national_id`,`users`.`photo` AS `photo`,`users`.`stage` AS `stage`,`users`.`level` AS `level` from ((`installments` join `expenses` on((`installments`.`expenses_id` = `expenses`.`expenses_id`))) join `users` on((`installments`.`student_id` = `users`.`id`)));
+
 -- --------------------------------------------------------
 
 --
@@ -1792,20 +1889,20 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `v_installment_students`
---
-DROP TABLE IF EXISTS `v_installment_students`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_installment_students` AS select `students_installments`.`student_id` AS `student_id`,`students_installments`.`paid` AS `paid`,`installments`.`expenses_id` AS `expenses_id`,`expenses`.`name` AS `expenses_name`,`expenses`.`value` AS `expenses_value`,`expenses`.`level` AS `level`,`expenses`.`stage` AS `stage`,`students_installments`.`installment_id` AS `installment_id`,`installments`.`value` AS `installment_value`,`installments`.`name` AS `installment_name`,`v_class_students`.`class_name` AS `class_name`,`students_installments`.`date_payment` AS `date_payment`,`v_class_students`.`class_id` AS `class_id`,`v_class_students`.`student_name` AS `student_name`,`installments`.`end_date` AS `end_date` from (((`students_installments` left join `v_class_students` on((`students_installments`.`student_id` = `v_class_students`.`student_id`))) left join `installments` on((`students_installments`.`installment_id` = `installments`.`id`))) left join `expenses` on((`installments`.`expenses_id` = `expenses`.`id`)));
-
--- --------------------------------------------------------
-
---
 -- Structure for view `v_stage_level_class`
 --
 DROP TABLE IF EXISTS `v_stage_level_class`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_stage_level_class` AS select `class`.`level` AS `level`,`class`.`stage` AS `stage`,`levels`.`level_name` AS `level_name`,`class`.`name` AS `name`,`class`.`class_id` AS `class_id`,`class`.`name_numeric` AS `name_numeric`,`class`.`teacher_id` AS `teacher_id`,`stages`.`stage_name` AS `stage_name` from (`class` left join (`levels` left join `stages` on((`levels`.`stage_id` = `stages`.`stage_id`))) on(((`class`.`level` = `levels`.`level_id`) and (`class`.`stage` = `levels`.`stage_id`))));
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_student_expenses`
+--
+DROP TABLE IF EXISTS `v_student_expenses`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_student_expenses` AS select `expenses`.`expenses_name` AS `expenses_name`,`expenses`.`expenses_level` AS `expenses_level`,`expenses`.`expenses_stage` AS `expenses_stage`,`expenses`.`expenses_value` AS `expenses_value`,`expenses`.`expenses_discount` AS `expenses_discount`,`installments`.`name` AS `installment_name`,`installments`.`value` AS `value`,`installments`.`end_date` AS `end_date`,`installments`.`student_paid` AS `student_paid`,`installments`.`st_date_payment` AS `st_date_payment`,`installments`.`expenses_id` AS `expenses_id`,`installments`.`installment_id` AS `installment_id`,`users`.`name` AS `student_name`,`installments`.`student_id` AS `student_id`,`users`.`email` AS `email`,`users`.`groups` AS `groups`,`users`.`phone` AS `phone`,`users`.`national_id` AS `national_id`,`users`.`photo` AS `photo`,`users`.`stage` AS `stage`,`users`.`level` AS `level` from ((`installments` join `expenses` on((`installments`.`expenses_id` = `expenses`.`expenses_id`))) join `users` on((`installments`.`student_id` = `users`.`id`)));
 
 -- --------------------------------------------------------
 
@@ -1816,360 +1913,6 @@ DROP TABLE IF EXISTS `v_user_absence`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_absence` AS select `absence`.`day` AS `day`,`absence`.`user_id` AS `user_id`,`users`.`national_id` AS `national_id`,`users`.`name` AS `name`,`users`.`groups` AS `groups`,`v_class_students`.`class_name` AS `class_name`,`v_class_students`.`class_id` AS `class_id` from ((`absence` left join `users` on((`users`.`id` = `absence`.`user_id`))) left join `v_class_students` on((`v_class_students`.`student_id` = `absence`.`user_id`)));
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `absence`
---
-ALTER TABLE `absence`
- ADD PRIMARY KEY (`day`,`user_id`);
-
---
--- Indexes for table `admin`
---
-ALTER TABLE `admin`
- ADD PRIMARY KEY (`admin_id`);
-
---
--- Indexes for table `book`
---
-ALTER TABLE `book`
- ADD PRIMARY KEY (`book_id`);
-
---
--- Indexes for table `bus`
---
-ALTER TABLE `bus`
- ADD PRIMARY KEY (`no`);
-
---
--- Indexes for table `bus_absence`
---
-ALTER TABLE `bus_absence`
- ADD PRIMARY KEY (`student_id`,`day`);
-
---
--- Indexes for table `bus_students`
---
-ALTER TABLE `bus_students`
- ADD PRIMARY KEY (`student_id`);
-
---
--- Indexes for table `class`
---
-ALTER TABLE `class`
- ADD PRIMARY KEY (`class_id`);
-
---
--- Indexes for table `class_routine`
---
-ALTER TABLE `class_routine`
- ADD PRIMARY KEY (`class_routine_id`);
-
---
--- Indexes for table `class_students`
---
-ALTER TABLE `class_students`
- ADD PRIMARY KEY (`student_id`);
-
---
--- Indexes for table `dormitory`
---
-ALTER TABLE `dormitory`
- ADD PRIMARY KEY (`dormitory_id`);
-
---
--- Indexes for table `email_template`
---
-ALTER TABLE `email_template`
- ADD PRIMARY KEY (`email_template_id`);
-
---
--- Indexes for table `exam`
---
-ALTER TABLE `exam`
- ADD PRIMARY KEY (`exam_id`);
-
---
--- Indexes for table `expenses`
---
-ALTER TABLE `expenses`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `forms`
---
-ALTER TABLE `forms`
- ADD PRIMARY KEY (`form_id`);
-
---
--- Indexes for table `grade`
---
-ALTER TABLE `grade`
- ADD PRIMARY KEY (`grade_id`);
-
---
--- Indexes for table `groups`
---
-ALTER TABLE `groups`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `installments`
---
-ALTER TABLE `installments`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `invoice`
---
-ALTER TABLE `invoice`
- ADD PRIMARY KEY (`invoice_id`);
-
---
--- Indexes for table `language`
---
-ALTER TABLE `language`
- ADD PRIMARY KEY (`phrase_id`);
-
---
--- Indexes for table `levels`
---
-ALTER TABLE `levels`
- ADD PRIMARY KEY (`stage_id`,`level_id`);
-
---
--- Indexes for table `login_attempts`
---
-ALTER TABLE `login_attempts`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `mark`
---
-ALTER TABLE `mark`
- ADD PRIMARY KEY (`mark_id`);
-
---
--- Indexes for table `noticeboard`
---
-ALTER TABLE `noticeboard`
- ADD PRIMARY KEY (`notice_id`);
-
---
--- Indexes for table `options`
---
-ALTER TABLE `options`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `parent`
---
-ALTER TABLE `parent`
- ADD PRIMARY KEY (`parent_id`);
-
---
--- Indexes for table `payment`
---
-ALTER TABLE `payment`
- ADD PRIMARY KEY (`payment_id`);
-
---
--- Indexes for table `settings`
---
-ALTER TABLE `settings`
- ADD PRIMARY KEY (`settings_id`);
-
---
--- Indexes for table `stages`
---
-ALTER TABLE `stages`
- ADD PRIMARY KEY (`stage_id`);
-
---
--- Indexes for table `student`
---
-ALTER TABLE `student`
- ADD PRIMARY KEY (`student_id`);
-
---
--- Indexes for table `students_installments`
---
-ALTER TABLE `students_installments`
- ADD PRIMARY KEY (`installment_id`,`student_id`);
-
---
--- Indexes for table `subject`
---
-ALTER TABLE `subject`
- ADD PRIMARY KEY (`subject_id`);
-
---
--- Indexes for table `translation`
---
-ALTER TABLE `translation`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `key` (`key`);
-
---
--- Indexes for table `transport`
---
-ALTER TABLE `transport`
- ADD PRIMARY KEY (`transport_id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users_forms`
---
-ALTER TABLE `users_forms`
- ADD PRIMARY KEY (`user_id`,`form_id`);
-
---
--- Indexes for table `users_groups`
---
-ALTER TABLE `users_groups`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `uc_users_groups` (`user_id`,`group_id`), ADD KEY `fk_users_groups_users1_idx` (`user_id`), ADD KEY `fk_users_groups_groups1_idx` (`group_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `admin`
---
-ALTER TABLE `admin`
-MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `book`
---
-ALTER TABLE `book`
-MODIFY `book_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `class`
---
-ALTER TABLE `class`
-MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT for table `class_routine`
---
-ALTER TABLE `class_routine`
-MODIFY `class_routine_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
---
--- AUTO_INCREMENT for table `dormitory`
---
-ALTER TABLE `dormitory`
-MODIFY `dormitory_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `email_template`
---
-ALTER TABLE `email_template`
-MODIFY `email_template_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `exam`
---
-ALTER TABLE `exam`
-MODIFY `exam_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `expenses`
---
-ALTER TABLE `expenses`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `grade`
---
-ALTER TABLE `grade`
-MODIFY `grade_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `groups`
---
-ALTER TABLE `groups`
-MODIFY `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
---
--- AUTO_INCREMENT for table `installments`
---
-ALTER TABLE `installments`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `invoice`
---
-ALTER TABLE `invoice`
-MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `language`
---
-ALTER TABLE `language`
-MODIFY `phrase_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=229;
---
--- AUTO_INCREMENT for table `login_attempts`
---
-ALTER TABLE `login_attempts`
-MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `mark`
---
-ALTER TABLE `mark`
-MODIFY `mark_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `noticeboard`
---
-ALTER TABLE `noticeboard`
-MODIFY `notice_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `options`
---
-ALTER TABLE `options`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `parent`
---
-ALTER TABLE `parent`
-MODIFY `parent_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `payment`
---
-ALTER TABLE `payment`
-MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `settings`
---
-ALTER TABLE `settings`
-MODIFY `settings_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
---
--- AUTO_INCREMENT for table `student`
---
-ALTER TABLE `student`
-MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
---
--- AUTO_INCREMENT for table `subject`
---
-ALTER TABLE `subject`
-MODIFY `subject_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `translation`
---
-ALTER TABLE `translation`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
---
--- AUTO_INCREMENT for table `transport`
---
-ALTER TABLE `transport`
-MODIFY `transport_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=616;
---
--- AUTO_INCREMENT for table `users_groups`
---
-ALTER TABLE `users_groups`
-MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -274,9 +274,9 @@ $(function () {
                     formatter:function (value, row, index) {
 
 
-                            var e = '<a href="javascript:void(0);" onclick="edit_dialog(' + index + ')"><img src="./assets/img/edit.pn" alt=""/><i class="icon-pencil bigger-130"></i></a> ';
-                            var d = '<a href="javascript:void(0);" onclick="_delete('+index +','+row.no+')"><img src="./assets/img/delete.pn" alt=""/><i class="icon-trash bigger-130"></i></a>';
-                            var v = '<a href="javascript:void(0);" onclick="_show_details(' + index + ')" ><img src="./assets/img/view.png" alt="view"/></a>';
+                            var e = '<a href="javascript:void(0);" onclick="edit_dialog(' + index + ')"><i class="icon-pencil bigger-130"></i></a> ';
+                            var d = '<a href="javascript:void(0);" onclick="_delete('+index +','+row.no+')"><i class="icon-trash bigger-130"></i></a>';
+                            var v = '<a href="javascript:void(0);" onclick="_show_details(' + index + ')" ></a>';
                             return "<div>" + e + d + "</div>";
                     }
 

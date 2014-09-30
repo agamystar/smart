@@ -113,7 +113,7 @@ class User extends MY_Controller
         if($this->input->get('date')){
             $today=$this->input->get('date');
         }else{
-        $today=date('Y/m/d') ;
+        $today=date('m/d/Y') ;
         }
         $classes=$this->mymodel_model->select("class","1=1");
       /////////old code //////  $class_students=$this->mymodel_model->select("v_class_students","class_id=$class and  student_id not in(select user_id from v_user_absence where day='$today'  ) order by student_name");

@@ -1,3 +1,5 @@
+
+
 function undo() {
     $('#datagrid').datagrid('reload');
 }
@@ -29,18 +31,17 @@ function getRowIndex(target) {
 function add_edit(action) {
     $('#username').removeAttr("disabled");
     $('#password').removeAttr("disabled");
-
     $('.loading-indicator').show();
+
+
+
     var addnewrow = {
-        no:$('#bus_no').val(),
-        driver:$('#driver').val(),
-        supervisor:$('#supervisor').val(),
-        path:$('#path').val(),
-        student_fees:$('#student_fees').val(),
-        school_fees:$('#school_fees').val(),
-        id:$('#kid').val()
-
-
+    name:$('#name').val(),
+    name_numeric:$('#name_numeric').val(),
+    stage:$('#stage').val(),
+    level:$('#level').val(),
+    teacher_id:$('#teacher_id').val(),
+    id:$('#kid').val()
     };
 
 
@@ -75,13 +76,14 @@ function _delete(index,id) {
     $('#datagrid').datagrid('selectRow', index);
     bootbox.confirm('Are you sure you want to delete this Record ? ', function (yes) {
             if (yes) {
-                   $('#datagrid').datagrid('deleteRow', index);
+                  var selection = $('#datagrid').datagrid('getSelected');
+                    $('#datagrid').datagrid('deleteRow', index);
 
                     $.post(
                         js_var_object.current_link,
                         {
                             action:'delete',
-                           id:''+id
+                            id:id
 
                         }, function (result) {
                             if (result.result == "success") {
@@ -97,21 +99,19 @@ function _delete(index,id) {
 
 
                     return false;
-
             }
-        }
-    );
+    })
+
 }
 function edit_dialog(index) {
     $('#datagrid').datagrid('selectRow', index);
     var selection = $('#datagrid').datagrid('getSelected');
-    $('#bus_no').val(selection.no);
-    $('#driver').val(selection.driver);
-    $('#supervisor').val(selection.supervisor);
-    $('#path').val(selection.path);
-    $('#student_fees').val(selection.student_fees);
-    $('#school_fees').val(selection.school_fees);
-    $('#kid').val(selection.no);
+    $('#name').val(selection.name);
+    $('#name_numeric').val(selection.name_numeric);
+    $('#stage').val(selection.stage);
+    $('#level').val(selection.level);
+    $('#teacher_id').val(selection.teacher_id);
+    $('#kid').val(selection.class_id);
     $('#submit_add').hide();
     $('#submit_edit').show();
     $("#mymodal").dialog("open");
@@ -119,12 +119,55 @@ function edit_dialog(index) {
 
 $(function () {
 
+
+    var list_stages=[];
+    $.each(js_var_object.stages,function(x,y){
+        list_stages[y.stage_id]= y.stage_name;
+    });
+
+    var list_levels=[];
+    $.each(js_var_object.levels,function(x,y){
+        list_levels[y.level_id]= y.level_name;
+    });
+
+    var list_teachers=[];
+    $.each(js_var_object.teachers,function(x,y){
+        list_teachers[y.id]= y.name;
+    });
+
+
+    $('select#stage').change(function(){
+       // alert($(this).val());
+        var options='';
+        var stage=$(this).val();
+
+         var result = $.grep(js_var_object.levels, function(x){
+             return   x.stage_id===stage;
+         }
+         );
+
+
+        $.each(result,function(x,y){
+
+            options+="<option value="+y.level_id+">"+ y.level_name+"</option>";
+        });
+      ///  alert(options);
+       $('select#level').html(options)
+    });
+
+
+    $('select#stage').trigger("change");
+
+
+
     $("#mymodal").dialog({
         width:550,
         autoOpen:false,
         modal:true,
         closed:true,
-        title:' Bus  '
+        title:' Class  ',
+        draggable:true,
+        top:100
     });
 
 
@@ -133,7 +176,8 @@ $(function () {
         autoOpen:false,
         modal:true,
         closed:true,
-        title:'Import Form'
+        title:'Import Form',
+        draggable:true
     });
 
     $("#export_dialog").dialog({
@@ -142,7 +186,8 @@ $(function () {
         modal:true,
         closed:true,
 
-        title:'Export Form'
+        title:'Export Form',
+        draggable:true
     });
 
 
@@ -209,6 +254,9 @@ $(function () {
         add_edit("edit");
     });
 
+ //  $('#paid_date').datebox();
+
+
 
     $('#datagrid').datagrid({
         url:js_var_object.current_link,
@@ -217,10 +265,10 @@ $(function () {
         pagination:true,
         sortName:'released',
         sortOrder:'desc',
-        width:1120,
+        width:1100,
         fixed:true,
         queryParams:{
-            action:'get_data_s',
+            action:'get_data',
             user_group:$("#select_group").val()
         },
         method:'get',
@@ -232,37 +280,149 @@ $(function () {
 
         }, columns:[
             [
-                {field:'action', title:'#', type:'label', width:40, align:'center',
+                {field:'action', title:'Action', type:'label', width:50, align:'center',
                     formatter:function (value, row, index) {
 
 
                             var e = '<a href="javascript:void(0);" onclick="edit_dialog(' + index + ')"><i class="icon-pencil bigger-130"></i></a> ';
-                            var d = '<a href="javascript:void(0);" onclick="_delete('+index +','+row.no+')"><i class="icon-trash bigger-130"></i></a>';
+                            var d = '<a href="javascript:void(0);" onclick="_delete(' + index +',\''+row.class_id+'\')"><i class="icon-trash bigger-130"></i></a>';
                             var v = '<a href="javascript:void(0);" onclick="_show_details(' + index + ')" ></a>';
                             return "<div>" + e + d + "</div>";
                     }
 
                 },
-                // {field:'id', title:"Id", width:60, align:'center', sortable:true},
-
-                {field:'stage_id', title:"ID ", width:100, align:'center', sortable:true,
-                    editor:{
-                        type:'text'
-                    }
-                },
-                {field:'stage_name', title:"Name", width:200, align:'center', sortable:true,
-                    editor:{
-                        type:'text'
-                    }
-                },
+                {field:'student_name', align:'center', title:"Student Name", width:250, sortable:true },
+                {field:'national_id', title:"National No", width:150, align:'center', sortable:true},
+                {field:'expenses_discount', align:'center', title:"Discount", width:150, sortable:true },
+                {field:'st_date_payment', align:'center', title:"Paid In", width:230, sortable:true },
+                {field:'student_paid', align:'center', title:" Amount ", width:150, sortable:true }
 
 
-                {field:'Levels', align:'center', title:"Levels", width:200, sortable:true,
+            ]
+        ],
+        onBeforeLoad:function (param) {
+        },
+        onLoadSuccess:function (data) {
 
-                    formatter:function (value, row, index) {
-                    return '<a href="#" > Add Levels</a>';
-                    }
-                    }
+            $('#import_text').text("Import  " + $('#select_group option:selected').text());
+            $('#export_text').text("Export  " + $('#select_group option:selected').text());
+
+            var d = new Date();
+            var month = d.getMonth()+1;
+            var day = d.getDate();
+            var output = (day<10 ? '0' : '') + day+ '/' +
+                (month<10 ? '0' : '') + month + '/' +
+                d.getFullYear() ;
+            alert(output);
+
+          //  $('#paid_date').datebox("setValue",output);
+
+        }, onDblClickRow:function (rowIndex, rowData) {
+
+        }, onSelect:function (rowIndex, rowData) {
+
+        },
+        onBeforeEdit:function (index, row) {
+            row.editing = true;
+            updateActions(index);
+        },
+        onAfterEdit:function (index, row) {
+            row.editing = false;
+            updateActions(index);
+        },
+        onCancelEdit:function (index, row) {
+            row.editing = false;
+            updateActions(index);
+        }
+    })
+
+        .datagrid('enableFilter', [
+
+        {
+            field:'id',
+            type:'text',
+            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
+        },
+        {
+            field:'name',
+            type:'text',
+
+            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
+        },
+        {
+            field:'birthday',
+            type:'text',
+
+            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
+        },
+        {
+            field:'email',
+            type:'text',
+
+            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
+        }
+        ,
+        {
+            field:'phone',
+            type:'text',
+
+            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
+        },
+        {
+            field:'address',
+            type:'text',
+
+            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
+        },
+        {
+            field:'sex',
+            type:'text',
+
+            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
+        },
+        {
+            field:'religion',
+            type:'text',
+
+            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
+        }
+
+
+    ]);
+
+
+
+    $('#student_name').combogrid({
+        url:js_var_object.current_link,
+        singleSelect:true,
+        rownumbers:false,
+        pagination:true,
+        sortName:'released',
+        sortOrder:'desc',
+        width:410,
+        height:30,
+        idField: 'id',
+        textField: 'name',
+        panelHeight:500,
+        fixed:true,
+        queryParams:{
+            action:'get_students',
+            stage:1,
+            level:1
+        },
+        method:'get',
+        pageSize:20,
+        autoRowHeight:true,
+        rowStyler:function (index, row) {
+
+            return 'height:35px;  border:2px solid #000';
+
+        }, columns:[
+            [
+
+                {field:'name', align:'center', title:" Name", width:200, sortable:true },
+                {field:'national_id', title:"National No", width:150, align:'center', sortable:true}
+
 
             ]
         ],
@@ -345,10 +505,6 @@ $(function () {
 
 
     ]);
-
-    $('input#active_0').on('click', function () {
-        alert("ok");
-    });
 
 
 });

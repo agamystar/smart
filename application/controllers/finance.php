@@ -14,13 +14,8 @@ class Finance extends MY_Controller
     }
 
 
-    function index()
-    {
+    function expenses()  {
 
-
-        if (!$this->ion_auth->logged_in()) {
-            redirect(SITE_LINK . "/security/login", 'refresh');
-        }
 
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
@@ -31,6 +26,11 @@ class Finance extends MY_Controller
         $row = json_decode($this->input->post("row"));
         $ajax_data = json_decode($this->input->post("data"));
 
+
+        $stages=$this->mymodel_model->select("stages",'1=1');
+        $levels=$this->mymodel_model->select("levels",'1=1');
+        $teachers=$this->mymodel_model->select("users",'groups="teacher"');
+
         if ($this->session->userdata("groups") != "admin") {
             redirect(SITE_LINK . '/security/login', 'refresh');
         }
@@ -38,17 +38,13 @@ class Finance extends MY_Controller
 
         else {
 
-            $stages=$this->mymodel_model->select("stages",'1=1');
-            $levels=$this->mymodel_model->select("levels",'1=1');
-
             if ($action_get == "get_data") {
 
                 $back = array();
                 $this->db->select('*');
                 $this->db->start_cache();
-                $this->db->from("v_installment_students");
+                $this->db->from("v_student_expenses");
 
-                //User filter
 
                 $flds_array = array(
                     'id' => array('where' => "id", 'order' => "id", 'val_template' => '', 'lower' => false),
@@ -69,7 +65,7 @@ class Finance extends MY_Controller
                     $page = 1;
                 }
                 $offset = (($page - 1) * $rows) + 1;
-                $sort = isset($_GET['sort']) ? $_GET['sort'] : 'student_id';
+                $sort = isset($_GET['sort']) ? $_GET['sort'] : 'class_id';
                 $order = isset($_GET['order']) ? $_GET['order'] : 'asc';
                 $filterRules = json_decode($this->input->get('filterRules'));
                 $sorting_array = explode(',', $sort);
@@ -188,127 +184,74 @@ class Finance extends MY_Controller
                 exit;
             }
 
-            if ($action_post == "create_user") {
+            if ($action_get == "get_students") {
+                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 10;
+                if (empty($rows)) {
+                    $rows = 10;
+                }
+                if (empty($page)) {
+                    $page = 1;
+                }
+                $offset = (($page - 1) * $rows) + 1;
+                $back = array();
+                $this->db->select('*');
+                $this->db->start_cache();
+                $this->db->from("users");
+                $this->db->limit($rows, $offset - 1);
+                $rs = $this->db->get();
+                //  echo $this->db->last_query();
 
-                $bus_fees = '';
-                $salt = '';
-                $password = $this->ion_auth->hash_password($row_add->password, $salt);
+                if ($rs->num_rows() > 0) {
+                    $back = array('total' => $this->db->count_all_results(), 'rows' => $rs->result_array());
 
-                if($row_add->stage){
-                    $the_stage=$row_add->stage;
                 }
-                else{$the_stage=0;
-                }
-                if($row_add->level){
-                    $the_level=$row_add->level;
-                }
-                else{$the_level=0;
-                }
+
+                echo json_encode($back);
+                exit;
+            }
+
+            if ($action_post == "add") {
 
                 $dat = array(
                     'name' => $row_add->name,
-                    'address' => $row_add->address,
-                    'national_id' => $row_add->national_id,
-                    'sex' => $row_add->sex,
-                    'religion' => $row_add->religion,
-                    'birthday' => $row_add->birthday,
-                    'blood_group' => $row_add->blood_group,
-                    'photo' => $row_add->photo,
-                    'phone' => $row_add->phone,
-                    'username' => $row_add->username,
-                    'groups' => $row_add->groups,
-                    'email' => strtolower($row_add->email),
-                    'password ' => $password,
-                    'bus_fees' => $row_add->bus_fees,
-                    'last_login' => date('Y/m/d h:m:s'),
-                    'stage' => $the_stage,
-                    'level' => $the_level
+                    'name_numeric' => $row_add->name_numeric,
+                    'stage' => $row_add->stage,
+                    'level' => $row_add->level,
+                    'teacher_id' => $row_add->teacher_id
                 );
-
-                $this->db->where('national_id',$row_add->national_id);
-                $num = $this->db->count_all_results("users");//table name from drowp down
-
-                if($num>0){
-                    $this->db->where("national_id", $row_add->national_id);
-                    $this->db->update("users", $dat);
-
-                }else{
-                    $this->db->insert("users", $dat);
-                }
-
+                $this->db->insert("class", $dat);
                 if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
                     echo json_encode(array("result" => "success"));
                 } else {
                     echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
                 }
-
-                //   echo $this->db->last_query();
                 exit;
             }
+            if ($action_post == "edit") {
 
-            if ($action_post == "edit_user") {
-
-
-                if (!$this->ion_auth->logged_in()) {
-                    redirect(SITE_LINK . "/security/login", 'refresh');
-                }
-
-
-                $salt = '';
-                $password = $this->ion_auth->hash_password($row_add->password, $salt);
-
-                if($row_add->stage){
-                    $the_stage=$row_add->stage;
-                }
-                else{$the_stage=0;
-                }
-                if($row_add->level){
-                    $the_level=$row_add->level;
-                }
-                else{$the_level=0;
-                }
                 $dat = array(
                     'name' => $row_add->name,
-                    'address' => $row_add->address,
-                    'national_id' => $row_add->national_id,
-                    'sex' => $row_add->sex,
-                    'religion' => $row_add->religion,
-                    'birthday' => $row_add->birthday,
-                    'blood_group' => $row_add->blood_group,
-                    'photo' => $row_add->photo,
-                    'phone' => $row_add->phone,
-                    'username' => $row_add->username,
-                    'groups' => $row_add->groups,
-                    'email' => strtolower($row_add->email),
-                    'password ' => $password,
-                    'bus_fees' => $row_add->bus_fees,
-                    'last_login' => date('Y/m/d h:m:s'),
-                    'stage' => $the_stage,
-                    'level' => $the_level
+                    'name_numeric' => $row_add->name_numeric,
+                    'stage' => $row_add->stage,
+                    'level' => $row_add->level,
+                    'teacher_id' => $row_add->teacher_id
                 );
-
-                $this->db->where("id", $row_add->id);
-                $this->db->update("users", $dat);
-
-                if ($this->db->affected_rows() > 0) {
+                $this->db->where("class_id", $row_add->id);
+                $this->db->update("class", $dat);
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
                     echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
                 }
-                elseif( $this->db->affected_rows()==0){
-                    echo json_encode(array("result" => "Nothing updated"));
-                }
-                else {
-                    echo json_encode(array("result" =>"failed"));
-                }
-
-                // print_r($res);
-
-                //echo $this->db->last_query();
                 exit;
             }
 
+
+
             if ($action_post == "delete") {
-                $this->db->where("id", $row->id);
-                $this->db->delete("users");
+                $this->db->where("class_id", $this->input->post('id'));
+                $this->db->delete("class");
                 if ($this->db->affected_rows() > 0) {
                     echo json_encode(array("result" => "success"));
                 } else {
@@ -324,23 +267,24 @@ class Finance extends MY_Controller
 
         $data = array();
         $data["js_vars"] = json_encode(array(
-            'current_link' => SITE_LINK . "/" . $this->uri->segments[1],
+            'current_link' => SITE_LINK . "/" . $this->uri->segments[1]. "/" . $this->uri->segments[2],
             'details' => SITE_LINK . "/" . "student/" . "details/",
             'main_url' => SITE_LINK . "/" . "security/",
             'stages' => $stages,
-            'levels' =>$levels
+            'levels' => $levels,
+            'teachers' => $teachers,
 
         ));
         $data['base_url'][] = SITE_LINK;
-        $data['js'][] = "usage/student_installments.js";
+        $data['js'][] = "usage/student_expenses.js";
         $data['main_url'] = SITE_LINK;
         $data['stages'] = $stages;
         $data['levels'] = $levels;
+        $data['teachers'] = $teachers;
         $data['use_big_model'] = "yes";
-        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'student_installments', $data);
+        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'student_expenses', $data);
 
     }
-
 
 
     public function get_class_children($stage, $level_id)
