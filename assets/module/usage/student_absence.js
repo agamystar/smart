@@ -1,8 +1,6 @@
 $(function () {
 
 
-    $('input#date').datepicker({format:'yyyy-mm-dd' , autoclose:true})
-
 //    alert(JSON.stringify(js_var_object.absence));
 
     $.each(js_var_object.absence,function(y,x){
