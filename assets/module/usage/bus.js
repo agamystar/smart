@@ -13,10 +13,16 @@ $(function () {
     });
     $("#import_dialog").dialog({
         width:500,
-        autoOpen:false,
+        height:300,
         modal: true,
         closed: true,
-        title:'Import Form'
+        title:'  ',
+        height: 550,
+        cache: false,
+        collapsible:true,
+        minimizable:true,
+        maximizable:true,
+        resizable:'true'
     });
 
 

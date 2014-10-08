@@ -14,12 +14,12 @@ include_once(
 
     <div id="tb">
 
-        <a href="#" id="open_new_dialog" class="easyui-linkbutton" plain="true"><img src="<?php echo SITE_LINK."/assets" ?>/img/add-icon.png" alt=""/> Add </a>
-        <a href="#" id="import" name="imports" class="easyui-linkbutton" plain="true">
+        <a href="javascript:void(0);" id="open_new_dialog" class="easyui-linkbutton" plain="true"><img src="<?php echo SITE_LINK."/assets" ?>/img/add-icon.png" alt=""/> Add </a>
+        <a href="javascript:void(0);" id="import" name="imports" class="easyui-linkbutton" plain="true">
             <img src="<?php echo SITE_LINK."/assets" ?>/img/import-icon.png" alt="Import"/>
         <span id="import_text"></span>
         </a>
-        <a href="#" id="export" name="exports" >
+        <a href="javascript:void(0);" id="export" name="exports" >
             <img src="<?php echo SITE_LINK."/assets" ?>/img/export-icon.png" alt="Export"/>
             <span id="export_text"></span></a>
     <span class="widget-toolbar">
@@ -32,7 +32,7 @@ include_once(
 <div id="mymodal" class=" ">
     <div class="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:180px;height:180px;margin: 100px 200px " /></div>
 
-    <div class="modal-content">
+    <div class="">
         <!-- dialog body -->
         <div class="modal-body">
 
@@ -102,7 +102,7 @@ include_once(
 
 <div id="import_dialog" class=" ">
 
-    <div class="modal-content" id="dialog_content">
+    <div class="" id="dialog_content">
         <!-- dialog body -->
         <div id="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
         <div class="modal-body">

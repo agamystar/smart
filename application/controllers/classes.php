@@ -16,7 +16,7 @@ class classes extends MY_Controller
     {
         $ar = array();
         $cl = array();
-        $que = $this->db->query("select  class_id as id , name as text from v_stage_level_class where stage=" . $stage . " and level=" . $level_id . " ");
+        $que = $this->db->query("select distinct class_id as id , name as text from v_stage_level_class where stage=" . $stage . " and level=" . $level_id . " ");
 
         foreach ($que->result() as $row) {
             $ar['id'] = $row->id;
@@ -31,7 +31,7 @@ class classes extends MY_Controller
     {
         $arrs = array();
         $stage_level = array();
-        $quer = $this->db->query("select  level as id , level_name as text from v_stage_level_class where stage=" . $stage_id . " ");
+        $quer = $this->db->query("select distinct level as id , level_name as text from v_stage_level_class where stage=" . $stage_id . " ");
 
         foreach ($quer->result() as $row) {
             //$arrs['id']=$row->id;
@@ -70,7 +70,7 @@ class classes extends MY_Controller
        $q_stage=$this->db->query('select stage  from v_stage_level_class where class_id="'.$class.'" ');
         $res_stage=$q_stage->row();
 
-        $q_level=$this->db->query('select level  from v_stage_level_class where class_id="'.$class.'" ');
+        $q_level=$this->db->query('select  level  from v_stage_level_class where class_id="'.$class.'" ');
         $res=$q_level->row();
 
         $students=$this->mymodel_model->select("users",'groups="student" and id not in (select student_id from class_students) and stage  in("'.$res_stage->stage.'") and level  in ("'.$res->level.'")  ');

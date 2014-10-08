@@ -10,10 +10,10 @@ $(function () {
     $('#select_class').combotree({
         url: js_var_object.current_link+"?action=load_classes",
         editable:false,
-        onSelect: function(node){
+        onSelect: function(node){  alert(JSON.stringify(node) );
             if(loading==true){
                 if(node.id==""||node.id==null){
-                    //  alert("Select Class");
+
                     $('#select_class').combotree("setValue",1);
                 }else{
                     window.location = js_var_object.current_link + "/" +node.id;
@@ -24,12 +24,14 @@ $(function () {
         },
         onLoadSuccess:function(node){
             loading=true;
+
         }
     }).combotree("setValue",js_var_object.p_class);
 
+
     $('.class_students').bootstrapDualListbox({
         nonSelectedListLabel:'<span class="label label-success arrowed-in arrowed-in-right">All Students That not have classes </span>',
-        selectedListLabel:'<span class="label label-success arrowed-in arrowed-in-right">All Student in This Class</span> ',
+        selectedListLabel:'<span class="label label-success arrowed-in arrowed-in-right align-right">All Student in This Class</span> ',
         preserveSelectionOnMove:'moved',
         moveOnSelect:false
         //  nonSelectedFilter:'ion ([7-9]|[1][0-2])'
@@ -40,10 +42,15 @@ $(function () {
     });
     $("#import_dialog").dialog({
         width:500,
-        autoOpen:false,
+        height:200,
+
         modal: true,
         closed: true,
-        title:'Import Form'
+        cache: false,
+        collapsible:true,
+        minimizable:true,
+        maximizable:true,
+        resizable:true
     });
 
 

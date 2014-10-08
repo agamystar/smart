@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4
+-- version 4.2.7.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Sep 30, 2014 at 02:53 PM
--- Server version: 5.6.12-log
--- PHP Version: 5.4.16
+-- Host: 127.0.0.1
+-- Generation Time: Oct 08, 2014 at 04:20 PM
+-- Server version: 5.6.20
+-- PHP Version: 5.5.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `schools_db_comp`
 --
-CREATE DATABASE IF NOT EXISTS `schools_db_comp` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `schools_db_comp`;
 
 -- --------------------------------------------------------
 
@@ -31,36 +29,22 @@ USE `schools_db_comp`;
 CREATE TABLE IF NOT EXISTS `absence` (
   `user_id` int(11) NOT NULL,
   `day` varchar(50) NOT NULL,
-  PRIMARY KEY (`day`,`user_id`)
+  `class` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `absence`
 --
 
-INSERT INTO `absence` (`user_id`, `day`) VALUES
-(379, '09/30/2014'),
-(398, '09/30/2014'),
-(402, '09/30/2014'),
-(68, '2014/09/28'),
-(71, '2014/09/28'),
-(380, '2014/09/28'),
-(395, '2014/09/28'),
-(399, '2014/09/28'),
-(403, '2014/09/28'),
-(558, '2014/09/28'),
-(59, '2014/09/29'),
-(379, '2014/09/29'),
-(397, '2014/09/29'),
-(398, '2014/09/29'),
-(400, '2014/09/29'),
-(401, '2014/09/29'),
-(499, '2014/09/29'),
-(503, '2014/09/29'),
-(510, '2014/09/29'),
-(528, '2014/09/29'),
-(381, '2014/09/30'),
-(539, '2014/09/30');
+INSERT INTO `absence` (`user_id`, `day`, `class`) VALUES
+(1, '05/10/2014', '2'),
+(396, '05/10/2014', '1'),
+(405, '05/10/2014', '1'),
+(1, '06/10/2014', '1'),
+(382, '06/10/2014', '1'),
+(525, '06/10/2014', '2'),
+(616, '08/10/2014', '1'),
+(616, '09/10/2014', '1');
 
 -- --------------------------------------------------------
 
@@ -69,12 +53,11 @@ INSERT INTO `absence` (`user_id`, `day`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `admin` (
-  `admin_id` int(11) NOT NULL AUTO_INCREMENT,
+`admin_id` int(11) NOT NULL,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `email` longtext COLLATE utf8_unicode_ci NOT NULL,
   `password` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `level` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`admin_id`)
+  `level` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -91,14 +74,13 @@ INSERT INTO `admin` (`admin_id`, `name`, `email`, `password`, `level`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `book` (
-  `book_id` int(11) NOT NULL AUTO_INCREMENT,
+`book_id` int(11) NOT NULL,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `description` longtext COLLATE utf8_unicode_ci NOT NULL,
   `author` longtext COLLATE utf8_unicode_ci NOT NULL,
   `class_id` longtext COLLATE utf8_unicode_ci NOT NULL,
   `status` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `price` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`book_id`)
+  `price` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -120,8 +102,7 @@ CREATE TABLE IF NOT EXISTS `bus` (
   `supervisor` varchar(100) NOT NULL,
   `path` varchar(300) NOT NULL,
   `student_fees` int(11) NOT NULL,
-  `school_fees` int(11) NOT NULL,
-  PRIMARY KEY (`no`)
+  `school_fees` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -130,8 +111,6 @@ CREATE TABLE IF NOT EXISTS `bus` (
 
 INSERT INTO `bus` (`no`, `driver`, `supervisor`, `path`, `student_fees`, `school_fees`) VALUES
 ('A1000', 'samy', 'ahmed', 'fayoum - 6 october', 9000, 900),
-('G20000', 'alaa', 'mohsen', 'a-b-c', 2000, 20000),
-('H700', 'ali', 'mohamed ali', 'cairo - giza', 4000, 8000),
 ('Z1000', 'mohamed', 'ali fouad', 'giza - cairo', 1000, 2000);
 
 -- --------------------------------------------------------
@@ -143,8 +122,19 @@ INSERT INTO `bus` (`no`, `driver`, `supervisor`, `path`, `student_fees`, `school
 CREATE TABLE IF NOT EXISTS `bus_absence` (
   `student_id` int(11) NOT NULL,
   `day` varchar(50) NOT NULL,
-  PRIMARY KEY (`student_id`,`day`)
+  `bus` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bus_absence`
+--
+
+INSERT INTO `bus_absence` (`student_id`, `day`, `bus`) VALUES
+(1, '06/10/2014', 'A1000'),
+(71, '05/10/2014', 'Z1000'),
+(378, '05/10/2014', 'Z1000'),
+(381, '05/10/2014', 'A1000'),
+(382, '05/10/2014', 'A1000');
 
 -- --------------------------------------------------------
 
@@ -154,8 +144,7 @@ CREATE TABLE IF NOT EXISTS `bus_absence` (
 
 CREATE TABLE IF NOT EXISTS `bus_students` (
   `bus_no` varchar(11) NOT NULL,
-  `student_id` int(11) NOT NULL,
-  PRIMARY KEY (`student_id`)
+  `student_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -163,15 +152,7 @@ CREATE TABLE IF NOT EXISTS `bus_students` (
 --
 
 INSERT INTO `bus_students` (`bus_no`, `student_id`) VALUES
-('G20000', 46),
-('z1000', 59),
-('z1000', 68),
-('z1000', 71),
-('z1000', 378),
-('z1000', 379),
-('A1000', 381),
-('A1000', 395),
-('A1000', 399);
+('Z1000', 616);
 
 -- --------------------------------------------------------
 
@@ -180,14 +161,13 @@ INSERT INTO `bus_students` (`bus_no`, `student_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `class` (
-  `class_id` int(11) NOT NULL AUTO_INCREMENT,
+`class_id` int(11) NOT NULL,
   `name` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `name_numeric` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `stage` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `level` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `teacher_id` int(11) NOT NULL,
-  PRIMARY KEY (`class_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+  `teacher_id` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `class`
@@ -197,8 +177,8 @@ INSERT INTO `class` (`class_id`, `name`, `name_numeric`, `stage`, `level`, `teac
 (1, 'A', '222', '1', '1', 64),
 (2, 'B', '2', '2', '1', 391),
 (3, 'C', '3', '2', '3', 393),
-(4, 'D1', '4', '2', '1', 392),
-(5, 'B322', '5', '2', '3', 64);
+(4, 'D4', '4', '2', '2', 391),
+(6, 'F1', '14', '1', '1', 64);
 
 -- --------------------------------------------------------
 
@@ -207,13 +187,12 @@ INSERT INTO `class` (`class_id`, `name`, `name_numeric`, `stage`, `level`, `teac
 --
 
 CREATE TABLE IF NOT EXISTS `class_routine` (
-  `class_routine_id` int(11) NOT NULL AUTO_INCREMENT,
+`class_routine_id` int(11) NOT NULL,
   `class_id` int(11) NOT NULL,
   `subject_id` int(11) NOT NULL,
   `time_start` int(11) NOT NULL,
   `time_end` int(11) NOT NULL,
-  `day` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`class_routine_id`)
+  `day` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
@@ -234,8 +213,7 @@ INSERT INTO `class_routine` (`class_routine_id`, `class_id`, `subject_id`, `time
 
 CREATE TABLE IF NOT EXISTS `class_students` (
   `class_id` int(11) NOT NULL,
-  `student_id` int(11) NOT NULL,
-  PRIMARY KEY (`student_id`)
+  `student_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -243,48 +221,9 @@ CREATE TABLE IF NOT EXISTS `class_students` (
 --
 
 INSERT INTO `class_students` (`class_id`, `student_id`) VALUES
-(1, 59),
-(1, 68),
-(1, 71),
-(1, 378),
-(1, 379),
-(1, 380),
-(1, 381),
-(1, 382),
-(1, 383),
-(1, 384),
-(1, 385),
-(1, 394),
-(1, 395),
-(1, 396),
-(1, 397),
-(1, 398),
-(1, 399),
-(1, 400),
-(1, 401),
-(1, 402),
-(1, 403),
-(1, 404),
-(1, 405),
-(1, 495),
-(1, 499),
-(1, 503),
-(1, 506),
-(1, 510),
-(1, 514),
-(1, 517),
-(1, 521),
 (2, 524),
 (2, 525),
-(1, 528),
-(1, 532),
-(1, 536),
-(1, 539),
-(1, 543),
-(1, 547),
-(1, 550),
-(1, 554),
-(1, 558);
+(1, 616);
 
 -- --------------------------------------------------------
 
@@ -293,11 +232,10 @@ INSERT INTO `class_students` (`class_id`, `student_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `dormitory` (
-  `dormitory_id` int(11) NOT NULL AUTO_INCREMENT,
+`dormitory_id` int(11) NOT NULL,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `number_of_room` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `description` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`dormitory_id`)
+  `description` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -314,11 +252,10 @@ INSERT INTO `dormitory` (`dormitory_id`, `name`, `number_of_room`, `description`
 --
 
 CREATE TABLE IF NOT EXISTS `email_template` (
-  `email_template_id` int(11) NOT NULL AUTO_INCREMENT,
+`email_template_id` int(11) NOT NULL,
   `task` longtext COLLATE utf8_unicode_ci NOT NULL,
   `subject` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `body` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`email_template_id`)
+  `body` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -328,11 +265,10 @@ CREATE TABLE IF NOT EXISTS `email_template` (
 --
 
 CREATE TABLE IF NOT EXISTS `exam` (
-  `exam_id` int(11) NOT NULL AUTO_INCREMENT,
+`exam_id` int(11) NOT NULL,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `date` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `comment` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`exam_id`)
+  `comment` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -349,23 +285,24 @@ INSERT INTO `exam` (`exam_id`, `name`, `date`, `comment`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `expenses` (
-  `expenses_id` int(11) NOT NULL AUTO_INCREMENT,
+`expenses_id` int(11) NOT NULL,
   `expenses_name` varchar(200) NOT NULL,
   `expenses_level` int(11) NOT NULL,
   `expenses_stage` int(11) NOT NULL,
-  `expenses_value` int(11) NOT NULL,
-  `expenses_discount` int(11) NOT NULL,
-  PRIMARY KEY (`expenses_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+  `expenses_value` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `expenses`
 --
 
-INSERT INTO `expenses` (`expenses_id`, `expenses_name`, `expenses_level`, `expenses_stage`, `expenses_value`, `expenses_discount`) VALUES
-(1, 'school fees', 1, 1, 1000, 0),
-(2, 'books fees', 1, 1, 2000, 0),
-(3, 'clothes fees', 1, 1, 3000, 0);
+INSERT INTO `expenses` (`expenses_id`, `expenses_name`, `expenses_level`, `expenses_stage`, `expenses_value`) VALUES
+(1, 'school expenses', 1, 1, 8000),
+(2, 'books expenses', 2, 1, 7000),
+(3, 'clothes expenses', 1, 1, 6500),
+(4, 'Bus Expenses', 1, 1, 3000),
+(5, '6666666', 1, 1, 6666),
+(6, 'zzzzzzzz', 1, 1, 6000);
 
 -- --------------------------------------------------------
 
@@ -374,19 +311,30 @@ INSERT INTO `expenses` (`expenses_id`, `expenses_name`, `expenses_level`, `expen
 --
 
 CREATE TABLE IF NOT EXISTS `forms` (
-  `form_id` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`form_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+`form_id` int(11) NOT NULL,
+  `name` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
 
 --
 -- Dumping data for table `forms`
 --
 
 INSERT INTO `forms` (`form_id`, `name`) VALUES
-(100, 'student'),
-(200, 'teacher'),
-(300, 'parent');
+(17, 'Dashboard'),
+(18, 'General Setting'),
+(19, 'Users&Security'),
+(20, 'profile'),
+(21, 'All Buses'),
+(22, 'Bus Absence'),
+(23, 'Bus Registration'),
+(24, 'Class'),
+(25, 'Absence'),
+(26, 'Finical'),
+(27, 'Inbox'),
+(28, 'Teacher'),
+(29, 'SMS'),
+(30, 'Setup'),
+(31, 'Chatting');
 
 -- --------------------------------------------------------
 
@@ -395,13 +343,12 @@ INSERT INTO `forms` (`form_id`, `name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `grade` (
-  `grade_id` int(11) NOT NULL AUTO_INCREMENT,
+`grade_id` int(11) NOT NULL,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `grade_point` longtext COLLATE utf8_unicode_ci NOT NULL,
   `mark_from` int(11) NOT NULL,
   `mark_upto` int(11) NOT NULL,
-  `comment` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`grade_id`)
+  `comment` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 --
@@ -420,12 +367,11 @@ INSERT INTO `grade` (`grade_id`, `name`, `grade_point`, `mark_from`, `mark_upto`
 --
 
 CREATE TABLE IF NOT EXISTS `groups` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+`id` mediumint(8) unsigned NOT NULL,
   `name` varchar(20) NOT NULL,
   `description` varchar(100) NOT NULL,
-  `show_front` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+  `show_front` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `groups`
@@ -435,7 +381,43 @@ INSERT INTO `groups` (`id`, `name`, `description`, `show_front`) VALUES
 (1, 'admin', 'Administrator', 0),
 (2, 'student', 'Student', 1),
 (3, 'teacher', 'Teacher\r\n', 1),
-(4, 'parent', 'Parents\r\n', 1);
+(4, 'parent', 'Parents\r\n', 1),
+(5, 'supervisors', 'Supervisors', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groups_forms`
+--
+
+CREATE TABLE IF NOT EXISTS `groups_forms` (
+  `group_id` int(11) NOT NULL,
+  `form_id` int(11) NOT NULL,
+  `h_r_w` varchar(10) NOT NULL DEFAULT 'r'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `groups_forms`
+--
+
+INSERT INTO `groups_forms` (`group_id`, `form_id`, `h_r_w`) VALUES
+(1, 22, 'w'),
+(1, 25, 'w'),
+(2, 28, 'h'),
+(2, 30, 'h');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `homework`
+--
+
+CREATE TABLE IF NOT EXISTS `homework` (
+`h_id` int(11) NOT NULL,
+  `teacher_id` int(11) NOT NULL,
+  `h_topic` varchar(1000) CHARACTER SET utf8 NOT NULL,
+  `h_date` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -444,26 +426,25 @@ INSERT INTO `groups` (`id`, `name`, `description`, `show_front`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `installments` (
-  `installment_id` int(11) NOT NULL AUTO_INCREMENT,
-  `expenses_id` int(11) NOT NULL,
+`installment_id` int(11) NOT NULL,
+  `expenses_id` int(11) NOT NULL DEFAULT '1',
   `name` varchar(200) NOT NULL,
   `value` int(11) NOT NULL,
-  `end_date` varchar(200) NOT NULL,
-  `student_id` int(11) NOT NULL,
-  `student_paid` int(11) NOT NULL,
-  `st_date_payment` varchar(22) NOT NULL,
-  `discount` int(22) NOT NULL,
-  PRIMARY KEY (`installment_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+  `end_date` varchar(200) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `installments`
 --
 
-INSERT INTO `installments` (`installment_id`, `expenses_id`, `name`, `value`, `end_date`, `student_id`, `student_paid`, `st_date_payment`, `discount`) VALUES
-(1, 1, 'installment 1', 500, '2014/09/25', 71, 100, '', 0),
-(2, 1, 'installment 2', 500, '2014/09/25', 601, 500, '', 0),
-(3, 2, 'installment 1', 2000, '', 613, 200, '', 0);
+INSERT INTO `installments` (`installment_id`, `expenses_id`, `name`, `value`, `end_date`) VALUES
+(1, 1, 'installment 1', 5000, '2014/09/25'),
+(2, 1, 'installment 2', 7000, '2014/09/25'),
+(3, 2, 'installment 1', 2000, '24/10/2014'),
+(4, 1, 'sssssss', 3000, '23/10/2014'),
+(5, 1, 'aaabbbb', 500, '28/12/2014'),
+(6, 5, 'installment 1 ', 5555, '05/10/2014'),
+(7, 6, 'installment 1 ', 6000, '08/10/2014');
 
 -- --------------------------------------------------------
 
@@ -472,7 +453,7 @@ INSERT INTO `installments` (`installment_id`, `expenses_id`, `name`, `value`, `e
 --
 
 CREATE TABLE IF NOT EXISTS `invoice` (
-  `invoice_id` int(11) NOT NULL AUTO_INCREMENT,
+`invoice_id` int(11) NOT NULL,
   `student_id` int(11) NOT NULL,
   `title` longtext COLLATE utf8_unicode_ci NOT NULL,
   `description` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -481,8 +462,7 @@ CREATE TABLE IF NOT EXISTS `invoice` (
   `payment_timestamp` longtext COLLATE utf8_unicode_ci NOT NULL,
   `payment_method` longtext COLLATE utf8_unicode_ci NOT NULL,
   `payment_details` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `status` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'paid or unpaid',
-  PRIMARY KEY (`invoice_id`)
+  `status` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'paid or unpaid'
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -499,7 +479,7 @@ INSERT INTO `invoice` (`invoice_id`, `student_id`, `title`, `description`, `amou
 --
 
 CREATE TABLE IF NOT EXISTS `language` (
-  `phrase_id` int(11) NOT NULL AUTO_INCREMENT,
+`phrase_id` int(11) NOT NULL,
   `phrase` longtext COLLATE utf8_unicode_ci NOT NULL,
   `english` longtext COLLATE utf8_unicode_ci NOT NULL,
   `bengali` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -521,8 +501,7 @@ CREATE TABLE IF NOT EXISTS `language` (
   `latin` longtext COLLATE utf8_unicode_ci NOT NULL,
   `indonesian` longtext COLLATE utf8_unicode_ci NOT NULL,
   `japanese` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `korean` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`phrase_id`)
+  `korean` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=229 ;
 
 --
@@ -770,8 +749,7 @@ INSERT INTO `language` (`phrase_id`, `phrase`, `english`, `bengali`, `spanish`, 
 CREATE TABLE IF NOT EXISTS `levels` (
   `stage_id` int(11) NOT NULL,
   `level_id` int(11) NOT NULL,
-  `level_name` varchar(50) NOT NULL,
-  PRIMARY KEY (`stage_id`,`level_id`)
+  `level_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -787,7 +765,10 @@ INSERT INTO `levels` (`stage_id`, `level_id`, `level_name`) VALUES
 (1, 6, 'level six'),
 (2, 1, 'first secondary  level'),
 (2, 2, 'second secondary  level'),
-(2, 3, 'third secondary  level');
+(2, 3, 'third secondary  level'),
+(3, 1, 'level 1'),
+(3, 2, 'level 2'),
+(3, 3, 'level 3');
 
 -- --------------------------------------------------------
 
@@ -796,11 +777,10 @@ INSERT INTO `levels` (`stage_id`, `level_id`, `level_name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `login_attempts` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+`id` int(11) unsigned NOT NULL,
   `ip_address` varchar(15) NOT NULL,
   `login` varchar(100) NOT NULL,
-  `time` int(11) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `time` int(11) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -810,7 +790,7 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 --
 
 CREATE TABLE IF NOT EXISTS `mark` (
-  `mark_id` int(11) NOT NULL AUTO_INCREMENT,
+`mark_id` int(11) NOT NULL,
   `student_id` int(11) NOT NULL,
   `subject_id` int(11) NOT NULL,
   `class_id` int(11) NOT NULL,
@@ -818,8 +798,7 @@ CREATE TABLE IF NOT EXISTS `mark` (
   `mark_obtained` int(11) NOT NULL DEFAULT '0',
   `mark_total` int(11) NOT NULL DEFAULT '100',
   `attendance` int(11) NOT NULL DEFAULT '0',
-  `comment` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`mark_id`)
+  `comment` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -829,11 +808,10 @@ CREATE TABLE IF NOT EXISTS `mark` (
 --
 
 CREATE TABLE IF NOT EXISTS `noticeboard` (
-  `notice_id` int(11) NOT NULL AUTO_INCREMENT,
+`notice_id` int(11) NOT NULL,
   `notice_title` longtext COLLATE utf8_unicode_ci NOT NULL,
   `notice` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `create_timestamp` int(11) NOT NULL,
-  PRIMARY KEY (`notice_id`)
+  `create_timestamp` int(11) NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
@@ -851,10 +829,9 @@ INSERT INTO `noticeboard` (`notice_id`, `notice_title`, `notice`, `create_timest
 --
 
 CREATE TABLE IF NOT EXISTS `options` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+`id` int(11) NOT NULL,
   `key` varchar(200) NOT NULL,
-  `value` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`)
+  `value` varchar(200) NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
@@ -872,11 +849,10 @@ INSERT INTO `options` (`id`, `key`, `value`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `parent` (
-  `parent_id` int(11) NOT NULL AUTO_INCREMENT,
+`parent_id` int(11) NOT NULL,
   `student_id` int(11) NOT NULL,
   `relation_with_student` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `profession` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`parent_id`)
+  `profession` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -893,7 +869,7 @@ INSERT INTO `parent` (`parent_id`, `student_id`, `relation_with_student`, `profe
 --
 
 CREATE TABLE IF NOT EXISTS `payment` (
-  `payment_id` int(11) NOT NULL AUTO_INCREMENT,
+`payment_id` int(11) NOT NULL,
   `payment_type` longtext COLLATE utf8_unicode_ci NOT NULL,
   `transaction_id` longtext COLLATE utf8_unicode_ci NOT NULL,
   `invoice_id` int(11) NOT NULL,
@@ -901,8 +877,7 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `method` longtext COLLATE utf8_unicode_ci NOT NULL,
   `description` longtext COLLATE utf8_unicode_ci NOT NULL,
   `amount` int(11) NOT NULL,
-  `timestamp` int(11) NOT NULL,
-  PRIMARY KEY (`payment_id`)
+  `timestamp` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -912,10 +887,9 @@ CREATE TABLE IF NOT EXISTS `payment` (
 --
 
 CREATE TABLE IF NOT EXISTS `settings` (
-  `settings_id` int(11) NOT NULL AUTO_INCREMENT,
+`settings_id` int(11) NOT NULL,
   `type` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `description` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`settings_id`)
+  `description` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
@@ -939,8 +913,7 @@ INSERT INTO `settings` (`settings_id`, `type`, `description`) VALUES
 
 CREATE TABLE IF NOT EXISTS `stages` (
   `stage_id` int(11) NOT NULL,
-  `stage_name` varchar(50) NOT NULL,
-  PRIMARY KEY (`stage_id`)
+  `stage_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -949,7 +922,8 @@ CREATE TABLE IF NOT EXISTS `stages` (
 
 INSERT INTO `stages` (`stage_id`, `stage_name`) VALUES
 (1, 'primary'),
-(2, 'secondary');
+(2, 'preparatory'),
+(3, 'secondary');
 
 -- --------------------------------------------------------
 
@@ -958,15 +932,14 @@ INSERT INTO `stages` (`stage_id`, `stage_name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `student` (
-  `student_id` int(11) NOT NULL AUTO_INCREMENT,
+`student_id` int(11) NOT NULL,
   `father_name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `mother_name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `class_id` longtext COLLATE utf8_unicode_ci NOT NULL,
   `roll` longtext COLLATE utf8_unicode_ci NOT NULL,
   `transport_id` int(11) NOT NULL,
   `dormitory_id` int(11) NOT NULL,
-  `dormitory_room_number` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`student_id`)
+  `dormitory_room_number` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
 
 --
@@ -987,53 +960,28 @@ INSERT INTO `student` (`student_id`, `father_name`, `mother_name`, `class_id`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `students_installments`
+-- Table structure for table `student_installments`
 --
 
-CREATE TABLE IF NOT EXISTS `students_installments` (
-  `installment_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `student_installments` (
   `student_id` int(11) NOT NULL,
-  `paid` int(11) NOT NULL,
-  `date_payment` varchar(50) NOT NULL,
-  `other` varchar(11) NOT NULL,
-  PRIMARY KEY (`installment_id`,`student_id`)
+  `installment_id` int(11) NOT NULL,
+  `paid_date` varchar(50) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `expenses_discount` int(50) NOT NULL,
+  `y` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `students_installments`
+-- Dumping data for table `student_installments`
 --
 
-INSERT INTO `students_installments` (`installment_id`, `student_id`, `paid`, `date_payment`, `other`) VALUES
-(1, 71, 0, '', '0');
+INSERT INTO `student_installments` (`student_id`, `installment_id`, `paid_date`, `amount`, `expenses_discount`, `y`) VALUES
+(46, 1, '03/11/2014', 4900, 100, ''),
+(59, 1, '03/10/2014', 1000, 99, ''),
+(65, 1, '03/10/2014', 300, 45, ''),
+(616, 1, '08/10/2014', 3000, 200, '');
 
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `student_expenses`
---
-CREATE TABLE IF NOT EXISTS `student_expenses` (
-`expenses_name` varchar(200)
-,`expenses_level` int(11)
-,`expenses_stage` int(11)
-,`expenses_value` int(11)
-,`expenses_discount` int(11)
-,`installment_name` varchar(200)
-,`value` int(11)
-,`end_date` varchar(200)
-,`student_paid` int(11)
-,`st_date_payment` varchar(22)
-,`expenses_id` int(11)
-,`installment_id` int(11)
-,`student_name` varchar(50)
-,`student_id` int(11)
-,`email` varchar(100)
-,`groups` varchar(100)
-,`phone` varchar(20)
-,`national_id` varchar(50)
-,`photo` varchar(200)
-,`stage` varchar(50)
-,`level` varchar(50)
-);
 -- --------------------------------------------------------
 
 --
@@ -1041,11 +989,10 @@ CREATE TABLE IF NOT EXISTS `student_expenses` (
 --
 
 CREATE TABLE IF NOT EXISTS `subject` (
-  `subject_id` int(11) NOT NULL AUTO_INCREMENT,
+`subject_id` int(11) NOT NULL,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `class_id` int(11) NOT NULL,
-  `teacher_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`subject_id`)
+  `teacher_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 --
@@ -1064,12 +1011,10 @@ INSERT INTO `subject` (`subject_id`, `name`, `class_id`, `teacher_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `translation` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+`id` int(11) NOT NULL,
   `key` varchar(50) NOT NULL,
   `english` varchar(200) NOT NULL,
-  `arabic` varchar(200) CHARACTER SET utf8 NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `key` (`key`)
+  `arabic` varchar(200) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30 ;
 
 --
@@ -1101,12 +1046,11 @@ INSERT INTO `translation` (`id`, `key`, `english`, `arabic`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `transport` (
-  `transport_id` int(11) NOT NULL AUTO_INCREMENT,
+`transport_id` int(11) NOT NULL,
   `route_name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `number_of_vehicle` longtext COLLATE utf8_unicode_ci NOT NULL,
   `description` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `route_fare` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`transport_id`)
+  `route_fare` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
@@ -1123,7 +1067,7 @@ INSERT INTO `transport` (`transport_id`, `route_name`, `number_of_vehicle`, `des
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+`id` int(11) unsigned NOT NULL,
   `bus_fees` int(15) NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -1131,7 +1075,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` varchar(100) NOT NULL,
   `activation_code` varchar(40) DEFAULT NULL,
   `forgotten_password_code` varchar(40) DEFAULT NULL,
-  `forgotten_password_time` int(11) unsigned DEFAULT NULL,
+  `job` varchar(50) DEFAULT NULL,
   `remember_code` varchar(40) DEFAULT NULL,
   `class_id` varchar(50) NOT NULL DEFAULT '1',
   `last_login` varchar(50) DEFAULT NULL,
@@ -1140,574 +1084,23 @@ CREATE TABLE IF NOT EXISTS `users` (
   `groups` varchar(100) DEFAULT 'not_defined',
   `phone` varchar(20) DEFAULT NULL,
   `national_id` varchar(50) NOT NULL,
-  `photo` varchar(200) NOT NULL,
+  `photo` varchar(200) DEFAULT NULL,
   `birthday` varchar(50) NOT NULL,
   `sex` varchar(50) NOT NULL,
   `religion` varchar(50) NOT NULL,
   `blood_group` varchar(50) NOT NULL,
   `address` varchar(200) NOT NULL,
   `stage` varchar(50) NOT NULL DEFAULT '1',
-  `level` varchar(50) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=616 ;
+  `level` varchar(50) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=618 ;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `bus_fees`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `class_id`, `last_login`, `active`, `name`, `groups`, `phone`, `national_id`, `photo`, `birthday`, `sex`, `religion`, `blood_group`, `address`, `stage`, `level`) VALUES
-(46, 0, 'admin', '$2y$08$ofb/opJfPW/xwrK46lLChuEkbFqiYgaDKYllFeiAn4C5S8sVQoYK.', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '14', '2014/09/30 12:09:33', 1, 'mohamed gomah agamy', 'admin', '999999999', '88888888', '14-09-29-05-09-52_2876452_Desert.jpg', '1/1/1992', 'male', 'Muslim', 'o', 'fayoum,egypt', '1', '1'),
-(59, 800, 'aaaa', '$2y$08$KP6/Oz/qLD1L1A4GE2r2VOGiVTdhmO9poVDXT79y6GSX4MJFpiHsO', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '1', '2014/09/28 08:09:15', 1, 'ali gamal mostafa', 'student', '111111111111', '111111111111111', '', '1/1/2001', 'male', 'Muslim', 'a', 'aaaaaaaaaa', '2', '2'),
-(64, 0, 'ahmed', '$2y$08$EHV2V1VbFQ.vDok/qiM4Fe9BCMyjC1RpQpbUXtt1T4daZqbRbqD02', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '14', '14/09/17 02:09:34', 1, 'ahmed gamal', 'teacher', '', '121232423', '', '1/1/2002', 'male', 'Muslim', 'e', 'giza', '1', '1'),
-(65, 0, '4444', '$2y$08$.TUrFt38TJhU7CohUasyAu9RPhbAglqn61YRjt6YXnjvfpvB2pYpy', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '14', '2014/09/29 05:09:18', 1, 'aaaaaaaa', 'parent', NULL, '4444', '14-09-29-06-09-03_14643454_Chrysanthemum.jpg', '2/2/2005', 'male', '', 'b', 'alex', '1', '1'),
-(68, 0, 'admin', '$2y$08$XVYSCAJHGtmTAkIc2kCCjeK53GTWU9alet6ZVX.nrRFgMwnFzD4pO', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '4', '2014/09/28 08:09:52', 1, 'mohamed gomah ', 'student', '', '', '', '999999999', 'male', 'Muslim', '', '', '1', '5'),
-(69, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(70, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', NULL, '555', '5555', '', '555', 'male', 'Muslim', 'i', '555', '1', '1'),
-(71, 800, '4444', '$2y$08$7EiJCgWwWacITEdodgiPEepOOhOyBneZnWUp98e96/9PSnyLgt4.q', NULL, 'noha@yahoo.com', NULL, NULL, NULL, NULL, '3', '2014/09/28 04:09:09', 1, 'noha', 'student', '353454543454345', '4655645645645645', '', '2', 'female', 'Muslim', 'c', '1', '2', '3'),
-(72, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', NULL, '34444', '45555', '', '777777', 'male', 'Muslim', 'o', '3333', '1', '1'),
-(74, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(75, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(76, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(77, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(78, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(79, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(80, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(81, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(82, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(83, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(84, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(85, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(86, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(87, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(88, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(89, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(90, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(91, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(92, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(93, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(94, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(95, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(96, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(97, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(98, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(99, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(100, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(101, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(102, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(103, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(104, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(105, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(106, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(107, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(108, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(109, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(110, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(111, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(112, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(113, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(114, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(115, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(116, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(117, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(118, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(119, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(120, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(121, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(122, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(123, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(124, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(125, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(126, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(127, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(128, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(129, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(130, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(131, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(132, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(133, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(134, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(135, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(136, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(137, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(138, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(139, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(140, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(141, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(142, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(143, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(144, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(145, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(146, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(147, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(148, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(149, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(150, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(151, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(152, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', '', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(153, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(154, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(155, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(156, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(157, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(158, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(159, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(160, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(161, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(162, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(163, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(164, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(165, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(166, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(167, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(168, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(169, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(170, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(171, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(172, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(173, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(174, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(175, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(176, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(177, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(178, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(179, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(180, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(181, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(182, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(183, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(184, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(185, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(186, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(187, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(188, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(189, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(190, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(191, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(192, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(193, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(194, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(195, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(196, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(197, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(198, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(199, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(200, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(201, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(202, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(203, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(204, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(205, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(206, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(207, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(208, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(209, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(210, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(211, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(212, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(213, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(214, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(215, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(216, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(217, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(218, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(219, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(220, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(221, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(222, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(223, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(224, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(225, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(226, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(227, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(228, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(229, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(230, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(231, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(232, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(233, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(234, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(235, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(236, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(237, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(238, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(239, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(240, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(241, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(242, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(243, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(244, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(245, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(246, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(247, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(248, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(249, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(250, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(251, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(252, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(253, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(254, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(255, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(256, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(257, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(258, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(259, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(260, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(261, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(262, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(263, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(264, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(265, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(266, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(267, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(268, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(269, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(270, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(271, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(272, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(273, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(274, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(275, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(276, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(277, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(278, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(279, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(280, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(281, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(282, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(283, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(284, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(285, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(286, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(287, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(288, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(289, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(290, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(291, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(292, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(293, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(294, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(295, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(296, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(297, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(298, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(299, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(300, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(301, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(302, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(303, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(304, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(305, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(306, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(307, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(308, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(309, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(310, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(311, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(312, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(313, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(314, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(315, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(316, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(317, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(318, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(319, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(320, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(321, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(322, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(323, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(324, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(325, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(326, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(327, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(328, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(329, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(330, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(331, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(332, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(333, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(334, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(335, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(336, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(337, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(338, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(339, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(340, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(341, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(342, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(343, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(344, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(345, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(346, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(347, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(348, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(349, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(350, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(351, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(352, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(353, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(354, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(355, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(356, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(357, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(358, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(359, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(360, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(361, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(362, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(363, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(364, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(365, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(366, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(367, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'aaaaaaaa', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(368, 0, 'aaaa', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(369, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(370, 0, 'aaaa', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(371, 0, 'ahmed', '', NULL, 'ahmed@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ahmed gamal', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1');
-INSERT INTO `users` (`id`, `bus_fees`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `class_id`, `last_login`, `active`, `name`, `groups`, `phone`, `national_id`, `photo`, `birthday`, `sex`, `religion`, `blood_group`, `address`, `stage`, `level`) VALUES
-(372, 0, '4444', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(373, 0, 'admin', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ahmed', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(374, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'not_defined', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(375, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'not_defined', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(376, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'not_defined', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(377, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'not_defined', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(378, 0, '', '$2y$08$MF9lueNcDqDbxS/8U0GkzOexWwCzKKIFH966Bbo1tS2FSOYiJl15S', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '4', '2014/09/28 08:09:16', 1, 'ali gamal badr', 'student', '222222222222', '121232435445660', '', '', '', 'Muslim', '', 'cairo', '2', '3'),
-(379, 0, '', '$2y$08$zro2bnCcBr.koDVzNYvo4eA.VcRwokB6bWI1z0lHXt39mhS6.an7u', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '1', '2014/09/28 02:09:18', 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'Male', 'Muslim', '', 'cairo', '1', '1'),
-(380, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', '', '', '', '', '1', '1'),
-(381, 0, '', '$2y$08$nzPTXBViGa4DpCMBcweLo.FfbQuOG8klcFcFXVcPIXVqZgjTWZKGe', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '1', '2014/09/28 04:09:15', 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'female', 'Muslim', '', '2432423423', '1', '1'),
-(382, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(383, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(384, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', '', '', '', '', '1', '1'),
-(385, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', '', '', '', '2432423423', '1', '1'),
-(386, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', '', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(387, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', '', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(388, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', '', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(389, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', '', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(390, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'teacher', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(391, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'teacher', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(392, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'teacher', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(393, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'teacher', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(394, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(395, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', '', '', '', '', '1', '1'),
-(396, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', '', '', '', '2432423423', '1', '1'),
-(397, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(398, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(399, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', '', '', '', '', '1', '1'),
-(400, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', '', '', '', '2432423423', '1', '1'),
-(401, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(402, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(403, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', '', '', '', '', '1', '1'),
-(404, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', '', '', '', '2432423423', '1', '1'),
-(405, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(406, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', '', '', '', '', '1', '1'),
-(407, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', '', '', '', '2432423423', '1', '1'),
-(408, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(409, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(410, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', '', '', '', '', '1', '1'),
-(411, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', '', '', '', '2432423423', '1', '1'),
-(412, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(413, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(414, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', '', '', '', '', '1', '1'),
-(415, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', '', '', '', '2432423423', '1', '1'),
-(416, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', '', '', '', 'cairo', '1', '1'),
-(417, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', '', '', '', '', '1', '1'),
-(418, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(419, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(420, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(421, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(422, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(423, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(424, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(425, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(426, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(427, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(428, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(429, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(430, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(431, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(432, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(433, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(434, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(435, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(436, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(437, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(438, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(439, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(440, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(441, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(442, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(443, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(444, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(445, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(446, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(447, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(448, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(449, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(450, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(451, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(452, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(453, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(454, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(455, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(456, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(457, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(458, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(459, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(460, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(461, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(462, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(463, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(464, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(465, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(466, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(467, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(468, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(469, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(470, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(471, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(472, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(473, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(474, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(475, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(476, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(477, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(478, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(479, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(480, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(481, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(482, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(483, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(484, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(485, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(486, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(487, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(488, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(489, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(490, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(491, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(492, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(493, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(494, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(495, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(496, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(497, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(498, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(499, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(500, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(501, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(502, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(503, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(504, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(505, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(506, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(507, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(508, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(509, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(510, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(511, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(512, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(513, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(514, 0, '', '$2y$08$JXCAGNyVv/.g3oWygNSYHeMfCtPopNhZJ3ttGcwbw9zw9t6HHn5mi', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '1', '2014/09/28 08:09:59', 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'female', 'Muslim', '', '2432423423', '1', '1'),
-(515, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(516, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(517, 0, '', '$2y$08$iIWDE0da3WjVQq1D7qXpPOItef5KwjHzcfUVwZka2hOW/eFGGS12S', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '1', '2014/09/28 08:09:11', 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'female', 'Muslim', '', '2432423423', '1', '1'),
-(518, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(519, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(520, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(521, 0, '', '$2y$08$I3QA4CraDeWayDg3FCHVJe9TlyJbhjqOVILmEcwVhy.WIlRaVUJSu', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '1', '2014/09/28 08:09:25', 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'female', 'Muslim', '', '2432423423', '1', '1'),
-(522, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(523, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(524, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', '', '', '', '', '1', '1'),
-(525, 0, '', '$2y$08$QWLCiqGdEw7m0jmvvijfZObylWZ3CpyyOR2RvB8B2CLBd7mdyBtMy', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '1', '2014/09/28 08:09:38', 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'female', 'Muslim', '', '2432423423', '1', '1'),
-(526, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(527, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(528, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(529, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(530, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(531, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(532, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(533, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(534, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(535, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(536, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(537, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(538, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(539, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(540, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(541, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(542, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(543, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(544, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(545, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(546, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(547, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(548, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(549, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(550, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(551, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(552, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(553, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(554, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(555, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(556, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(557, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(558, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(559, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(560, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(561, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(562, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(563, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(564, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(565, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(566, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(567, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(568, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(569, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(570, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(571, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(572, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(573, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(574, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(575, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(576, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(577, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(578, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(579, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(580, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(581, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(582, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(583, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(584, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(585, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(586, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(587, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(588, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(589, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(590, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(591, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(592, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(593, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(594, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(595, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(596, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(597, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(598, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(599, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(600, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(601, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(602, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(603, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(604, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(605, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(606, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(607, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(608, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(609, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(610, 0, '', '', NULL, 'a@ali.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali gamal', 'student', '222222222222', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(611, 0, '', '', NULL, 'a@fffff.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'ali ffff', 'student', '33333333333', '121232435445660', '', '', 'male', '', '', 'cairo', '1', '1'),
-(612, 0, '', '', NULL, 'admin@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'mohamed gomah agamy', 'student', NULL, '', '', '', 'male', '', '', '', '1', '1'),
-(613, 0, '', '', NULL, '4444@yahoo.com', NULL, NULL, NULL, NULL, '0', NULL, 1, 'gemy', 'student', '353454543454340', '4.6556456456456e15', '', '', 'male', '', '', '2432423423', '1', '1'),
-(614, 0, 'w', '$2y$08$ktpNJ7DeiekoYJEmkN/hAuL3NfTjIfVUizIV.Q.nKUNxEIgQnBVxC', NULL, 'ssss@yahoo.com', NULL, NULL, NULL, NULL, '0', '2014/09/27 07:09:30', 1, 'ssss', 'teacher', '1', '1', 'static', '1', 'male', 'Muslim', 'wwwwwwww', '1', '1', '1'),
-(615, 0, '1', '$2y$08$SkrhmtxvQ.Lp1wdd2bqgkulA2A08mdCl2k.TDhuiHyYjE0cpEeVWe', NULL, '1', NULL, NULL, NULL, NULL, '0', '2014/09/27 07:09:09', 1, '2222222', 'teacher', '1', '11', 'static', '1', 'male', 'Muslim', '1', '1', '1', '1');
+INSERT INTO `users` (`id`, `bus_fees`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `job`, `remember_code`, `class_id`, `last_login`, `active`, `name`, `groups`, `phone`, `national_id`, `photo`, `birthday`, `sex`, `religion`, `blood_group`, `address`, `stage`, `level`) VALUES
+(616, 2000, 'ahmed.gamal', '$2y$08$qhrvreS6FjagxBchWKR7FuzQdLOW1t62xwYZeKIu816boNMJ6P8FK', NULL, 'orcl.masr@hotmail.com', NULL, NULL, '', NULL, '1', '08/10/2014 02:10:25', 1, 'ahmed gamal', 'student', '64328726483', '593275982738', '14-10-08-02-10-21_77966877_10610761_836430199709651_3736104383196062703_n.jpg', '08/01/1991', 'male', 'Muslim', 'o', 'giza , Egypt', '1', '1'),
+(617, 0, 'admin', '$2y$08$AnCY.x9e7bYJIX5b15FN2.ynvYZuTLdZBlOkKmWr7G1w.o5/rA8hy', NULL, ' orcl.masr@hotmail.com ', NULL, NULL, 'admin', NULL, '1', '08/10/2014 02:10:54', 1, 'mohamed gomah', 'admin', ' 64328726483 ', '8979797', '14-10-07-11-10-56_84515683_Capture.PNG', '25/01/1991', 'male', 'Muslim', 'x', '            fayoum , Egypt         ', '1', '1');
 
 -- --------------------------------------------------------
 
@@ -1718,8 +1111,7 @@ INSERT INTO `users` (`id`, `bus_fees`, `username`, `password`, `salt`, `email`, 
 CREATE TABLE IF NOT EXISTS `users_forms` (
   `user_id` int(11) NOT NULL,
   `form_id` int(11) NOT NULL,
-  `rwx` varchar(10) NOT NULL,
-  PRIMARY KEY (`user_id`,`form_id`)
+  `rwx` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -1728,22 +1120,6 @@ CREATE TABLE IF NOT EXISTS `users_forms` (
 
 INSERT INTO `users_forms` (`user_id`, `form_id`, `rwx`) VALUES
 (1, 100, 'w');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `users_groups`
---
-
-CREATE TABLE IF NOT EXISTS `users_groups` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) unsigned NOT NULL,
-  `group_id` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uc_users_groups` (`user_id`,`group_id`),
-  KEY `fk_users_groups_users1_idx` (`user_id`),
-  KEY `fk_users_groups_groups1_idx` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1769,6 +1145,9 @@ CREATE TABLE IF NOT EXISTS `v_bus_students` (
 ,`path` varchar(300)
 ,`student_fees` int(11)
 ,`school_fees` int(11)
+,`sex` varchar(50)
+,`stage` varchar(50)
+,`level` varchar(50)
 ,`national_id` varchar(50)
 ,`student_id` int(11)
 ,`bus_no` varchar(11)
@@ -1779,7 +1158,8 @@ CREATE TABLE IF NOT EXISTS `v_bus_students` (
 -- Stand-in structure for view `v_class_students`
 --
 CREATE TABLE IF NOT EXISTS `v_class_students` (
-`student_name` varchar(50)
+`student_id` int(11)
+,`student_name` varchar(50)
 ,`stage` varchar(50)
 ,`level` varchar(50)
 ,`sex` varchar(50)
@@ -1791,7 +1171,9 @@ CREATE TABLE IF NOT EXISTS `v_class_students` (
 ,`phone` varchar(20)
 ,`class_id` int(11)
 ,`class_name` varchar(200)
-,`student_id` int(11)
+,`teacher_id` int(11)
+,`stage_name` varchar(50)
+,`level_name` varchar(50)
 );
 -- --------------------------------------------------------
 
@@ -1814,27 +1196,25 @@ CREATE TABLE IF NOT EXISTS `v_stage_level_class` (
 -- Stand-in structure for view `v_student_expenses`
 --
 CREATE TABLE IF NOT EXISTS `v_student_expenses` (
-`expenses_name` varchar(200)
+`student_id` int(11)
+,`paid_date` varchar(50)
+,`amount` int(11)
+,`discount` int(50)
+,`name` varchar(50)
+,`national_id` varchar(50)
+,`email` varchar(100)
+,`phone` varchar(20)
+,`stage` varchar(50)
+,`level` varchar(50)
+,`installment_id` int(11)
+,`installment_name` varchar(200)
+,`expenses_id` int(11)
+,`value` int(11)
+,`end_date` varchar(200)
+,`expenses_name` varchar(200)
 ,`expenses_level` int(11)
 ,`expenses_stage` int(11)
 ,`expenses_value` int(11)
-,`expenses_discount` int(11)
-,`installment_name` varchar(200)
-,`value` int(11)
-,`end_date` varchar(200)
-,`student_paid` int(11)
-,`st_date_payment` varchar(22)
-,`expenses_id` int(11)
-,`installment_id` int(11)
-,`student_name` varchar(50)
-,`student_id` int(11)
-,`email` varchar(100)
-,`groups` varchar(100)
-,`phone` varchar(20)
-,`national_id` varchar(50)
-,`photo` varchar(200)
-,`stage` varchar(50)
-,`level` varchar(50)
 );
 -- --------------------------------------------------------
 
@@ -1853,15 +1233,6 @@ CREATE TABLE IF NOT EXISTS `v_user_absence` (
 -- --------------------------------------------------------
 
 --
--- Structure for view `student_expenses`
---
-DROP TABLE IF EXISTS `student_expenses`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `student_expenses` AS select `expenses`.`expenses_name` AS `expenses_name`,`expenses`.`expenses_level` AS `expenses_level`,`expenses`.`expenses_stage` AS `expenses_stage`,`expenses`.`expenses_value` AS `expenses_value`,`expenses`.`expenses_discount` AS `expenses_discount`,`installments`.`name` AS `installment_name`,`installments`.`value` AS `value`,`installments`.`end_date` AS `end_date`,`installments`.`student_paid` AS `student_paid`,`installments`.`st_date_payment` AS `st_date_payment`,`installments`.`expenses_id` AS `expenses_id`,`installments`.`installment_id` AS `installment_id`,`users`.`name` AS `student_name`,`installments`.`student_id` AS `student_id`,`users`.`email` AS `email`,`users`.`groups` AS `groups`,`users`.`phone` AS `phone`,`users`.`national_id` AS `national_id`,`users`.`photo` AS `photo`,`users`.`stage` AS `stage`,`users`.`level` AS `level` from ((`installments` join `expenses` on((`installments`.`expenses_id` = `expenses`.`expenses_id`))) join `users` on((`installments`.`student_id` = `users`.`id`)));
-
--- --------------------------------------------------------
-
---
 -- Structure for view `v_bus_absence`
 --
 DROP TABLE IF EXISTS `v_bus_absence`;
@@ -1875,7 +1246,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_bus_students`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_bus_students` AS select `users`.`name` AS `name`,`bus`.`driver` AS `driver`,`bus`.`supervisor` AS `supervisor`,`bus`.`path` AS `path`,`bus`.`student_fees` AS `student_fees`,`bus`.`school_fees` AS `school_fees`,`users`.`national_id` AS `national_id`,`bus_students`.`student_id` AS `student_id`,`bus_students`.`bus_no` AS `bus_no` from (`bus` left join (`bus_students` left join `users` on((`bus_students`.`student_id` = `users`.`id`))) on((`bus_students`.`bus_no` = `bus`.`no`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_bus_students` AS select `users`.`name` AS `name`,`bus`.`driver` AS `driver`,`bus`.`supervisor` AS `supervisor`,`bus`.`path` AS `path`,`bus`.`student_fees` AS `student_fees`,`bus`.`school_fees` AS `school_fees`,`users`.`sex` AS `sex`,`users`.`stage` AS `stage`,`users`.`level` AS `level`,`users`.`national_id` AS `national_id`,`bus_students`.`student_id` AS `student_id`,`bus_students`.`bus_no` AS `bus_no` from ((`bus_students` join `bus`) join `users`) where ((`bus_students`.`student_id` = `users`.`id`) and (`bus_students`.`bus_no` = `bus`.`no`));
 
 -- --------------------------------------------------------
 
@@ -1884,7 +1255,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_class_students`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_class_students` AS select `users`.`name` AS `student_name`,`users`.`stage` AS `stage`,`users`.`level` AS `level`,`users`.`sex` AS `sex`,`users`.`bus_fees` AS `bus_fees`,`users`.`photo` AS `photo`,`users`.`birthday` AS `birthday`,`users`.`national_id` AS `national_id`,`users`.`email` AS `email`,`users`.`phone` AS `phone`,`class`.`class_id` AS `class_id`,`class`.`name` AS `class_name`,`class_students`.`student_id` AS `student_id` from (`users` left join (`class` left join `class_students` on((`class_students`.`class_id` = `class`.`class_id`))) on((`class_students`.`student_id` = `users`.`id`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_class_students` AS select `class_students`.`student_id` AS `student_id`,`users`.`name` AS `student_name`,`users`.`stage` AS `stage`,`users`.`level` AS `level`,`users`.`sex` AS `sex`,`users`.`bus_fees` AS `bus_fees`,`users`.`photo` AS `photo`,`users`.`birthday` AS `birthday`,`users`.`national_id` AS `national_id`,`users`.`email` AS `email`,`users`.`phone` AS `phone`,`class`.`class_id` AS `class_id`,`class`.`name` AS `class_name`,`class`.`teacher_id` AS `teacher_id`,`v_stage_level_class`.`stage_name` AS `stage_name`,`v_stage_level_class`.`level_name` AS `level_name` from (((`users` join `class`) join `class_students`) join `v_stage_level_class`) where ((`class_students`.`class_id` = `class`.`class_id`) and (`class_students`.`student_id` = `users`.`id`) and (`class`.`class_id` = `v_stage_level_class`.`class_id`));
 
 -- --------------------------------------------------------
 
@@ -1902,7 +1273,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_student_expenses`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_student_expenses` AS select `expenses`.`expenses_name` AS `expenses_name`,`expenses`.`expenses_level` AS `expenses_level`,`expenses`.`expenses_stage` AS `expenses_stage`,`expenses`.`expenses_value` AS `expenses_value`,`expenses`.`expenses_discount` AS `expenses_discount`,`installments`.`name` AS `installment_name`,`installments`.`value` AS `value`,`installments`.`end_date` AS `end_date`,`installments`.`student_paid` AS `student_paid`,`installments`.`st_date_payment` AS `st_date_payment`,`installments`.`expenses_id` AS `expenses_id`,`installments`.`installment_id` AS `installment_id`,`users`.`name` AS `student_name`,`installments`.`student_id` AS `student_id`,`users`.`email` AS `email`,`users`.`groups` AS `groups`,`users`.`phone` AS `phone`,`users`.`national_id` AS `national_id`,`users`.`photo` AS `photo`,`users`.`stage` AS `stage`,`users`.`level` AS `level` from ((`installments` join `expenses` on((`installments`.`expenses_id` = `expenses`.`expenses_id`))) join `users` on((`installments`.`student_id` = `users`.`id`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_student_expenses` AS select `student_installments`.`student_id` AS `student_id`,`student_installments`.`paid_date` AS `paid_date`,`student_installments`.`amount` AS `amount`,`student_installments`.`expenses_discount` AS `discount`,`users`.`name` AS `name`,`users`.`national_id` AS `national_id`,`users`.`email` AS `email`,`users`.`phone` AS `phone`,`users`.`stage` AS `stage`,`users`.`level` AS `level`,`installments`.`installment_id` AS `installment_id`,`installments`.`name` AS `installment_name`,`installments`.`expenses_id` AS `expenses_id`,`installments`.`value` AS `value`,`installments`.`end_date` AS `end_date`,`expenses`.`expenses_name` AS `expenses_name`,`expenses`.`expenses_level` AS `expenses_level`,`expenses`.`expenses_stage` AS `expenses_stage`,`expenses`.`expenses_value` AS `expenses_value` from (((`student_installments` join `installments`) join `users`) join `expenses`) where ((`student_installments`.`student_id` = `users`.`id`) and (`student_installments`.`installment_id` = `installments`.`installment_id`) and (`installments`.`expenses_id` = `expenses`.`expenses_id`));
 
 -- --------------------------------------------------------
 
@@ -1913,6 +1284,371 @@ DROP TABLE IF EXISTS `v_user_absence`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_absence` AS select `absence`.`day` AS `day`,`absence`.`user_id` AS `user_id`,`users`.`national_id` AS `national_id`,`users`.`name` AS `name`,`users`.`groups` AS `groups`,`v_class_students`.`class_name` AS `class_name`,`v_class_students`.`class_id` AS `class_id` from ((`absence` left join `users` on((`users`.`id` = `absence`.`user_id`))) left join `v_class_students` on((`v_class_students`.`student_id` = `absence`.`user_id`)));
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `absence`
+--
+ALTER TABLE `absence`
+ ADD PRIMARY KEY (`day`,`user_id`,`class`);
+
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+ ADD PRIMARY KEY (`admin_id`);
+
+--
+-- Indexes for table `book`
+--
+ALTER TABLE `book`
+ ADD PRIMARY KEY (`book_id`);
+
+--
+-- Indexes for table `bus`
+--
+ALTER TABLE `bus`
+ ADD PRIMARY KEY (`no`);
+
+--
+-- Indexes for table `bus_absence`
+--
+ALTER TABLE `bus_absence`
+ ADD PRIMARY KEY (`student_id`,`day`);
+
+--
+-- Indexes for table `bus_students`
+--
+ALTER TABLE `bus_students`
+ ADD PRIMARY KEY (`student_id`);
+
+--
+-- Indexes for table `class`
+--
+ALTER TABLE `class`
+ ADD PRIMARY KEY (`class_id`);
+
+--
+-- Indexes for table `class_routine`
+--
+ALTER TABLE `class_routine`
+ ADD PRIMARY KEY (`class_routine_id`);
+
+--
+-- Indexes for table `class_students`
+--
+ALTER TABLE `class_students`
+ ADD PRIMARY KEY (`student_id`);
+
+--
+-- Indexes for table `dormitory`
+--
+ALTER TABLE `dormitory`
+ ADD PRIMARY KEY (`dormitory_id`);
+
+--
+-- Indexes for table `email_template`
+--
+ALTER TABLE `email_template`
+ ADD PRIMARY KEY (`email_template_id`);
+
+--
+-- Indexes for table `exam`
+--
+ALTER TABLE `exam`
+ ADD PRIMARY KEY (`exam_id`);
+
+--
+-- Indexes for table `expenses`
+--
+ALTER TABLE `expenses`
+ ADD PRIMARY KEY (`expenses_id`);
+
+--
+-- Indexes for table `forms`
+--
+ALTER TABLE `forms`
+ ADD PRIMARY KEY (`form_id`);
+
+--
+-- Indexes for table `grade`
+--
+ALTER TABLE `grade`
+ ADD PRIMARY KEY (`grade_id`);
+
+--
+-- Indexes for table `groups`
+--
+ALTER TABLE `groups`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `groups_forms`
+--
+ALTER TABLE `groups_forms`
+ ADD PRIMARY KEY (`group_id`,`form_id`);
+
+--
+-- Indexes for table `homework`
+--
+ALTER TABLE `homework`
+ ADD PRIMARY KEY (`h_id`);
+
+--
+-- Indexes for table `installments`
+--
+ALTER TABLE `installments`
+ ADD PRIMARY KEY (`installment_id`);
+
+--
+-- Indexes for table `invoice`
+--
+ALTER TABLE `invoice`
+ ADD PRIMARY KEY (`invoice_id`);
+
+--
+-- Indexes for table `language`
+--
+ALTER TABLE `language`
+ ADD PRIMARY KEY (`phrase_id`);
+
+--
+-- Indexes for table `levels`
+--
+ALTER TABLE `levels`
+ ADD PRIMARY KEY (`stage_id`,`level_id`);
+
+--
+-- Indexes for table `login_attempts`
+--
+ALTER TABLE `login_attempts`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `mark`
+--
+ALTER TABLE `mark`
+ ADD PRIMARY KEY (`mark_id`);
+
+--
+-- Indexes for table `noticeboard`
+--
+ALTER TABLE `noticeboard`
+ ADD PRIMARY KEY (`notice_id`);
+
+--
+-- Indexes for table `options`
+--
+ALTER TABLE `options`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `parent`
+--
+ALTER TABLE `parent`
+ ADD PRIMARY KEY (`parent_id`);
+
+--
+-- Indexes for table `payment`
+--
+ALTER TABLE `payment`
+ ADD PRIMARY KEY (`payment_id`);
+
+--
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+ ADD PRIMARY KEY (`settings_id`);
+
+--
+-- Indexes for table `stages`
+--
+ALTER TABLE `stages`
+ ADD PRIMARY KEY (`stage_id`);
+
+--
+-- Indexes for table `student`
+--
+ALTER TABLE `student`
+ ADD PRIMARY KEY (`student_id`);
+
+--
+-- Indexes for table `student_installments`
+--
+ALTER TABLE `student_installments`
+ ADD PRIMARY KEY (`student_id`,`installment_id`);
+
+--
+-- Indexes for table `subject`
+--
+ALTER TABLE `subject`
+ ADD PRIMARY KEY (`subject_id`);
+
+--
+-- Indexes for table `translation`
+--
+ALTER TABLE `translation`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `key` (`key`);
+
+--
+-- Indexes for table `transport`
+--
+ALTER TABLE `transport`
+ ADD PRIMARY KEY (`transport_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users_forms`
+--
+ALTER TABLE `users_forms`
+ ADD PRIMARY KEY (`user_id`,`form_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admin`
+--
+ALTER TABLE `admin`
+MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `book`
+--
+ALTER TABLE `book`
+MODIFY `book_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `class`
+--
+ALTER TABLE `class`
+MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `class_routine`
+--
+ALTER TABLE `class_routine`
+MODIFY `class_routine_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `dormitory`
+--
+ALTER TABLE `dormitory`
+MODIFY `dormitory_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `email_template`
+--
+ALTER TABLE `email_template`
+MODIFY `email_template_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `exam`
+--
+ALTER TABLE `exam`
+MODIFY `exam_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `expenses`
+--
+ALTER TABLE `expenses`
+MODIFY `expenses_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `forms`
+--
+ALTER TABLE `forms`
+MODIFY `form_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
+--
+-- AUTO_INCREMENT for table `grade`
+--
+ALTER TABLE `grade`
+MODIFY `grade_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `groups`
+--
+ALTER TABLE `groups`
+MODIFY `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `homework`
+--
+ALTER TABLE `homework`
+MODIFY `h_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `installments`
+--
+ALTER TABLE `installments`
+MODIFY `installment_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `invoice`
+--
+ALTER TABLE `invoice`
+MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `language`
+--
+ALTER TABLE `language`
+MODIFY `phrase_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=229;
+--
+-- AUTO_INCREMENT for table `login_attempts`
+--
+ALTER TABLE `login_attempts`
+MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `mark`
+--
+ALTER TABLE `mark`
+MODIFY `mark_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `noticeboard`
+--
+ALTER TABLE `noticeboard`
+MODIFY `notice_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `options`
+--
+ALTER TABLE `options`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `parent`
+--
+ALTER TABLE `parent`
+MODIFY `parent_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `payment`
+--
+ALTER TABLE `payment`
+MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `settings`
+--
+ALTER TABLE `settings`
+MODIFY `settings_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `student`
+--
+ALTER TABLE `student`
+MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `subject`
+--
+ALTER TABLE `subject`
+MODIFY `subject_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `translation`
+--
+ALTER TABLE `translation`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
+--
+-- AUTO_INCREMENT for table `transport`
+--
+ALTER TABLE `transport`
+MODIFY `transport_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=618;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

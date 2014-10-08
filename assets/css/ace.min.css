@@ -13,10 +13,10 @@ body {
     line-height: 1.5
 }
 
-body
 
 
--fixed {
+
+body-fixed {
     padding-top: 45px
 }
 
@@ -53,7 +53,8 @@ body.breadcrumbs-fixed {
 }
 
 .container.main-container .sidebar.sidebar-fixed, .container.main-container .sidebar.sidebar-fixed:before {
-    left: auto
+    left: auto;
+
 }
 
 .main-content {
@@ -1692,7 +1693,7 @@ blockquote, blockquote.pull-right {
 }
 
 .user-info {
-    max-width: 100px;
+    max-width: 300px;
     display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2061,7 +2062,11 @@ blockquote, blockquote.pull-right {
     border-width: 0 1px 0 0;
     background-color: #f2f2f2
 }
+.main-container-inner{
 
+    background-color: #f2f2f2 !important;
+
+}
 .sidebar:before {
     content: "";
     display: block;
@@ -2070,7 +2075,7 @@ blockquote, blockquote.pull-right {
     bottom: 0;
     top: 0;
     z-index: -1;
-    background-color: #f2f2f2;
+    background-color: #f2f2f2 !important;
     border: 1px solid #ccc;
     border-width: 0 1px 0 0
 }

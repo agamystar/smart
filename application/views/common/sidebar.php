@@ -1,5 +1,5 @@
 
-<div class="sidebar" id="sidebar">
+<div class="sidebar sidebar-fixe" id="sidebar">
 <script type="text/javascript">
     try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 </script>
@@ -51,16 +51,16 @@
 </li>
 
 <li>
-    <a href="<?php echo SITE_LINK."/"."user/profile" ;?>">
-        <i class="icon-cog "></i>
+
+    <a href="<?php echo SITE_LINK."/"."user/profile" ;?>"  class="dropdown-toggle">
+        <i class="icon-user-md "></i>
         <span class="menu-text"> Profile</span>
 
     </a>
 </li>
-
 <li>
     <a href="" class="dropdown-toggle">
-        <i class="icon-desktop"></i>
+        <i class="icon-user"></i>
         <span class="menu-text"> Users </span>
 
         <b class="arrow icon-angle-down"></b>
@@ -69,7 +69,7 @@
     <ul class="submenu">
         <li>
             <a href="<?php echo SITE_LINK."/"."security" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 All Users
             </a>
         </li>
@@ -77,25 +77,23 @@
 
         <li>
             <a href="jquery-ui.html">
-                <i class="icon-double-angle-right"></i>
+
                 Import
             </a>
         </li>
 
         <li>
             <a href="nestable-list.html">
-                <i class="icon-double-angle-right"></i>
+
                 Export
             </a>
         </li>
 
     </ul>
 </li>
-
-
 <li>
     <a href="" class="dropdown-toggle">
-        <i class="icon-exchange "></i>
+        <i class="icon-archive "></i>
         <span class="menu-text"> Class </span>
 
         <b class="arrow icon-angle-down"></b>
@@ -104,7 +102,7 @@
     <ul class="submenu">
         <li>
             <a href="<?php echo SITE_LINK."/"."classes/all_classes" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 All Classes
             </a>
         </li>
@@ -112,26 +110,24 @@
 
         <li>
             <a href="nestable-list.html">
-                <i class="icon-double-angle-right"></i>
+
                 Export
             </a>
         </li>
 
     </ul>
 </li>
-
 <li>
-    <a href="" class="dropdown-toggle">
-        <i class="icon-exchange "></i>
+    <a href="#" class="dropdown-toggle">
+        <i class="icon-truck "></i>
         <span class="menu-text"> Bus </span>
-
         <b class="arrow icon-angle-down"></b>
     </a>
 
     <ul class="submenu">
         <li>
             <a href="<?php echo SITE_LINK."/"."bus"."/all_buses" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 All Buses
             </a>
         </li>
@@ -139,14 +135,14 @@
 
         <li>
             <a href="<?php echo SITE_LINK."/"."bus"."/bus_absence" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 Bus Absence
             </a>
         </li>
 
         <li>
             <a href="<?php echo SITE_LINK."/"."bus"."/bus_registration" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 Bus Registration
             </a>
         </li>
@@ -155,7 +151,7 @@
 </li>
 <li>
     <a href="#" class="dropdown-toggle">
-        <i class="icon-edit "></i>
+        <i class="icon-bar-chart "></i>
         <span class="menu-text"> Absence  </span>
 
         <b class="arrow icon-angle-down"></b>
@@ -167,14 +163,14 @@
 
         <li>
             <a href="<?php echo SITE_LINK."/"."user"."/student_absence" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 Student
             </a>
         </li>
 
         <li>
             <a href="<?php echo SITE_LINK."/"."user"."/staff_absence" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 Staff
             </a>
         </li>
@@ -184,11 +180,9 @@
 
     </ul>
 </li>
-
-
 <li>
-    <a href="<?php echo SITE_LINK."/"."exams" ;?>" class="dropdown-toggle">
-        <i class="icon-credit-card "></i>
+    <a href="" class="dropdown-toggle">
+        <i class="icon-money "></i>
         <span class="menu-text"> Finical   </span>
 
         <b class="arrow icon-angle-down"></b>
@@ -197,38 +191,18 @@
 
     <ul class="submenu">
         <li>
-            <a href="#">
-                <i class="icon-double-angle-right"></i>
-                School Expenses
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="icon-double-angle-right"></i>
-                Clothes Expenses
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="icon-double-angle-right"></i>
-             Book Expenses
-            </a>
-        </li>
+            <a href="<?php echo SITE_LINK."/"."finance/expenses" ;?>">
 
-        <li>
-            <a href="#">
-                <i class="icon-double-angle-right"></i>
-                Bus Expenses
+                 Expenses
             </a>
         </li>
 
     </ul>
 </li>
 
-
 <li>
     <a href="#" class="dropdown-toggle">
-        <i class="icon-edit "></i>
+        <i class="icon-calendar "></i>
         <span class="menu-text"> Time Line  </span>
 
         <b class="arrow icon-angle-down"></b>
@@ -240,21 +214,21 @@
 
         <li>
             <a href="#">
-                <i class="icon-double-angle-right"></i>
+
                 Time Table
             </a>
         </li>
 
         <li>
             <a href="#">
-                <i class="icon-double-angle-right"></i>
+
                 Exams Table
             </a>
         </li>
 
         <li>
             <a href="#">
-                <i class="icon-double-angle-right"></i>
+
                 Events
             </a>
         </li>
@@ -265,9 +239,9 @@
 
 
 <li>
-    <a href="<?php echo SITE_LINK."/"."exams" ;?>" class="dropdown-toggle">
-        <i class="icon-credit-card "></i>
-        <span class="menu-text"> Exams </span>
+    <a href="" class="dropdown-toggle">
+        <i class="icon-book "></i>
+        <span class="menu-text"> Teacher </span>
 
         <b class="arrow icon-angle-down"></b>
 
@@ -275,34 +249,42 @@
 
     <ul class="submenu">
         <li>
-            <a href="elements.html">
-                <i class="icon-double-angle-right"></i>
+            <a href="<?php echo SITE_LINK."/"."teacher/online_exam" ;?>">
+
                 Online Exam
             </a>
         </li>
         <li>
-            <a href="elements.html">
-                <i class="icon-double-angle-right"></i>
+            <a href="<?php echo SITE_LINK."/"."teacher/homework" ;?>">
+
                 Home Work
             </a>
         </li>
         <li>
             <a href="elements.html">
-                <i class="icon-double-angle-right"></i>
+
                 Exams Result
             </a>
         </li>
         <li>
             <a href="elements.html">
-                <i class="icon-double-angle-right"></i>
+
                  Numbers
             </a>
         </li>
     </ul>
 </li>
 <li>
-    <a href="<?php echo SITE_LINK."/"."sms" ;?>" class="dropdown-toggle">
+    <a href="<?php echo SITE_LINK."/user/"."inbox" ;?>" class="dropdown-toggle">
         <i class="icon-envelope "></i>
+        <span class="menu-text"> Inbox </span>
+
+
+    </a>
+</li>
+<li>
+    <a href="<?php echo SITE_LINK."/"."sms" ;?>" class="dropdown-toggle">
+        <i class="icon-mail-forward "></i>
         <span class="menu-text"> SMS </span>
 
 
@@ -321,27 +303,27 @@
     <ul class="submenu">
         <li>
             <a href="<?php echo SITE_LINK."/"."setup"."/"."classes" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 Classes
             </a>
         </li>
         <li>
             <a href="<?php echo SITE_LINK."/"."setup"."/"."buses" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 Buses
             </a>
         </li>
 
         <li>
-            <a href="<?php echo SITE_LINK."/"."setup"."/"."buses" ;?>">
-                <i class="icon-double-angle-right"></i>
+            <a href="<?php echo SITE_LINK."/"."setup"."/"."user_groups" ;?>">
+
                 User Group
             </a>
         </li>
 
         <li>
             <a href="<?php echo SITE_LINK."/"."setup"."/"."stages_levels" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 Stages&Levels
             </a>
         </li>
@@ -349,7 +331,7 @@
 
         <li>
             <a href="<?php echo SITE_LINK."/"."setup"."/"."expenses" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 Expenses
             </a>
         </li>
@@ -357,18 +339,38 @@
 
         <li>
             <a href="<?php echo SITE_LINK."/"."setup"."/"."subject" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 Subjects
             </a>
         </li>
 
         <li>
             <a href="<?php echo SITE_LINK."/"."setup"."/"."book" ;?>">
-                <i class="icon-double-angle-right"></i>
+
                 Books
             </a>
         </li>
 
+
+
+    </ul>
+</li>
+<li>
+    <a href=" <?php echo SITE_LINK."/"."translations" ;?>" class="dropdown-toggle">
+        <i class="icon-tasks"></i>
+        <span class="menu-text"> Chatting </span>
+
+        <b class="arrow icon-angle-down"></b>
+
+    </a>
+
+    <ul class="submenu">
+        <li>
+            <a href="elements.html">
+                <i class="icon-double-angle-right"></i>
+                ........
+            </a>
+        </li>
 
 
     </ul>
@@ -394,33 +396,16 @@
     </ul>
 </li>
 
-<li>
-    <a href=" <?php echo SITE_LINK."/"."translations" ;?>" class="dropdown-toggle">
-        <i class="icon-globe"></i>
-        <span class="menu-text"> Chatting </span>
 
-        <b class="arrow icon-angle-down"></b>
-
-    </a>
-
-    <ul class="submenu">
-        <li>
-            <a href="elements.html">
-                <i class="icon-double-angle-right"></i>
-                ........
-            </a>
-        </li>
-
-
-    </ul>
-</li>
 
 </ul><!-- /.nav-list -->
 
+
 <div class="sidebar-collapse" id="sidebar-collapse">
-   <!-- <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
--->
+   <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
 </div>
+
+
 
 <script type="text/javascript">
     try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}

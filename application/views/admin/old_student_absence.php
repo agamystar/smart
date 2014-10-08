@@ -103,7 +103,7 @@ $selected_class=$p_class[0] ;?>
 </div>
 <div id="import_dialog" class=" ">
 
-    <div class="modal-content" id="dialog_content">
+    <div class="" id="dialog_content">
         <!-- dialog body -->
         <div id="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
         <div class="modal-body">

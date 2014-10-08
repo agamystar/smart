@@ -32,27 +32,26 @@ include_once(
     }
 </style>
 
-<?php //print_r($user_data)?>
+
 
 <br/>
 <div id="user-profile-1" class="user-profile row">
 <div class="col-xs-12 col-sm-3 center">
     <div>
-        <div class="loading-indicator" style="display:none;height: 200px !important">
+        <div class="loading-indicator" style="display:none;width:260px;height: 225px !important">
             <img src="<?php echo SITE_LINK . "/assets" ?>/img/page-loader.gif"
                  style="width:50px;height:50px;margin: 50px 50px ">
         </div>
 
 
-        <img  id="my_photo" <?php if(empty($user_data->photo)){ echo 'style="display: none;" '; }?>  src="<?php echo SITE_LINK . "/assets/uploads/".$user_data->photo?>" style="width:200px;height:200px" alt="">
+        <img  id="my_photo" <?php if(strlen($user_data->photo)<5){ echo 'style="display: none;" '; }?>
+              src="<?php echo SITE_LINK . "/assets/uploads/".$user_data->photo?>" style="width:200px;height:200px" alt="">
 
-        <form action="" <?php if(!empty($user_data->photo)){ echo 'style="display: none;" '; }?>  method="post" enctype="multipart/form-data" id="upload_form">
+        <form action="" <?php  if(strlen($user_data->photo)>5){ echo 'style="display: none;" '; }?>
+              method="post" enctype="multipart/form-data" id="upload_form">
 
             <input multiple="" type="file" name="file" id="id-input-file-3"/>
-            <label>
-                <input type="checkbox" name="file-format" id="id-file-format" class="ace"/>
 
-            </label>
             <button style="display: none;" class="btn btn-primary" type="submit" id="submit_file">upload file</button>
         </form>
 
@@ -157,50 +156,49 @@ include_once(
 </div>
 
 <div class="col-xs-12 col-sm-9">
+  <?php
+
+    if($this->session->userdata("groups")=="student"){?>
     <div class="center">
-												<span class="btn btn-app btn-sm btn-light no-hover">
-													<span class="line-height-1 bigger-170 blue"> 1,411 </span>
+
+												<span class="btn btn-app btn-sm btn-primary no-hover">
+													<span class="line-height-1 small-90 ">  <?php  if(isset($student_data->class_name)){ echo $student_data->class_name ; } ?>  </span>
 
 													<br>
-													<span class="line-height-1 smaller-90"> Views </span>
+													<span class="line-height-1 smaller-90 "> class  </span>
 												</span>
 
-												<span class="btn btn-app btn-sm btn-yellow no-hover">
-													<span class="line-height-1 bigger-170"> 32 </span>
+												<span class="btn btn-app btn-sm btn-blue ">
+													<span class="line-height-1 smaller-90 white "> <?php if(isset($student_data->level_name)){echo $student_data->level_name ; } ?>  </span>
 
 													<br>
-													<span class="line-height-1 smaller-90"> Followers </span>
+													<span class="line-height-1 smaller-90 "> Level </span>
 												</span>
 
-												<span class="btn btn-app btn-sm btn-pink no-hover">
-													<span class="line-height-1 bigger-170"> 4 </span>
+												<span class="btn btn-app btn-sm btn-pink ">
+													<span class="line-height-1 smaller-90 "> <?php if(isset($student_data->stage_name)){ echo $student_data->stage_name ;}?>  </span>
 
 													<br>
-													<span class="line-height-1 smaller-90"> Projects </span>
+													<span class="line-height-1 smaller-90"> Stage </span>
 												</span>
 
 												<span class="btn btn-app btn-sm btn-grey no-hover">
-													<span class="line-height-1 bigger-170"> 23 </span>
+													<span class="line-height-1 smaller-90"> <?php if(isset($student_bus->bus_no)){ echo $student_bus->bus_no ; } ?>  </span>
 
 													<br>
-													<span class="line-height-1 smaller-90"> Reviews </span>
+													<span class="line-height-1 smaller-90"> Bus </span>
 												</span>
 
 												<span class="btn btn-app btn-sm btn-success no-hover">
-													<span class="line-height-1 bigger-170"> 7 </span>
+													<span class="line-height-1 bigger-170"> <?php if(isset($user_absence)){ echo $user_absence ;} ?>   </span>
 
 													<br>
-													<span class="line-height-1 smaller-90"> Albums </span>
+													<span class="line-height-1 smaller-90"> Absence </span>
 												</span>
 
-												<span class="btn btn-app btn-sm btn-primary no-hover">
-													<span class="line-height-1 bigger-170"> 55 </span>
 
-													<br>
-													<span class="line-height-1 smaller-90"> Contacts </span>
-												</span>
     </div>
-
+<?php }?>
     <div class="space-12"></div>
 
     <div class="profile-user-info profile-user-info-striped">
@@ -208,7 +206,7 @@ include_once(
             <div class="profile-info-name align-center"> Username</div>
 
             <div class="profile-info-value">
-                <span class="editable editable-click" id="username"> <?php echo $user_data->username ?> </span>
+                <span class=" editable-click" id="username"> <?php echo $user_data->username ?> </span>
             </div>
         </div>
 
@@ -231,14 +229,14 @@ include_once(
             <div class="profile-info-name align-center"> National No</div>
 
             <div class="profile-info-value">
-                <span class="editable editable-click" id="national_id"> <?php echo $user_data->national_id ?> </span>
+                <span class=" editable-click" id="national_id"> <?php echo $user_data->national_id ?> </span>
             </div>
         </div>
         <div class="profile-info-row">
             <div class="profile-info-name align-center">Birthday</div>
 
             <div class="profile-info-value">
-                <span class="editable editable-click" id="birthday"> <?php echo $user_data->birthday ?> </span>
+                <span class=" editable-click" id="birthday"> <?php echo $user_data->birthday ?> </span>
             </div>
         </div>
 
@@ -246,14 +244,14 @@ include_once(
             <div class="profile-info-name align-center">Religion</div>
 
             <div class="profile-info-value">
-                <span class="editable editable-click" id="religion"> <?php echo $user_data->religion ?> </span>
+                <span class=" editable-click" id="religion"> <?php echo $user_data->religion ?> </span>
             </div>
         </div>
         <div class="profile-info-row">
             <div class="profile-info-name align-center">Sex</div>
 
             <div class="profile-info-value">
-                <span class="editable editable-click" id="sex"> <?php echo $user_data->sex ?> </span>
+                <span class=" editable-click" id="sex"> <?php echo $user_data->sex ?> </span>
             </div>
         </div>
 
@@ -294,7 +292,7 @@ include_once(
             <i class="icon-on-right icon-arrow-right"></i>
         </a>
 
-        <a href="#" id="update_profile" style="display: none" class="btn btn-sm btn-primary">
+        <a href="javascript:void(0);" id="update_profile" style="display: none" class="btn btn-sm btn-primary">
             <i class="icon-rss bigger-150 middle"></i>
             <span class="bigger-110">Update Profile </span>
 

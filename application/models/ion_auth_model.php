@@ -908,8 +908,8 @@ class Ion_auth_model extends CI_Model
 		    'password'   => $password,
 		    'email'      => $email,
 		    'ip_address' => $ip_address,
-		    'created_on' => date('Y/m/d h:m:s'),
-		    'last_login' => date('Y/m/d h:m:s'),
+		    'created_on' => date('d/m/Y h:m:s'),
+		    'last_login' => date('d/m/Y h:m:s'),
 		    'active'     => ($manual_activation === false ? 1 : 0)
 		);
 
@@ -985,15 +985,13 @@ class Ion_auth_model extends CI_Model
 		}
 
 
-       // echo $query->num_rows().$this->db->last_query();
 
 		if ($query->num_rows() === 1)
 		{
-          //  echo $query->num_rows().$this->db->last_query();
-			$user = $query->row();
 
-           /// print_r($user);
-              $password=$this->hash_password_db($user->id, $password);
+			$user = $query->row();
+            $password=$this->hash_password_db($user->id, $password);
+
 			if ($password === TRUE)
 			{
 				if ($user->active == 0)
@@ -1655,7 +1653,7 @@ class Ion_auth_model extends CI_Model
 
 		$this->trigger_events('extra_where');
 
-		$this->db->update($this->tables['users'], array('last_login' =>date('Y/m/d h:m:s')), array('id' => $id));
+		$this->db->update($this->tables['users'], array('last_login' =>date('d/m/Y h:m:s')), array('id' => $id));
 
 		return $this->db->affected_rows() == 1;
 	}
@@ -1705,6 +1703,8 @@ class Ion_auth_model extends CI_Model
 		$session_data = array(
 		    'identity'             => $user->{$this->identity_column},
 		    'username'             => $user->username,
+		    'photo'             => $user->photo,
+		    'name'             => $user->name,
 		    'email'                => $user->email,
 		    'groups'                => $user->groups,
 		    'user_id'              => $user->id, //everyone likes to overwrite id so we'll use user_id

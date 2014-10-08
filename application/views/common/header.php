@@ -3,65 +3,67 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>jqGrid - Ace Admin</title>
+    <title>Smart School </title>
 
     <link href="<?php echo SITE_LINK."/assets" ?>/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/font-awesome.min.css"/>
-
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/jquery-ui-1.10.3.full.min.css"/>
-
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-fonts.css"/>
-
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace.min.css"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-rtl.min.css"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-skins.min.css"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/css/ace-ie.min.css"/>
+    <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/module/multi_select_list/bootstrap-duallistbox.css"/>
+    <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/module/jq_widgets/jqx.base.css"/>
+    <link rel="stylesheet" type="text/css" href="<?php echo SITE_LINK . "/assets/module/css"; ?>/easyui.css">
 
-
-
-
-    <?php
-    if (isset($css)) {
-        foreach ($css as $css_file) {
-            if (file_exists("./assets" . DIRECTORY_SEPARATOR . "module" . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR . $css_file)) {
-                ?>
-                <link href="<?php //echo SITE_LINK?>/assets/module/css/<?php echo $css_file; ?>" rel="stylesheet"
-                      type="text/css">
-
-                <?php
-            }
-        }
-    }?>
-
-    <script src="<?php echo SITE_LINK."/assets" ?>/js/ace-extra.min.js"></script>
-
-    <script src="<?php echo SITE_LINK."/assets" ?>/js/html5shiv.js"></script>
-    <script src="<?php echo SITE_LINK."/assets" ?>/js/respond.min.js"></script>
-   
-
-    <script type="text/javascript">
-        window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
-    </script>
 
 
     <script type="text/javascript">
-        window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>" + "<" + "/script>");
+        window.jQuery || document.write("<script src='<?php echo SITE_LINK."/assets" ?>/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
     </script>
 
-
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='<?php echo SITE_LINK."/assets" ?>/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+    </script>
     <script type="text/javascript">
         if ("ontouchend" in document) document.write("<script src='<?php echo SITE_LINK."/assets" ?>/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
     </script>
 
 
-    <script  type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/model/assets/prettify/run_prettify.js"></script>
+    <script src="<?php echo SITE_LINK."/assets" ?>/js/bootstrap.min.js"></script>
+    <script src="<?php echo SITE_LINK."/assets" ?>/js/typeahead-bs2.min.js"></script>
+    <script src="<?php echo SITE_LINK."/assets" ?>/js/bootbox.min.js"></script>
 
-    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/jquery-1.10.2.min.js"></script>
-    <script src="<?php echo SITE_LINK ?>/assets/js/chosen.jquery.min.js"></script>
-    <script src="<?php echo SITE_LINK ?>/assets/js/jquery.autosize.min.js"></script>
-    <script src="<?php echo SITE_LINK ?>/assets/js/ace-elements.min.js"></script>
-    <script src="<?php echo SITE_LINK ?>/assets/js/ace.min.js"></script>
-    <script src="<?php echo SITE_LINK ?>/assets/js/excanvas.min.js"></script>
+
+
+
+    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/jq_widgets"; ?>/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/jq_widgets"; ?>/globalize.js"></script>
+    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/jq_widgets"; ?>/jqxcore.js"></script>
+    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/jq_widgets"; ?>/jqxcalendar.js"></script>
+    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/jq_widgets"; ?>/jqxdatetimeinput.js"></script>
+
+
+    <script type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/easyui/jquery.easyui.min.js"></script>
+
+
+    <!--
+
+    <script type="text/javascript" src="<?php //echo SITE_LINK."/assets" ?>/easyui/filter.js"></script>
+-->
+    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/multi_select_list/jquery.bootstrap-duallistbox.js"; ?>"></script>
+
+
+    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.min.js"></script>
+    <link href="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.css" rel="stylesheet" type="text/css" />
+
+
+    <script src="<?php echo SITE_LINK."/assets" ?>/js/ace-elements.min.js"></script>
+    <script src="<?php echo SITE_LINK."/assets" ?>/js/ace.min.js"></script>
+
+
     <script type="text/javascript">
         try {
             ace.settings.check('navbar', 'fixed')
@@ -70,47 +72,40 @@
     </script>
 
 
-    <?php
-
-    if (isset($js_vars) || isset($js_lang)) {
-        ?>
-        <script type="text/javascript">
-
-           var  js_site_url="<?php echo $base_url[0];?>";
-
-                <?php
-                if (isset($js_vars)) {
-                    if (!empty($js_vars)) {
-                        ?>
-                    var js_var_object = <?php echo $js_vars; ?>;
-                    var js_site_link = "<?php echo SITE_LINK; ?>";
-                    //alert(js_var_object.current_link);
-                        <?php
-                    }
-                }
-                if (isset($js_lang)) {
-                    if (!empty($js_lang)) {
-                        ?>
-                    var js_lang_object = <?php echo $js_lang; ?>;
-                        <?php
-                    }
-                }
-                ?>
-        </script>
-        <?php
-    }
+    <?php  if (isset($js_vars) || isset($js_lang)) {
     ?>
+    <script type="text/javascript">
 
-    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.min.js"></script>
-    <link href="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.min.css" rel="stylesheet" type="text/css" />
-    <link href="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="<?php echo SITE_LINK . "/assets/module/css"; ?>/easyui.css">
-    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/jquery.easyui.min.js"></script>
+        var  js_site_url="<?php echo $base_url[0];?>";
+
+            <?php
+            if (isset($js_vars)) {
+                if (!empty($js_vars)) {
+                    ?>
+                var js_var_object = <?php echo $js_vars; ?>;
+                var js_site_link = "<?php echo SITE_LINK; ?>";
+                //alert(js_var_object.current_link);
+                    <?php
+                }
+            }
+            if (isset($js_lang)) {
+                if (!empty($js_lang)) {
+                    ?>
+                var js_lang_object = <?php echo $js_lang; ?>;
+                    <?php
+                }
+            }
+            ?>
+
+        $(function(){
 
 
-
+        });
+    </script>
     <?php
-    if (isset($js)) {
+} ?>
+
+    <?php  if (isset($js)) {
         foreach ($js as $js_file) {
             if (file_exists("./assets" . DIRECTORY_SEPARATOR . "module" . DIRECTORY_SEPARATOR . $js_file)) {
                 ?>
@@ -119,18 +114,12 @@
                 <?php
             }
         }
-    }
-
-    ?>
-    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/js"; ?>/filter.js"></script>
+    } ?>
 
 
-    <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/multi_select_list/jquery.bootstrap-duallistbox.js"; ?>"></script>
-
-    <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/module/multi_select_list/bootstrap-duallistbox.css"/>
 
 
-    <link href="<?php echo SITE_LINK . "/assets/css"; ?>/dropzone.css" rel="stylesheet" type="text/css" />
+
 
 
 
@@ -149,7 +138,7 @@
             background-color: #000;
             height: 100%;
             width:100%;
-            opacity: 0.4
+            opacity: 0.3
         }
 
 
@@ -178,8 +167,9 @@
             height: 35px !important;
         }
         .window .window-header{
-            height: 50px !important;
+            height: 40px !important;
         }
+     /*
         .ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix.ui-draggable-handle{
             height: 50px !important;
         }
@@ -188,13 +178,25 @@
             width: auto !important;
 
         }
+*/
+        .modal-body{
+                padding: 8px 20px !important;
+                padding-bottom: 1px !important;
+            }
 
-       .check_person{
+        .check_person{
            border:5px solid red !important;
        }
 
-
+        .datagrid-header-over{
+            background-color: #87B87F !important;
+        }
+        .bootstrap-duallistbox-container .info{
+            font-size: 21px;
+            text-decoration: underline;
+        }
     </style>
+
 
 
 
@@ -205,7 +207,7 @@
 
 <body class="">
 
-<div class="navbar navbar-default" id="navbar">
+<div class="navbar navbar-default navbar-fixe-top" id="navbar">
 
 
 <div class="navbar-container" id="navbar-container">
@@ -432,10 +434,14 @@
 
 <li class="light-blue">
     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+        <?php if($this->session->userdata("photo")>3 ){?>
+        <img class="nav-user-photo" src="<?php echo SITE_LINK."/assets/uploads/".$this->session->userdata("photo")?>" alt="Jason's Photo"/>
+            <?php }else{?>
         <img class="nav-user-photo" src="<?php echo SITE_LINK?>/assets/avatars/user.jpg" alt="Jason's Photo"/>
+    <?php }?>
 								<span class="user-info">
-									<small>Welcome,</small>
-									Jason
+									<small>Welcome , </small>
+									<?php echo $this->session->userdata("name") ;?>
 								</span>
 
         <i class="icon-caret-down"></i>
@@ -450,7 +456,7 @@
         </li>
 
         <li>
-            <a href="#">
+            <a href="<?php echo SITE_LINK."/user/profile"?>">
                 <i class="icon-user"></i>
                 Profile
             </a>
@@ -476,6 +482,7 @@
 
 <div class="main-container" id="main-container">
     <script type="text/javascript">
+
         try {
             ace.settings.check('main-container', 'fixed')
         } catch (e) {
@@ -510,12 +517,11 @@
 
             <div class="page-content">
                 <div class="page-header">
-                    <h1>
-                        Dashboard
-                        <small>
-                            <i class="icon-double-angle-right"></i>
-                            overview &amp; stats
-                        </small>
-                    </h1>
-                </div>
-                <!-- /.page-header -->
+                  <h1>
+                      Dashboard
+                      <small>
+                          <i class="icon-double-angle-right"></i>
+                          overview &amp; stats
+                      </small>
+                  </h1>
+              </div>

@@ -1,27 +1,4 @@
-function undo() {
-    $('#datagrid').datagrid('reload');
-}
-function cancelrow(target) {
-    var editors = $('#datagrid').datagrid('getEditors', target);
-    if (editors[0] != undefined) {
-        if (editors[0].target.val().length > 0 || editors[1].target.val().length > 0) {
 
-        } else {
-            $('#datagrid').datagrid('deleteRow', target);
-        }
-    }
-    $('#datagrid').datagrid('cancelEdit', target);
-    return false;
-}
-function start_edit(id) {
-    $('#datagrid').datagrid('beginEdit', id);
-}
-function updateActions(index) {
-    $('#datagrid').datagrid('updateRow', {
-        index:index,
-        row:{}
-    });
-}
 function getRowIndex(target) {
     var tr = $(target).closest('tr.datagrid-row');
     return parseInt(tr.attr('datagrid-row-index'));
@@ -74,6 +51,8 @@ function _delete(index,id) {
     $('#datagrid').datagrid('selectRow', index);
     bootbox.confirm('Are you sure you want to delete this Record ? ', function (yes) {
             if (yes) {
+
+                $('.bootbox-close-button.close').trigger("click");
                   var selection = $('#datagrid').datagrid('getSelected');
                     $('#datagrid').datagrid('deleteRow', index);
 
@@ -159,28 +138,28 @@ $(function () {
 
     $("#mymodal").dialog({
         width:550,
-        autoOpen:false,
+
         modal:true,
         closed:true,
-        title:' Class  '
+        title:'   '
     });
 
 
     $("#import_dialog").dialog({
         width:500,
-        autoOpen:false,
+
         modal:true,
         closed:true,
-        title:'Import Form'
+        title:' '
     });
 
     $("#export_dialog").dialog({
         width:500,
-        autoOpen:false,
+
         modal:true,
         closed:true,
 
-        title:'Export Form'
+        title:' '
     });
 
 
@@ -262,7 +241,7 @@ $(function () {
             user_group:$("#select_group").val()
         },
         method:'get',
-        pageSize:10,
+        pageSize:20,
         autoRowHeight:true,
         rowStyler:function (index, row) {
 

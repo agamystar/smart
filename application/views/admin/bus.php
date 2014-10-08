@@ -22,7 +22,6 @@ $selected_bus=$p_bus[0] ;?>
 
 
 <div class="row">
-    <div><marquee scrollamount="20"  direction="right"><img src="<?php echo SITE_LINK?>/assets/img/bus.gif" width="250" height="100" > </marquee> </div>
     <div class="col-xs-12">
     <form class="form-horizontal" id="sample-form">
     <div class="form-group">
@@ -56,8 +55,8 @@ $selected_bus=$p_bus[0] ;?>
 
 
             <div class="col-sm-12">
-                <a  href="#" id="export_class"  class=" label label-warning arrowed-right ">Export This Bus </a>
-                <a  href="#" id="import_class"  class=" label label-primary arrowed-left arrowed-in ">Import Students to This Bus </a>
+                <a  href="javascript:void(0);" id="export_class"  class=" label label-warning arrowed-right ">Export This Bus </a>
+                <a  href="javascript:void(0);" id="import_class"  class=" label label-primary arrowed-left arrowed-in ">Import Students to This Bus </a>
             </div>
         </div>
 
@@ -101,7 +100,7 @@ $selected_bus=$p_bus[0] ;?>
 </div>
 <div id="import_dialog" class=" ">
 
-    <div class="modal-content" id="dialog_content">
+    <div class="" id="dialog_content">
         <!-- dialog body -->
         <div id="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
         <div class="modal-body">

@@ -30,11 +30,14 @@ $(function () {
             user_group:$("#select_group").val()
         },
         method:'get',
-        pageSize:10,
+        pageSize:20,
         autoRowHeight:true,
         rowStyler:function (index, row) {
 
-            return 'height:35px;  border:2px solid #000';
+            if(row.no==js_var_object.mybus){
+                return 'font-weight:bold; color:red; border:2px solid #000';
+            }
+
 
         }, columns:[
             [
@@ -68,7 +71,7 @@ $(function () {
 
                     }
                 },
-                {field:'school_fees', align:'center', title:"School Fees", width:120, sortable:true,
+                {field:'school_fees', align:'center', title:"School Fees", width:160, sortable:true,
                     formatter:function (value, row, index) {
                         return "<a onclick=register(\""+row.no+"\")>Register In This Bus</a>";
                     }
@@ -79,6 +82,8 @@ $(function () {
         onBeforeLoad:function (param) {
         },
         onLoadSuccess:function (data) {
+
+
 
             $('#import_text').text("Import  " + $('#select_group option:selected').text());
             $('#export_text').text("Export  " + $('#select_group option:selected').text());

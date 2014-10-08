@@ -26,15 +26,11 @@ $selected_class=$p_class[0] ;?>
     <form class="form-horizontal" id="sample-form">
     <div class="form-group">
         <div class="col-sm-6">
-            <div class="col-sm-12">
+            <div class="col-sm-10">
                 <span class="label label-info arrowed-right arrowed-in"> Select  Class </span>
                 <input id="select_class"  required="true"  value="<?php // echo $selected_class?>" style="width:250px">
             </div>
 
-        <!--  <label> Use Filter :
-                    <input id="id-pills-stacked" name="switch-field-1" class="ace ace-switch ace-switch-6" type="checkbox">
-                    <span class="lbl"></span>
-                </label>-->
 
             <div class="nav-pills col-sm-12" style="display: none;">
                 <span class="label label-info arrowed-right arrowed-in"> No.Students in this(Class) </span>
@@ -60,19 +56,20 @@ $selected_class=$p_class[0] ;?>
 
         </div>
 
+        <div class="col-sm-2"> <img src="<?php echo  SITE_LINK."/assets/img/class.jpg"?>" width="150" height="50" alt=""/> </div>
+        <div class="col-sm-4">
 
-        <div class="col-sm-6">
+                <div class="col-sm-12">
+                    <a  href="#" id="export_class"  class=" label label-warning arrowed-right ">Export This Class </a>
+                    <a  href="#" id="import_class"  class=" label label-primary arrowed-left arrowed-in ">Import Students to This Class </a>
+                </div>
 
-
-
-            <div class="col-sm-12">
-                <a  href="#" id="export_class"  class=" label label-warning arrowed-right ">Export This Class </a>
-                <a  href="#" id="import_class"  class=" label label-primary arrowed-left arrowed-in ">Import Students to This Class </a>
-            </div>
+</div>
         </div>
 
 
-    <div class="col-md-12">
+        <div class="form-group">
+    <div class="col-md-12 ">
 
         <select style="display: none;" multiple="multiple" size="10" name="class_students" class="class_students">
             <?php
@@ -110,7 +107,7 @@ $selected_class=$p_class[0] ;?>
 </div>
 <div id="import_dialog" class=" ">
 
-    <div class="modal-content" id="dialog_content">
+    <div class="" id="dialog_content">
         <!-- dialog body -->
         <div id="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
         <div class="modal-body">

@@ -35,7 +35,7 @@ $selected_class = $p_class[0];?>
                     <div class="col-sm-12">
                         <span class="label label-info arrowed-right arrowed-in"> Select  Class </span>
                         <input id="select_class" required="true" value="<?php // echo $selected_class?>"
-                               style="width:250px">
+                               style="width:200px">
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -48,10 +48,10 @@ $selected_class = $p_class[0];?>
                 </div>
                 <div class="col-sm-4">
                     <div class="input-group">
-                        <input class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="dd-mm-yyyy">
-																	<span class="input-group-addon">
-																		<i class="icon-calendar bigger-110"></i>
-																	</span>
+                        <div id='content'>
+
+<input class="date" type="text"/>
+                        </div>
                     </div>
                 </div>
                 </div>
@@ -96,7 +96,7 @@ $selected_class = $p_class[0];?>
 
             <div id="import_dialog" class=" ">
 
-                <div class="modal-content" id="dialog_content">
+                <div class="" id="dialog_content">
                     <!-- dialog body -->
                     <div id="loading-indicator" style="display:none;"><img
                         src="<?php echo SITE_LINK . "/assets" ?>/img/page-loader.gif"

@@ -13,12 +13,11 @@ include_once(
 </style>
 
 
-
 <br/>
 
 <?php
 
-
+//print_r($set_users[0]);
 $selected_bus=$p_bus[0] ;?>
 
 
@@ -26,9 +25,10 @@ $selected_bus=$p_bus[0] ;?>
 <div class="row">
     <div class="col-xs-12">
     <form class="form-horizontal" id="sample-form">
+
     <div class="form-group">
-        <div class="col-sm-6">
-            <div class="col-sm-6">
+
+            <div class="col-sm-4">
                 <span class="label label-info arrowed-right arrowed-in"> Select  Bus </span>
                 <select id="select_bus" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
                     <?php
@@ -43,17 +43,15 @@ $selected_bus=$p_bus[0] ;?>
                     } ?>
                 </select>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <div id='content'>
 
+                        <input class="date" type="text"/>
+                    </div>
+                </div>
             </div>
-
-
-
-
-        </div>
-
-
-        <div class="col-sm-6">
+            <div class="col-sm-4">
 
 
 
@@ -64,32 +62,42 @@ $selected_bus=$p_bus[0] ;?>
         </div>
 
 
-    <div class="col-md-12">
-
-        <select style="display: none;" multiple="multiple" size="10" name="bus_students" class="bus_students">
-
-
-            <?php
-            if(isset($bus_students[0])){
-                foreach($bus_students[0] as $c_students){
-                    echo "<option value=\"$c_students->student_id\"  >".$c_students->name."</option>";
-                }
-            } ?>
-            <?php
-            if(isset($students[0])){
-                foreach($students[0] as $students){
-                    echo "<option value=\"$students->student_id\" selected=\"selected\">".$students->name."</option>";
-                }
-            } ?>
-        </select>
     </div>
 
+        <div class="form-group">
+            <div class="form-group" id="the_work_area" style="max-height: 600px; overflow:auto;overflow-x:hidden;">
+                <div class="col-xs-12">
+                    <ul>
+                        <?php
 
-    </div>
+
+                        if(isset($set_users)){
+                            foreach($set_users[0] as $c_students){
+                                $img_link="";
+                                if($c_students->sex=="male"){
+                                    $img_link= SITE_LINK . '/assets/avatars/avatar.png';
+                                }
+                                elseif($c_students->sex=="female"){
+                                    $img_link= SITE_LINK . '/assets/avatars/avatar1.png';
+                                }else{
+                                    $img_link= SITE_LINK . '/assets/avatars/avatar2.png';
+                                }
+                                // echo "<option value=\"$absence->user_id\"  selected=\"selected\">".$absence->name."</option>";
+                                echo ' <li style="height:60px;width:240px;display:inline-block;" class="itemdiv dialogdiv">
+                                <div class="user" style="width:100% !important; cursor:pointer">
+         <img alt="'.$c_students->name.'"  id="'.$c_students->student_id.'" src="'.$img_link.'" ><span style="margin-left:10px">'.$c_students->name.'</span></div></li>';
+
+                            }
+                        } ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
 
     <div class="form-group">
 
-        <div class="col-sm-3"> <button type="button" id="add_to_bus" class="btn btn-primary"> Submit </button></div>
+        <div class="col-sm-3"> <button type="button" id="add" class="btn btn-primary"> Submit </button></div>
 
 
 
@@ -99,29 +107,9 @@ $selected_bus=$p_bus[0] ;?>
 </div>
 
 
+
 </div>
-<div id="import_dialog" class=" ">
 
-    <div class="modal-content" id="dialog_content">
-        <!-- dialog body -->
-        <div id="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
-        <div class="modal-body">
-
-            <div class="row">
-                <form class="form-horizontal" id="import_form" role="form" enctype="multipart/form-data" method="post" action="">
-
-                    <div class="col-sm-9">
-                        <input class="form-control" name="file" id="file" type="file">
-                    </div>
-                    <div class="col-sm-3">
-                        <button type="submit" id="submit_import" class="btn btn-primary"> Import</button>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 <?php
 include_once(
     APPPATH . DIRECTORY_SEPARATOR .

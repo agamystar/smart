@@ -87,6 +87,7 @@ function _delete(index){
     $('#datagrid').datagrid('selectRow',index);
     $.messager.confirm("delete", "delete ? ", function (r) {
         if (r) {
+            $('.bootbox-close-button.close').trigger("click");
             var selection=$('#datagrid').datagrid('getSelected');
             $('#datagrid').datagrid('deleteRow',index);
 

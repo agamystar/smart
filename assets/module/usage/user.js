@@ -1,3 +1,5 @@
+var for_upload;
+
 function undo() {
     $('#datagrid').datagrid('reload');
 }
@@ -26,6 +28,7 @@ function _delete(index) {
     $('#datagrid').datagrid('selectRow', index);
     bootbox.confirm('Are you sure you want to delete this Record ? ',function(yes){
             if(yes){
+                $('.bootbox-close-button.close').trigger("click");
                     var selection = $('#datagrid').datagrid('getSelected');
                     $('#datagrid').datagrid('deleteRow', index);
 
@@ -53,7 +56,6 @@ function _delete(index) {
             }}
     );
 }
-
 function updateActions(index) {
     $('#datagrid').datagrid('updateRow', {
         index:index,
@@ -64,13 +66,13 @@ function getRowIndex(target) {
     var tr = $(target).closest('tr.datagrid-row');
     return parseInt(tr.attr('datagrid-row-index'));
 }
-
-
 function add_edit(action) {
+   var count_error=0;
     $('#username').removeAttr("disabled");
     $('#password').removeAttr("disabled");
+    $('#password').addClass("required");
 
-    $('.loading-indicator').show();
+
     var addnewrow = {
         name:$('#name').val(),
         national_id:$('#national_id').val(),
@@ -78,10 +80,9 @@ function add_edit(action) {
         groups:$('#select_group').val(),
         username:$('#username').val(),
         password:$('#password').val(),
-        id:$('#user_id').val(),
+        job:$('#job').val(),
         phone:$('#phone').val(),
-        photo:$('#photo').val(),
-        birthday:$('#birthday').val(),
+        birthday:$('#birthday').datebox("getValue"),
         sex:$('#sex').val(),
         religion:$('#religion').val(),
         blood_group:$('#blood_group').val(),
@@ -91,10 +92,22 @@ function add_edit(action) {
         level:$('#level').val(),
         id:$('#kid').val()
 
-
     };
 
 
+    $.each($('#mymodal input.required'),function(x,y){
+
+
+        if( $(this).val()<1){
+         $(this).closest(".form-group").addClass('has-error');
+            count_error++;
+        }
+
+    }
+    );
+
+if(count_error<1){
+   $('.loading-indicator').show();
     $.post( js_var_object.current_link,
         {
             action:action,
@@ -113,26 +126,45 @@ function add_edit(action) {
             $('#datagrid').datagrid("reload");
         }, 'json'
     );
-
-
 }
 
+}
 function edit_dialog(index) {
+
+
+    $.each($('#mymodal input.required'),function(x,y){
+
+            $(this).closest(".form-group").removeClass('has-error');
+
+    });
+
+    $('#my_photo').show();
 $('#datagrid').datagrid('selectRow', index);
  var selection = $('#datagrid').datagrid('getSelected');
+    for_upload=selection.id;
 $('#username').attr("disabled","disabled");
 $('#password').attr("disabled","disabled");
+$('#password').removeClass("required");
 
 $('#name').val(selection.name);
+$('#job').val(selection.job);
 $('#username').val(selection.username);
 $('#national_id').val(selection.national_id);
-$('#birthday').val(selection.birthday);
+$('#birthday').datebox("setValue",selection.birthday);
 $('#address').val(selection.address);
 $('#blood_group').val(selection.blood_group);
 $('#email').val(selection.email);
 $('#select_group').val(selection.groups);
+
 $('#phone').val(selection.phone);
-$('#photo').val(selection.photo);
+  if(selection.phone>3){
+      $('#photo').show();
+      $('#upload_form').hide();
+  $('#my_photo img').attr("src",js_site_link+"/assets/uploads/" +selection.photo);
+  }else{
+      $('#my_photo').hide();
+      $('#upload_form').show();
+  }
 $('#sex').val(selection.sex);
 $('#bus_fees').val(selection.bus_fees);
 $('#stage').val(selection.stage);
@@ -147,29 +179,156 @@ $('#password').val('******************');
     $("#mymodal").dialog("open");
 
 }
-function activation(act,id){
-    var action;
-    if(act==1){
-        action="dis_active_user";
-    }else{
-        action="active_user";
-    }
-    $.ajax( {
-        url: js_var_object.current_link,
-        beforeSend : function() {
-            $('#change_form').addClass('active');
-            $('.loading-indicator').show();
-        }, success : function(result) {
-            toastr.success('data inserted successfully procedure ',result.rows);
-            $('#datagrid').datagrid('reload');
-        },
-        type: 'POST',
-        data: {action:'active_user',user_id:id},
-        processData: false,
-        contentType: false
-    } );
-}
 $(function () {
+
+    $('input.date').datebox({
+        height:30,
+        width:280
+
+    });
+
+    $('#open_new_dialog').click(function (){
+
+        $('#username').removeAttr("disabled");
+        $('#password').removeAttr("disabled");
+        $("#mymodal input").val("");
+
+        $('#reset_btn').trigger("click");
+        $('#my_photo').hide();
+        $('#upload_form').show();
+        $('div#password_section').show();
+        $('div#r_password_section').show();
+        $('#submit_add').show();
+        $('#submit_edit').hide();
+        $("#mymodal").dialog("open");
+    } );
+    $('#cancel').click(function () {
+        $("#mymodal").dialog("close");
+    });
+
+    $('a#change_photo').click(function(){
+        $('#upload_form').show();
+        $('#my_photo').hide();
+    });
+    $('#id-input-file-3').ace_file_input({
+        style:'well',
+        btn_choose:'Drop files here or click to choose',
+        btn_change:null,
+        no_icon:'icon-cloud-upload',
+        droppable:true,
+        thumbnail:'small',//large | fit|small
+        //,icon_remove:null//set null, to hide remove/reset button
+        before_change:function(files, dropped) {
+            $('#loading').show();
+            $("#upload_form").submit(function(e){
+
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    url: js_site_url+"/security/f_upload/"+for_upload,
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (returndata) {
+                        if(returndata.length<30){
+                            toastr.success('Image Uploaded  Successfully  ');
+                            for_upload="";
+                        }else{
+                            toastr.error(returndata);
+                        }
+                        $('#loading').hide();
+                    }
+                });
+                e.preventDefault();
+                return false;
+            });
+
+            $('#submit_file').trigger("click");
+            return true;
+        }
+        /**,before_remove : function() {
+         return true;
+         }*/
+        ,
+        preview_error : function(filename, error_code) {
+
+        }
+
+    }).on('change', function(){
+
+        });
+    $('a#activation').click(function(){
+
+        var selection = $('#datagrid').datagrid('getSelected');
+        var  new_active;
+        if(selection.active=="1"){
+            new_active=0;
+        }else{
+            new_active=1;
+        }
+        $.post(js_var_object.current_link,{
+            action:"activation" ,
+            activation:new_active,
+            id:selection.id
+        },function(result){
+
+            if (result.message == "success") {
+                toastr.success('successfully  ');
+                if(new_active=="0"){
+                $('#active_span').show();
+                $('#disactive_span').hide();
+                    $('#datagrid').datagrid('reload');
+                }
+                else{
+                    $('#active_span').hide();
+                    $('#disactive_span').show();
+                    $('#datagrid').datagrid('reload');
+                }
+            } else {
+                toastr.error('Failed  ');
+            }
+
+        },'json')
+
+    });
+
+
+
+
+
+    $('#submit_add').click(function () {
+        add_edit("create_user");
+    });
+    $('#submit_edit').click(function () {
+        add_edit("edit_user");
+    });
+
+
+
+    $('#submit_reset').click(function(){
+        $('#loading_reset').show();
+        var selection = $('#datagrid').datagrid('getSelected');
+
+        $.post(js_var_object.current_link,{
+            action:"reset_password" ,
+            password:$('#res_password').val(),
+            id:selection.id
+        },function(result){
+
+            if (result.message == "success") {
+                toastr.success('successfully Updated ');//Success Info Warning Error
+                $('#loading_reset').hide();
+            } else {
+                toastr.error('Failed  ');//Success Info Warning Error
+            }
+
+        },'json')
+
+    });
+
 
     var loading=false;
     $('#select_class').combotree({
@@ -199,34 +358,51 @@ $(function () {
 
     $("#mymodal").dialog({
         width:950,
-        autoOpen:false,
         modal: true,
         closed: true,
-        title:' User '
+        title:'  ',
+        height: 550,
+        cache: false,
+        collapsible:true,
+        minimizable:true,
+        maximizable:true,
+        resizable:true
     });
     $("#change_dialog").dialog({
         width:500,
-        autoOpen:false,
         modal: true,
         closed: true,
-        title:'Reset password '
+        title:'  ',
+        cache: false,
+        collapsible:true,
+        minimizable:true,
+        maximizable:true,
+        resizable:true
     });
 
     $("#import_dialog").dialog({
         width:500,
-        autoOpen:false,
+        cache: false,
+        collapsible:true,
+        minimizable:true,
+        maximizable:true,
+        resizable:true,
         modal: true,
         closed: true,
-        title:'Import Form'
+        title:' '
     });
 
     $("#export_dialog").dialog({
         width:500,
-        autoOpen:false,
+        cache: false,
+        collapsible:true,
+        minimizable:true,
+        maximizable:true,
+        resizable:true,
         modal: true,
         closed: true,
 
-        title:'Export Form'
+        title:' '
     });
 
 
@@ -274,10 +450,10 @@ $(function () {
 
     $("#reset_dialog").dialog({
         width:530,
-        autoOpen:false,
+
         modal: true,
         closed: true,
-        title:'Reset  Form'
+        title:'  '
     });
 
     $('#reset_password').click(function(){
@@ -313,26 +489,7 @@ $(function () {
 
 
 
-        $('#open_new_dialog').click(function (){
-         $('#reset_btn').trigger("click");
-            $('div#password_section').show();
-            $('div#r_password_section').show();
-            $('#submit_add').show();
-            $('#submit_edit').hide();
-            $("#mymodal").dialog("open");
-        } );
-        $('#cancel').click(function () {
-            $("#mymodal").dialog("close");
-        });
 
-
-
-    $('#submit_add').click(function () {
-        add_edit("create_user");
-    });
-    $('#submit_edit').click(function () {
-        add_edit("edit_user");
-    });
 
 
 
@@ -375,32 +532,27 @@ $(function () {
             pagination:true,
             sortName:'released',
             sortOrder:'desc',
-            width:1050,
+            width:1115,
             fixed:true,
             queryParams:{
                 action:'get_data',
                 user_group:$("#select_group").val()
             },
             method:'get',
-            pageSize:10,
+            pageSize:20,
             autoRowHeight:true,
             rowStyler:function (index, row) {
 
                 return 'height:35px;  border:2px solid #000';
 
             }, rowStyler:function(index,row){
-           if(row.groups=="student"){
-           if (row.class_id==""||row.class_id==null||row.class_id=="0"){
-               return 'color:red';
-           }
-           }
-           if(row.groups=="not_defined"||row.groups==""||row.groups==null){
+           if(row.groups=="not_defined"||row.groups==""||row.groups==null||row.active=="0"){
                    return 'color:red';
 
            }
        }, columns:[
                 [
-                    {field:'action', title:'Action', type:'label', width:40, align:'center',
+                    {field:'action', title:'#', type:'label', width:40, align:'center',
                         formatter:function (value, row, index){
                                 var e = '<a href="javascript:void(0);" onclick="edit_dialog(' + index + ')"><i class="icon-pencil bigger-130"></i></a> ';
                                 var d = '<a href="javascript:void(0);" onclick="_delete(' + index + ')"><i class="icon-trash bigger-130"></i></a>';
@@ -410,39 +562,16 @@ $(function () {
                     },
                    // {field:'id', title:"Id", width:60, align:'center', sortable:true},
 
-                    {field:'name', title:"Name", width:150, align:'center', sortable:true
+                    {field:'name', title:"Name", width:200, align:'center', sortable:true
                     },
-                    {field:'username', title:"User Name", width:150, align:'center', sortable:true
+                    {field:'username', title:"User Name", width:200, align:'center', sortable:true
                     },
 
 
-                    {field:'email', align:'center', title:"Email", width:150, sortable:true},
-                    {field:'phone', align:'center', title:"Phone", width:120, sortable:true},
-                    {field:'national_id', align:'center', title:"National No", width:150, sortable:true},
-                    {field:'last_login', align:'center', title:"last_login", width:120, sortable:true},
-                    {field:'active', align:'center', title:"Active", width:80, sortable:true,
-                        formatter:function (value, row, index){
-
-                            if(value==1){
-
-                            // &#x2714;
-                           return '<label class="pull-right inline">' +
-                               ' <input  checked=""  oncheck="activation('+value+','+row.id+')" type="checkbox" class="ace ace-switch ace-switch-5"  id=\'active_' + index + '\'>' +
-                               ' <span class="lbl"></span> </label>';
-                            }else{
-                           // &#x2718;
-                                return '<label class="pull-right inline">' +
-                                    ' <input id="id-pills-stack_"'+index+' type="checkbox" class="ace ace-switch ace-switch-5" />' +
-                                    ' <span class="lbl"></span> </label>';
-                            }
-                          },
-                        editor:{
-                            type:'text'
-
-                        }
-                    }
-
-
+                    {field:'email', align:'center', title:"Email", width:210, sortable:true},
+                    {field:'phone', align:'center', title:"Phone", width:140, sortable:true},
+                    {field:'national_id', align:'center', title:"National No", width:170, sortable:true},
+                    {field:'last_login', align:'center', title:"Last Login", width:150, sortable:true}
 
                 ]
             ],
@@ -456,16 +585,34 @@ $(function () {
                 if($('#select_group option:selected').val()=="student"){
                     $('#div_for_student').show();
                     $('#div_bus_fees').show();
+                    $('#div_for_other').hide();
 
                 }else{
                     $('#div_for_student').hide();
                     $('#div_bus_fees').hide();
+
+                    $('#div_for_other').show();
+                    $('#job_text').html("Job");
+                }
+
+                if($('#select_group option:selected').val()=="teacher"){
+                    $('#div_for_other').show();
+                    $('#job_text').html("Subject");
                 }
 
 
             }, onDblClickRow:function (rowIndex, rowData) {
 
             }, onSelect:function (rowIndex, rowData) {
+
+            if(rowData.active=="1"){
+
+                $('#active_span').hide();
+                $('#disactive_span').show();
+            }else{
+                $('#disactive_span').hide();
+                $('#active_span').show();
+            }
 
             },
             onBeforeEdit:function (index, row) {

@@ -19,7 +19,7 @@ $('a#change_photo').click(function(){
                 var formData = new FormData($(this)[0]);
 
                 $.ajax({
-                    url: 'http://localhost/system/user/upload',
+                    url: js_site_url+"/user/upload",
                     type: 'POST',
                     data: formData,
                     async: false,
@@ -27,6 +27,11 @@ $('a#change_photo').click(function(){
                     contentType: false,
                     processData: false,
                     success: function (returndata) {
+                      if(returndata.length<30){
+                          toastr.success('Image Uploaded  Successfully  ');
+                      }else{
+                          toastr.error(returndata);
+                      }
                         $('.loading-indicator').hide();
                     }
                 });
@@ -60,9 +65,8 @@ $('a#change_photo').click(function(){
 
     $('#edit_profile').click(function(){
 
-        alert($('input[name="user_image"]').val());
        $('span.editable').each(function(index, obj){
-           $(obj).replaceWith($('<input type=text>').attr({ id: $(obj).attr("id"), value: $(obj).text(),class:"editable" }));
+           $(obj).replaceWith($('<input type=text>').attr({ id: $(obj).attr("id"), value: $(obj).text(),class:"editable col-xs-12" }));
        });
 
        $(this).hide();
@@ -73,38 +77,25 @@ $('a#change_photo').click(function(){
     $('#update_profile').click(function(){
 
         var addnewrow = {
-            name:$('#name').val(),
-            national_id:$('#national_id').val(),
             email:$('#email').val(),
-            groups:$('#group').val(),
-            username:$('#username').val(),
-            password:$('#password').val(),
-            id:$('#user_id').val(),
             phone:$('#phone').val(),
-            photo:$('#photo').val(),
-            birthday:$('#birthday').val(),
-            sex:$('#sex').val(),
-            religion:$('#religion').val(),
-            blood_group:$('#blood_group').val(),
-            address:$('#address').val(),
-            id:$('#kid').val()
-
+            address:$('#address').val()
 
         };
 
 
         $.post( js_var_object.current_link+"/profile",
             {
-                action:"update_profile",
-                row_add:JSON.stringify(addnewrow)
+                action:"edit",
+                row:JSON.stringify(addnewrow)
             }, function (result) {
                 if (result.result == "success") {
-                    toastr.success('User Created Successfully  ');//Success Info Warning Error
+                    toastr.success(' Success  ');//Success Info Warning Error
 
                     $('.loading-indicator').hide();
                     $("#mymodal").dialog("close");
                 } else {
-                    toastr.error('Failed Process  ');//Success Info Warning Error
+                    toastr.error('Failed ... Try Again   ');//Success Info Warning Error
 
                 }
 

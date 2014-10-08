@@ -1,31 +1,4 @@
 
-
-function undo() {
-    $('#datagrid').datagrid('reload');
-}
-
-function cancelrow(target) {
-    var editors = $('#datagrid').datagrid('getEditors', target);
-    if (editors[0] != undefined) {
-        if (editors[0].target.val().length > 0 || editors[1].target.val().length > 0) {
-
-        } else {
-            $('#datagrid').datagrid('deleteRow', target);
-        }
-    }
-    $('#datagrid').datagrid('cancelEdit', target);
-    return false;
-}
-
-function start_edit(id) {
-    $('#datagrid').datagrid('beginEdit', id);
-}
-function updateActions(index) {
-    $('#datagrid').datagrid('updateRow', {
-        index:index,
-        row:{}
-    });
-}
 function getRowIndex(target) {
     var tr = $(target).closest('tr.datagrid-row');
     return parseInt(tr.attr('datagrid-row-index'));
@@ -124,17 +97,17 @@ $(function () {
 
     $("#mymodal").dialog({
         width:600,
-        autoOpen:false,
+
         modal: true,
         closed: true,
-        title:'Student Form'
+        title:' '
     });
     $("#import_dialog").dialog({
         width:500,
-        autoOpen:false,
+
         modal: true,
         closed: true,
-        title:'Import Form'
+        title:' '
     });
 
     $('#import').click(function(){
@@ -212,7 +185,7 @@ $(function () {
             action:'get_data'
         },
         method:'get',
-        pageSize:10,
+        pageSize:20,
         autoRowHeight:true,
         rowStyler:function (index, row) {
 

@@ -29,10 +29,15 @@ var loading=false;
     });
     $("#import_dialog").dialog({
         width:500,
-        autoOpen:false,
+        height:200,
+        cache: false,
+        collapsible:true,
+        minimizable:true,
+        maximizable:true,
+        resizable:true,
         modal: true,
         closed: true,
-        title:'Import Form'
+        title:''
     });
 
 

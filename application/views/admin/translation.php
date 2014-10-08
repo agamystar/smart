@@ -21,7 +21,7 @@ include_once(
                 </h5>
 
                 <div class="widget-toolbar">
-                    <a href="#" data-action="collapse" id="open_new_dialog">
+                    <a href="javascript:void(0);" data-action="collapse" id="open_new_dialog">
                         <img src="<?php echo SITE_LINK."/assets" ?>/img/new.png" alt="New">
                     </a>
 

@@ -14,25 +14,28 @@ include_once(
 
     <div id="tb">
 
-        <a href="#" id="open_new_dialog" class="easyui-linkbutton" plain="true"><img src="<?php echo SITE_LINK."/assets" ?>/img/add-icon.png" alt=""/> Add Expenses </a>
-        <a href="#" id="import" name="imports" class="easyui-linkbutton" plain="true">
-            <img src="<?php echo SITE_LINK."/assets" ?>/img/import-icon.png" alt="Import"/>
-        <span id="import_text"></span>
-        </a>
-        <a href="#" id="export" name="exports" >
-            <img src="<?php echo SITE_LINK."/assets" ?>/img/export-icon.png" alt="Export"/>
-            <span id="export_text"></span></a>
-    <span class="widget-toolbar">
+        <a href="javascript:void(0);" id="open_new_dialog" class="easyui-linkbutton" plain="true"><img src="<?php echo SITE_LINK."/assets" ?>/img/add-icon.png" alt=""/> Add Expenses </a>
 
     </div>
 
 
     <table id="datagrid" toolbar="#tb"></table>
 
+
+<div id="dg2_container">
+    <div id="tb_2">
+
+        <a href="javascript:void(0);" id="open_new_dialog_2" class="easyui-linkbutton" plain="true"><img src="<?php echo SITE_LINK."/assets" ?>/img/add-icon.png" alt=""/> Add Installments </a>
+
+    </div>
+
+    <table id="datagrid_2" toolbar="#tb_2"></table>
+</div>
+
 <div id="mymodal" class=" ">
     <div class="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:180px;height:180px;margin: 100px 200px " /></div>
 
-    <div class="modal-content">
+    <div class="">
         <!-- dialog body -->
         <div class="modal-body">
 
@@ -88,27 +91,58 @@ include_once(
 
 </div>
 
-<div id="import_dialog" class=" ">
+<div id="mymodal_2" class=" ">
+    <div class="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:180px;height:180px;margin: 100px 200px " /></div>
 
-    <div class="modal-content" id="dialog_content">
+    <div class="">
         <!-- dialog body -->
-        <div id="loading-indicator" style="display:none;" > <img src="<?php echo SITE_LINK."/assets" ?>/img/page-loader.gif" style="width:100px;height:50px;margin: 0px 30%; " /></div>
         <div class="modal-body">
 
-            <div class="row">
-                <form class="form-horizontal" id="import_form" role="form" enctype="multipart/form-data" method="post" action="<?php echo $main_url . "import"?>">
+            <form class="form-horizontal" id="reset_form_2" role="form"  method="post" action="">
+                <div class="row">
+                    <div class="col-sm-12">
 
-                    <div class="col-sm-9">
-                        <input class="form-control" name="file" id="file" type="file">
-                    </div>
-                    <div class="col-sm-3">
-                        <button type="submit" id="submit_import" class="btn btn-primary"> Import</button>
-                    </div>
+                        <div class="form-group">
+                            <label class="align-left col-sm-3 control-label">Name</label>
 
-                </form>
-            </div>
+                            <div class="col-sm-9">
+                                <input class="form-control" id="name_2" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="align-left col-sm-3 control-label">Value</label>
+
+                            <div class="col-sm-9">
+                                <input class="form-control" id="value_2" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="align-left col-sm-3 control-label">End Date</label>
+
+                            <div class="col-sm-9">
+                                <input class="form-control date" id="end_date_2" type="text">
+                            </div>
+                        </div>
+
+
+
+                        <div class="modal-footer">
+                            <input class="form-control" id="kid_2" type="hidden">
+                            <button type="button" id="submit_add_2" style="display: none;" class="btn btn-primary">Submit</button>
+                            <button type="button" id="submit_edit_2" style="display: none;" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-danger " id="cancel_2">Cancel</button>
+                            <button type="reset" class="btn btn-default " id="reset_btn_2">Reset</button>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
+
+
     </div>
+
 </div>
 
 

@@ -21,11 +21,61 @@ class Security extends MY_Controller
 
     //redirect if needed, otherwise display the user list
 
+    public function f_upload($id='')
+    {
+        if (!empty($_FILES)) {
+
+            if(!empty($id)){
+
+                $this->db->select("photo");
+                $this->db->from("users");
+                $this->db->where("id",$id);
+                $pho=$this->db->get();
+                $res_pho=$pho->row();
+                if(file_exists(SITE_LINK.'/assets/uploads/'.$res_pho->photo)){
+                unlink(SITE_LINK.'/assets/uploads/'.$res_pho->photo);
+                 }
+            }
+
+
+
+            $tempFile = $_FILES['file']['tmp_name'];
+            $fileName = $_FILES['file']['name'];
+
+            $ext = explode('.', $fileName);
+            $ext = array_pop($ext);
+            $file_ext=strtolower($ext);
+
+
+            $allowed_ext = array('jpg','jpeg','png','gif');
+            if(!in_array($file_ext,$allowed_ext)){
+                $message = 'Only '.implode(',',$allowed_ext).' files are allowed!';
+                echo json_encode(array("message"=>$message));
+                exit;
+            }else{
+
+                $targetPath = './assets/uploads/';
+                $new_file_name = date("y-m-d-h-m-s") . "_" . rand(100000, 90000000) . "_" . $fileName;
+                $targetFile = $targetPath . $new_file_name;
+                move_uploaded_file($tempFile, $targetFile);
+
+
+
+                $this->session->set_userdata("image_name",$new_file_name);
+
+                echo json_encode(array("message"=>"success"));
+                exit;
+            }
+
+        }
+
+
+        exit;
+    }
 
 
     function index()
     {
-
 
         if (!$this->ion_auth->logged_in()) {
             redirect(SITE_LINK . "/security/login", 'refresh');
@@ -204,6 +254,7 @@ class Security extends MY_Controller
 
             if ($action_post == "create_user") {
 
+
                 $bus_fees = '';
                 $salt = '';
                 $password = $this->ion_auth->hash_password($row_add->password, $salt);
@@ -219,6 +270,13 @@ class Security extends MY_Controller
                 else{$the_level=0;
                 }
 
+                if($row_add->job){
+                    $job=$row_add->job;
+                }
+                else{
+                    $job='';
+                }
+
                 $dat = array(
                     'name' => $row_add->name,
                     'address' => $row_add->address,
@@ -227,17 +285,23 @@ class Security extends MY_Controller
                     'religion' => $row_add->religion,
                     'birthday' => $row_add->birthday,
                     'blood_group' => $row_add->blood_group,
-                    'photo' => $row_add->photo,
+                    'photo' =>$this->session->userdata("image_name"),
                     'phone' => $row_add->phone,
                     'username' => $row_add->username,
                     'groups' => $row_add->groups,
                     'email' => strtolower($row_add->email),
                     'password ' => $password,
                     'bus_fees' => $row_add->bus_fees,
-                    'last_login' => date('Y/m/d h:m:s'),
+                    'last_login' => date('d/m/Y  h:m:s'),
+                    'active' => 1,
                     'stage' => $the_stage,
-                    'level' => $the_level
+                    'level' => $the_level,
+                    'job'=>$job
                 );
+
+                if(strlen($dat['photo'])<3){
+                    unset($dat['photo']);
+                }
 
                 $this->db->where('national_id',$row_add->national_id);
                 $num = $this->db->count_all_results("users");//table name from drowp down
@@ -256,7 +320,7 @@ class Security extends MY_Controller
                     echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
                 }
 
-             //   echo $this->db->last_query();
+                $this->session->unset_userdata('image_name');
                 exit;
             }
 
@@ -266,6 +330,7 @@ class Security extends MY_Controller
                 if (!$this->ion_auth->logged_in()) {
                     redirect(SITE_LINK . "/security/login", 'refresh');
                 }
+
 
 
                 $salt = '';
@@ -281,6 +346,18 @@ class Security extends MY_Controller
                 }
                 else{$the_level=0;
                 }
+                if($row_add->job){
+                    $job=$row_add->job;
+                }
+                else{
+                    $job='';
+                }
+
+                if($this->session->userdata("image_name")){
+                    $image=$this->session->userdata("image_name");
+                }else{
+                    $image="";
+                }
                 $dat = array(
                     'name' => $row_add->name,
                     'address' => $row_add->address,
@@ -289,18 +366,21 @@ class Security extends MY_Controller
                     'religion' => $row_add->religion,
                     'birthday' => $row_add->birthday,
                     'blood_group' => $row_add->blood_group,
-                    'photo' => $row_add->photo,
+                    'photo' =>$image ,
                     'phone' => $row_add->phone,
                     'username' => $row_add->username,
                     'groups' => $row_add->groups,
                     'email' => strtolower($row_add->email),
-                    'password ' => $password,
                     'bus_fees' => $row_add->bus_fees,
-                    'last_login' => date('Y/m/d h:m:s'),
+                    'last_login' => date('d/m/Y h:m:s'),
                     'stage' => $the_stage,
-                    'level' => $the_level
+                    'level' => $the_level,
+                    'job'=>$job
                 );
 
+                if(strlen($dat['photo'])<3){
+                    unset($dat['photo']);
+                }
                 $this->db->where("id", $row_add->id);
                 $this->db->update("users", $dat);
 
@@ -313,9 +393,7 @@ class Security extends MY_Controller
                 else {
                     echo json_encode(array("result" =>"failed"));
                 }
-
-                // print_r($res);
-
+                $this->session->unset_userdata('image_name');
                 //echo $this->db->last_query();
                 exit;
             }
@@ -329,6 +407,43 @@ class Security extends MY_Controller
                     echo json_encode(array("result" => "failed"));
                 }
                 // echo $this->db->last_query();
+                exit;
+            }
+
+
+            if ($action_post == "activation") {
+
+                $new_data=array(
+                    "active"=>$this->input->post('activation')
+                );
+                $this->db->where("id",$this->input->post('id'));
+                $this->db->update("users",$new_data);
+
+                if($this->db->affected_rows()>0) {
+                    echo json_encode(array("message"=>"success"));
+                }else{
+                    echo json_encode(array("message"=>"failed"));
+                }
+                //   echo $this->db->last_query();
+                exit;
+            }
+
+            if ($action_post == "reset_password") {
+
+                $salt = '';
+                $pass = $this->ion_auth->hash_password($this->input->post("password"), $salt);
+
+                $new_data=array(
+                    "password"=> $pass
+                );
+                $this->db->where("id",$this->input->post('id'));
+                $this->db->update("users",$new_data);
+
+                if($this->db->affected_rows()>0) {
+                    echo json_encode(array("message"=>"success"));
+                }else{
+                    echo json_encode(array("message"=>"failed"));
+                }
                 exit;
             }
 
@@ -405,18 +520,9 @@ class Security extends MY_Controller
             }
 
             //reset password - final step for forgotten password
-            if ($action_post == "reset_password") {
 
-            }
             //activate the user
-            function activate($id, $code = false)
-            {
-            }
 
-            //deactivate the user
-            function deactivate($id = NULL)
-            {
-            }
 
             //create a new user
 
@@ -433,6 +539,7 @@ class Security extends MY_Controller
 
         ));
         $data['base_url'][] = SITE_LINK;
+
         $data['js'][] = "usage/user.js";
         $data['main_url'] = SITE_LINK;
         $data['stages'] = $stages;

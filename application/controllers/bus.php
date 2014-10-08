@@ -110,6 +110,7 @@ class Bus extends MY_Controller
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
         $bus_no = $this->input->post("bus_no");
+        $my_bus=$this->mymodel_model->select("bus_students","student_id=".$this->session->userdata('user_id')." ");
 
 
         if ($action_get == "get_data") {
@@ -249,15 +250,20 @@ class Bus extends MY_Controller
             $rs = $this->db->get();
             //  echo $this->db->last_query();
 
-            if ($rs->num_rows() > 0) {
-                $back = array('total' => $this->db->count_all_results(), 'rows' => $rs->result_array());
 
+
+            if ($rs->num_rows() > 0) {
+
+
+                $back = array('total' => $this->db->count_all_results(), 'rows' => $rs->result_array());
             }
 
             echo json_encode($back);
             exit;
         }
         if ($action_post == "register") {
+            $this->db->where("student_id",$this->session->userdata("user_id"));
+            $this->db->delete("bus_students");
 
             $therow = array(
                 "bus_no" => $bus_no,
@@ -275,11 +281,17 @@ class Bus extends MY_Controller
 
             exit;
         }
+
+        if($my_bus){
+           $the_bus= $my_bus[0]->bus_no;
+        }else{
+            $the_bus=1111111111;
+        }
         $data["js_vars"] = json_encode(array(
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1] . "/" . $this->uri->segments[2],
             'controller_link' => SITE_LINK . "/" . $this->uri->segments[1],
             'main_url' => SITE_LINK . "/" . "security/",
-
+            "mybus"=>$the_bus,
         ));
         $data['base_url'][] = SITE_LINK;
 
@@ -371,18 +383,27 @@ class Bus extends MY_Controller
         exit;
     }
 
-    public function bus_absence($x = '')
+    public function bus_absence()
     {
 
 
         $action_get = $this->input->get("action");
+        $date = $this->input->get("date");
+        $p_bus = $this->input->get("bus");
         $action_post = $this->input->post("action");
         $ajax_data = json_decode($this->input->post("data"));
+
+        if($date){
+            $today=$date;
+        }
+        else{
+            $today=date("d/m/Y");
+        }
 
 
         $data = array();
 
-        if (empty($x)) {
+        if (!$p_bus) {
             $this->db->select("*");
             $this->db->from("bus");
             $this->db->limit(1);
@@ -391,39 +412,41 @@ class Bus extends MY_Controller
             $bus = $r_bus->no;
         } else {
 
-            $bus = $x;
+            $bus = $p_bus;
         }
-        $today = date('Y/m/d');
 
         $buses = $this->mymodel_model->select("bus", "1=1");
-        $students = $this->mymodel_model->select("v_bus_absence", "bus_no='$bus' and  day='$today'"); // right - selected
-        $bus_students = $this->mymodel_model->select("v_bus_students", "bus_no='$bus' and student_id not in (select  student_id from v_bus_absence where  day='$today' ) "); //left
-        //print_r($students);
-        // print_r($bus_students);
-        if ($action_post == "distribute") {
+        $absence = $this->mymodel_model->select("v_bus_absence", "bus_no='$bus' and  day='$today'"); // right - selected
+        $set_users = $this->mymodel_model->select("v_bus_students", "bus_no='$bus'"); //left
+
+        if ($action_post == "add") {
+
             $no = "";
             $message = "";
             $big_st_ids = array();
-            foreach ($ajax_data->students_inbus as $st) {
-                $big_st_ids[] = array("day" => $today, "student_id" => $st);
+            foreach ($ajax_data->selection as $st) {
+                $big_st_ids[] = array("day" => $ajax_data->date, "student_id" => $st,"bus"=>$ajax_data->bus);
 
             }
+            $this->db->trans_begin();
 
-
-            $this->db->where("day", $today);
+            $this->db->where("day", $ajax_data->date);
+            $this->db->where("bus", $ajax_data->bus);
             $this->db->delete("bus_absence");
-
+           // echo $this->db->last_query();
 
             if (!empty($big_st_ids)) {
                 $this->db->insert_batch("bus_absence", $big_st_ids);
                 if ($this->db->affected_rows() > 0) {
                     $no = $this->db->affected_rows();
+                    $this->db->trans_commit();
                     $message = "success";
                 } else {
                     $message = "failed  ";
+                    $this->db->trans_rollback();
                 }
             }
-            // echo $this->db->last_query();
+//             echo $this->db->last_query();
             echo  json_encode(array("message" => $message, "no" => $no));
             exit;
         }
@@ -433,13 +456,16 @@ class Bus extends MY_Controller
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1] . "/" . $this->uri->segments[2],
             'controller_link' => SITE_LINK . "/" . $this->uri->segments[1],
             'main_url' => SITE_LINK . "/" . "security/",
+            'set_users' => $set_users,
+            'p_date' => $today,
+            'absence' => $absence
 
         ));
         $data['base_url'][] = SITE_LINK;
         $data['buses'][] = $buses;
-        $data['students'][] = $students;
+        $data['absence'][] = $absence;
         $data['p_bus'][] = $bus;
-        $data['bus_students'][] = $bus_students;
+        $data['set_users'][] = $set_users;
         $data['js'][] = "usage/bus_absence.js";
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'bus_absence', $data);
     }

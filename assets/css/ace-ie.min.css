@@ -1,7 +1,4 @@
-.sidebar {
-    *left: 0;
-    height: 830px !important;
-}
+
 
 .sidebar:before {
     display: none

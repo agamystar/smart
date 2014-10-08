@@ -14,23 +14,26 @@ class Finance extends MY_Controller
     }
 
 
-    function expenses()  {
+    function expenses()
+    {
 
 
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
 
-        $id = $this->input->get("id");
-        $group = $this->input->get("user_group");
+        $stage = $this->input->get("stage");
+        $level = $this->input->get("level");
+
         $row_add = json_decode($this->input->post("row_add"));
-        $row = json_decode($this->input->post("row"));
-        $ajax_data = json_decode($this->input->post("data"));
+        $expense =$this->input->get("expense");
+        $installment =$this->input->get("installment");
 
 
-        $stages=$this->mymodel_model->select("stages",'1=1');
-        $levels=$this->mymodel_model->select("levels",'1=1');
-        $teachers=$this->mymodel_model->select("users",'groups="teacher"');
-
+        $stages = $this->mymodel_model->select("stages", '1=1');
+        $levels = $this->mymodel_model->select("levels", '1=1');
+        $installments = $this->mymodel_model->select("installments", '1=1');
+        $teachers = $this->mymodel_model->select("users", 'groups="teacher"');
+        $expenses = $this->mymodel_model->select("expenses", '1=1 ');
         if ($this->session->userdata("groups") != "admin") {
             redirect(SITE_LINK . '/security/login', 'refresh');
         }
@@ -44,7 +47,10 @@ class Finance extends MY_Controller
                 $this->db->select('*');
                 $this->db->start_cache();
                 $this->db->from("v_student_expenses");
-
+                $this->db->where("stage",$stage);
+                $this->db->where("level",$level);
+                $this->db->where("expenses_id",$expense);
+                $this->db->where("installment_id",$installment);
 
                 $flds_array = array(
                     'id' => array('where' => "id", 'order' => "id", 'val_template' => '', 'lower' => false),
@@ -183,7 +189,6 @@ class Finance extends MY_Controller
                 echo json_encode($back);
                 exit;
             }
-
             if ($action_get == "get_students") {
                 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
                 $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 10;
@@ -198,9 +203,12 @@ class Finance extends MY_Controller
                 $this->db->select('*');
                 $this->db->start_cache();
                 $this->db->from("users");
+                $this->db->where("groups","student");
+                $this->db->where("stage",$stage);
+                $this->db->where("level",$level);
                 $this->db->limit($rows, $offset - 1);
                 $rs = $this->db->get();
-                //  echo $this->db->last_query();
+                // echo $this->db->last_query();
 
                 if ($rs->num_rows() > 0) {
                     $back = array('total' => $this->db->count_all_results(), 'rows' => $rs->result_array());
@@ -210,45 +218,43 @@ class Finance extends MY_Controller
                 echo json_encode($back);
                 exit;
             }
-
             if ($action_post == "add") {
-
                 $dat = array(
-                    'name' => $row_add->name,
-                    'name_numeric' => $row_add->name_numeric,
-                    'stage' => $row_add->stage,
-                    'level' => $row_add->level,
-                    'teacher_id' => $row_add->teacher_id
+                    'student_id' => $row_add->student_id,
+
+                    'installment_id' => $row_add->installment_id,
+                    'paid_date' => $row_add->paid_date,
+                    'amount' => $row_add->amount,
+                    'expenses_discount' => $row_add->expenses_discount
                 );
-                $this->db->insert("class", $dat);
-                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                $this->db->insert("student_installments", $dat);
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows() == 0) {
                     echo json_encode(array("result" => "success"));
                 } else {
-                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
+                    echo json_encode(array("result" => $this->db->_error_number() . " * " . $this->db->_error_message()));
                 }
                 exit;
             }
             if ($action_post == "edit") {
 
                 $dat = array(
-                    'name' => $row_add->name,
-                    'name_numeric' => $row_add->name_numeric,
-                    'stage' => $row_add->stage,
-                    'level' => $row_add->level,
-                    'teacher_id' => $row_add->teacher_id
+                   // 'student_id' => $row_add->student_id,
+
+                   // 'installment_id' => $row_add->installment_id,
+                    'paid_date' => $row_add->paid_date,
+                    'amount' => $row_add->amount,
+                    'expenses_discount' => $row_add->expenses_discount
                 );
-                $this->db->where("class_id", $row_add->id);
-                $this->db->update("class", $dat);
-                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                $this->db->where("student_id", $row_add->student_id);
+                $this->db->where("installment_id", $row_add->installment_id);
+                $this->db->update("student_installments", $dat);
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows() == 0) {
                     echo json_encode(array("result" => "success"));
                 } else {
-                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
+                    echo json_encode(array("result" => $this->db->_error_number() . " * " . $this->db->_error_message()));
                 }
                 exit;
             }
-
-
-
             if ($action_post == "delete") {
                 $this->db->where("class_id", $this->input->post('id'));
                 $this->db->delete("class");
@@ -267,12 +273,13 @@ class Finance extends MY_Controller
 
         $data = array();
         $data["js_vars"] = json_encode(array(
-            'current_link' => SITE_LINK . "/" . $this->uri->segments[1]. "/" . $this->uri->segments[2],
+            'current_link' => SITE_LINK . "/" . $this->uri->segments[1] . "/" . $this->uri->segments[2],
             'details' => SITE_LINK . "/" . "student/" . "details/",
             'main_url' => SITE_LINK . "/" . "security/",
             'stages' => $stages,
             'levels' => $levels,
-            'teachers' => $teachers,
+            'expenses' => $expenses,
+            'installments' => $installments
 
         ));
         $data['base_url'][] = SITE_LINK;
@@ -281,6 +288,7 @@ class Finance extends MY_Controller
         $data['stages'] = $stages;
         $data['levels'] = $levels;
         $data['teachers'] = $teachers;
+        $data['expenses'] = $expenses;
         $data['use_big_model'] = "yes";
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'student_expenses', $data);
 
