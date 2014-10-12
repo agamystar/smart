@@ -23,48 +23,23 @@ $selected_class=$p_class[0] ;?>
 
 <div class="row">
     <div class="col-xs-12">
-    <form class="form-horizontal" id="sample-form">
-    <div class="form-group">
-        <div class="col-sm-6">
-            <div class="col-sm-10">
-                <span class="label label-info arrowed-right arrowed-in"> Select  Class </span>
-                <input id="select_class"  required="true"  value="<?php // echo $selected_class?>" style="width:250px">
+        <div class="col-sm-8">
+            <span class="label label-info arrowed-right arrowed-in col-sm-1" >  Class </span>
+            <input id="select_class"  required="true"  value="<?php // echo $selected_class?>" class="col-sm-10">
             </div>
-
-
-            <div class="nav-pills col-sm-12" style="display: none;">
-                <span class="label label-info arrowed-right arrowed-in"> No.Students in this(Class) </span>
-                <select id="student_number"  class="FormElement ui-widget-content ui-corner-all">
-                    <option value="20">20</option>
-                    <option value="20">25</option>
-                    <option value="20">30</option>
-                    <option value="20">35</option>
-                    <option value="20">40</option>
-                    <option value="20">45</option>
-                    <option value="20">50</option>
-                </select>
-
-                <span class="label label-info arrowed-right arrowed-in"> Sort Student By  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <select id="student_sort" style="min-width: 120px;" class="FormElement ui-widget-content ui-corner-all">
-                    <option value="1">Random</option>
-                    <option value="2">Name</option>
-                    <option value="3">Sex</option>
-
-                </select>
-
+            <div class="col-sm-4">
+                <a  href="#" id="export_class"  class=" label label-warning arrowed-right ">Export This Class </a>
+                <a  href="#" id="import_class"  class=" label label-primary arrowed-left arrowed-in ">Import Students to This Class </a>
             </div>
-
         </div>
 
-        <div class="col-sm-2"> <img src="<?php echo  SITE_LINK."/assets/img/class.jpg"?>" width="150" height="50" alt=""/> </div>
-        <div class="col-sm-4">
+        <div class="col-xs-12">
+    <form class="form-horizontal" id="sample-form">
+    <div class="form-group">
+        <div class="col-sm-8">
+        </div>
 
-                <div class="col-sm-12">
-                    <a  href="#" id="export_class"  class=" label label-warning arrowed-right ">Export This Class </a>
-                    <a  href="#" id="import_class"  class=" label label-primary arrowed-left arrowed-in ">Import Students to This Class </a>
-                </div>
 
-</div>
         </div>
 
 

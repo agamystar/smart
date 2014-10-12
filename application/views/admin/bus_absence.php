@@ -65,8 +65,8 @@ $selected_bus=$p_bus[0] ;?>
     </div>
 
         <div class="form-group">
-            <div class="form-group" id="the_work_area" style="max-height: 600px; overflow:auto;overflow-x:hidden;">
-                <div class="col-xs-12">
+            <div class="" id="the_work_area" style="max-height: 600px; overflow:auto;overflow-x:hidden;">
+                <div class="col-xs-11">
                     <ul>
                         <?php
 

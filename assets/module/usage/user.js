@@ -1,28 +1,56 @@
 var for_upload;
+var flage=true;
+function edit_dialog(index) {
 
-function undo() {
-    $('#datagrid').datagrid('reload');
-}
-function cancelrow(target) {
-    var editors = $('#datagrid').datagrid('getEditors', target);
-    if (editors[0] != undefined) {
-        if (editors[0].target.val().length > 0 || editors[1].target.val().length > 0) {
 
-        } else {
-            $('#datagrid').datagrid('deleteRow', target);
-        }
+    $.each($('#mymodal input.required'),function(x,y){
+
+        $(this).closest(".form-group").removeClass('has-error');
+
+    });
+
+    $('#my_photo').show();
+    $('#datagrid').datagrid('selectRow', index);
+    var selection = $('#datagrid').datagrid('getSelected');
+    for_upload=selection.id;
+
+    $('#name').val(selection.name);
+
+    $('#job').val(selection.job);
+    $('#username').val(selection.username);
+    $('#national_id').val(selection.national_id);
+    $('#birthday').datebox("setValue",selection.birthday);
+    $('#address').val(selection.address);
+    $('#blood_group').val(selection.blood_group);
+    $('#email').val(selection.email);
+    $('#select_group').val(selection.groups);
+
+      $('#phone').val(selection.phone);
+    if(selection.phone>3){
+        $('#photo').show();
+        $('#upload_form').hide();
+        $('#my_photo img').attr("src",js_site_link+"/assets/uploads/" +selection.photo);
+    }else{
+        $('#my_photo').hide();
+        $('#upload_form').show();
     }
-    $('#datagrid').datagrid('cancelEdit', target);
-    return false;
-}
-function start_edit(id) {
-    $('#datagrid').datagrid('beginEdit', id);
-}
-function editrow(target) {
-    $('#datagrid').datagrid('selectRow', target);
-    $('#datagrid').datagrid('beginEdit', target);
+    $('#sex').val(selection.sex);
+    $('#bus_fees').val(selection.bus_fees);
+    $('#stage').val(selection.stage);
+    $('#stage').trigger("change");
+    $('#level').val(selection.level);
 
-    return false;
+    $('#kid').val(selection.id);
+    $('#password').val('******************');
+
+    $('#username').attr("disabled","disabled");
+    $('#password').attr("disabled","disabled");
+    $('#password').removeClass("required");
+
+    $('#submit_add').hide();
+    $('#submit_edit').show();
+    $("#mymodal").dialog("open");
+
 }
 function _delete(index) {
     $('#datagrid').datagrid('selectRow', index);
@@ -55,12 +83,6 @@ function _delete(index) {
 
             }}
     );
-}
-function updateActions(index) {
-    $('#datagrid').datagrid('updateRow', {
-        index:index,
-        row:{}
-    });
 }
 function getRowIndex(target) {
     var tr = $(target).closest('tr.datagrid-row');
@@ -129,56 +151,7 @@ if(count_error<1){
 }
 
 }
-function edit_dialog(index) {
 
-
-    $.each($('#mymodal input.required'),function(x,y){
-
-            $(this).closest(".form-group").removeClass('has-error');
-
-    });
-
-    $('#my_photo').show();
-$('#datagrid').datagrid('selectRow', index);
- var selection = $('#datagrid').datagrid('getSelected');
-    for_upload=selection.id;
-$('#username').attr("disabled","disabled");
-$('#password').attr("disabled","disabled");
-$('#password').removeClass("required");
-
-$('#name').val(selection.name);
-$('#job').val(selection.job);
-$('#username').val(selection.username);
-$('#national_id').val(selection.national_id);
-$('#birthday').datebox("setValue",selection.birthday);
-$('#address').val(selection.address);
-$('#blood_group').val(selection.blood_group);
-$('#email').val(selection.email);
-$('#select_group').val(selection.groups);
-
-$('#phone').val(selection.phone);
-  if(selection.phone>3){
-      $('#photo').show();
-      $('#upload_form').hide();
-  $('#my_photo img').attr("src",js_site_link+"/assets/uploads/" +selection.photo);
-  }else{
-      $('#my_photo').hide();
-      $('#upload_form').show();
-  }
-$('#sex').val(selection.sex);
-$('#bus_fees').val(selection.bus_fees);
-$('#stage').val(selection.stage);
-$('#stage').trigger("change");
-$('#level').val(selection.level);
-
-$('#kid').val(selection.id);
-$('#password').val('******************');
-
-    $('#submit_add').hide();
-    $('#submit_edit').show();
-    $("#mymodal").dialog("open");
-
-}
 $(function () {
 
     $('input.date').datebox({
@@ -219,7 +192,9 @@ $(function () {
         thumbnail:'small',//large | fit|small
         //,icon_remove:null//set null, to hide remove/reset button
         before_change:function(files, dropped) {
+
             $('#loading').show();
+            if(flage==true){
             $("#upload_form").submit(function(e){
 
                 var formData = new FormData($(this)[0]);
@@ -245,7 +220,8 @@ $(function () {
                 e.preventDefault();
                 return false;
             });
-
+            }
+            flage=false;
             $('#submit_file').trigger("click");
             return true;
         }
@@ -490,12 +466,6 @@ $(function () {
 
 
 
-
-
-
-
-
-
     $('select#stage').change(function(){
         // alert($(this).val());
         var options='';
@@ -554,9 +524,11 @@ $(function () {
                 [
                     {field:'action', title:'#', type:'label', width:40, align:'center',
                         formatter:function (value, row, index){
+                            if(js_var_object.hrw=="w"){
                                 var e = '<a href="javascript:void(0);" onclick="edit_dialog(' + index + ')"><i class="icon-pencil bigger-130"></i></a> ';
                                 var d = '<a href="javascript:void(0);" onclick="_delete(' + index + ')"><i class="icon-trash bigger-130"></i></a>';
                                return e+d;
+                            }
                         }
 
                     },

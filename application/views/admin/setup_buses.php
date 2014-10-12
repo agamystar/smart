@@ -57,7 +57,18 @@ include_once(
                             <label class="align-left col-sm-3 control-label">Supervisor</label>
 
                             <div class="col-sm-9">
-                                <input class="form-control" id="supervisor" type="text">
+
+                                <select id="supervisor" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
+                                    <?php
+                                    if(isset($teachers)){
+                                        foreach($teachers as $one){
+
+                                            echo "<option    value=\"$one->id\" > " .$one->name."</option>";
+
+                                        }
+                                    } ?>
+                                </select>
+
                             </div>
                         </div>
                         <div class="form-group">

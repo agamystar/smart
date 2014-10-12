@@ -2056,6 +2056,7 @@ blockquote, blockquote.pull-right {
 
 .sidebar {
     width: 190px;
+    min-height: 550px !important;
     float: left;
     position: relative;
     border: 1px solid #ccc;

@@ -17,6 +17,14 @@ class Finance extends MY_Controller
     function expenses()
     {
 
+        $form_id=10;
+        $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
+
+        if($hrw=="h"){
+            echo "      No privilege ...   . Contact System Administrator ";
+            redirect(SITE_LINK."/security/login","refresh");
+        }
+
 
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
@@ -279,9 +287,10 @@ class Finance extends MY_Controller
             'stages' => $stages,
             'levels' => $levels,
             'expenses' => $expenses,
-            'installments' => $installments
-
+            'installments' => $installments,
+            'hrw' =>$hrw
         ));
+        $data['hrw'] = $hrw;
         $data['base_url'][] = SITE_LINK;
         $data['js'][] = "usage/student_expenses.js";
         $data['main_url'] = SITE_LINK;
@@ -289,8 +298,12 @@ class Finance extends MY_Controller
         $data['levels'] = $levels;
         $data['teachers'] = $teachers;
         $data['expenses'] = $expenses;
-        $data['use_big_model'] = "yes";
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Finance";
+        $data['third_title'] = " Expenses And Fees ";
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'student_expenses', $data);
+
+
 
     }
 
@@ -508,7 +521,6 @@ class Finance extends MY_Controller
         }
         $this->db->insert_batch("class_students", $table);
 
-        echo $this->db->last_query();
         echo json_encode(array("rows" => count($table)));
         exit;
     }

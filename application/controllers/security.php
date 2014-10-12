@@ -18,14 +18,11 @@ class Security extends MY_Controller
         $this->load->helper('language');
 
     }
-
-    //redirect if needed, otherwise display the user list
-
     public function f_upload($id='')
     {
         if (!empty($_FILES)) {
 
-            if(!empty($id)){
+            if(is_numeric($id)){
 
                 $this->db->select("photo");
                 $this->db->from("users");
@@ -72,33 +69,28 @@ class Security extends MY_Controller
 
         exit;
     }
-
-
     function index()
     {
 
-        if (!$this->ion_auth->logged_in()) {
-            redirect(SITE_LINK . "/security/login", 'refresh');
+        $form_id=3;
+        $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
+
+        if($hrw=="h"){
+            echo "    No privilege ...   . Contact System Administrator ";
+            redirect(SITE_LINK."/security/login","refresh");
         }
+
 
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
-
         $id = $this->input->get("id");
         $group = $this->input->get("user_group");
         $row_add = json_decode($this->input->post("row_add"));
         $row = json_decode($this->input->post("row"));
         $ajax_data = json_decode($this->input->post("data"));
-
-        if ($this->session->userdata("groups") != "admin") {
-        redirect(SITE_LINK . '/security/login', 'refresh');
-        }
-
-
-        else {
-
-            $stages=$this->mymodel_model->select("stages",'1=1');
-            $levels=$this->mymodel_model->select("levels",'1=1');
+        $groups=$this->mymodel_model->select("groups",'1=1 order by sort asc ');
+        $stages=$this->mymodel_model->select("stages",'1=1');
+        $levels=$this->mymodel_model->select("levels",'1=1');
 
             if ($action_get == "get_data") {
 
@@ -410,7 +402,6 @@ class Security extends MY_Controller
                 exit;
             }
 
-
             if ($action_post == "activation") {
 
                 $new_data=array(
@@ -470,7 +461,6 @@ class Security extends MY_Controller
                 exit;
             }
 
-            //forgot password
             if ($action_get == "forgot_password") {
                 $this->form_validation->set_rules('email', $this->lang->line('forgot_password_validation_email_label'), 'required|valid_email');
                 if ($this->form_validation->run() == false) {
@@ -519,43 +509,39 @@ class Security extends MY_Controller
                 }
             }
 
-            //reset password - final step for forgotten password
-
-            //activate the user
-
-
-            //create a new user
-
-        }
-
-
         $data = array();
         $data["js_vars"] = json_encode(array(
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1],
             'details' => SITE_LINK . "/" . "student/" . "details/",
             'main_url' => SITE_LINK . "/" . "security/",
             'stages' => $stages,
-            'levels' =>$levels
+            'levels' =>$levels,
+            'hrw' =>$hrw
 
         ));
         $data['base_url'][] = SITE_LINK;
-
         $data['js'][] = "usage/user.js";
         $data['main_url'] = SITE_LINK;
         $data['stages'] = $stages;
         $data['levels'] = $levels;
+        $data['groups'] = $groups;
+        $data['hrw'] = $hrw;
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Security";
+        $data['third_title'] = "All Users";
         $data['use_big_model'] = "yes";
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'user', $data);
 
-    }
 
-    //log the user in
+
+    }
     function login()
     {
 
 
-        $this->data['title'] = "Login";
-
+        if($this->session->userdata("user_id")){
+         redirect(SITE_LINK."/dashboard","refresh");
+        }
         //validate form input
         $this->form_validation->set_rules('identity', 'Identity', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
@@ -569,7 +555,7 @@ class Security extends MY_Controller
                 //if the login is successful
                 //redirect them back to the home page
                 $this->session->set_flashdata('message', $this->ion_auth->messages());
-                redirect(SITE_LINK . '/mainmenu', 'refresh');
+                redirect(SITE_LINK . '/dashboard', 'refresh');
             }
             else {
                 //if the login was un-successful
@@ -596,8 +582,6 @@ class Security extends MY_Controller
             $this->_render_page('admin/login', $this->data);
         }
     }
-
-
     function front_create_user()
     {
        $data="";
@@ -667,8 +651,6 @@ class Security extends MY_Controller
 
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'register', $data);
     }
-
-    //log the user out
     function logout()
     {
         $this->data['title'] = "Logout";
@@ -680,11 +662,6 @@ class Security extends MY_Controller
         $this->session->set_flashdata('message', $this->ion_auth->messages());
         redirect(SITE_LINK . '/security/login', 'refresh');
     }
-
-    //change password
-
-
-
     function _render_page($view, $data = null, $render = false)
     {
 
@@ -694,8 +671,8 @@ class Security extends MY_Controller
 
         if (!$render) return $view_html;
     }
-
-    public function export($x='') {
+    public function export($x='')
+    {
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $rowCount = 1;
@@ -733,8 +710,8 @@ class Security extends MY_Controller
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
     }
-
-    public  function import($group="") {
+    public  function import($group="")
+    {
 
         $inputFileName =$_FILES['file']['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
@@ -776,6 +753,280 @@ class Security extends MY_Controller
         $this->db->insert_batch("users",$table);
         echo json_encode(array("rows"=>count($table)));
         exit;
+    }
+
+
+
+    function users_groups()  {
+
+
+        $action_get = $this->input->get("action");
+        $action_post = $this->input->post("action");
+
+        $id = $this->input->get("id");
+        $group = $this->input->get("user_group");
+        $row_add = json_decode($this->input->post("row_add"));
+        $row = json_decode($this->input->post("row"));
+        $ajax_data = json_decode($this->input->post("data"));
+
+        if ($this->session->userdata("groups") != "admin") {
+            redirect(SITE_LINK . '/security/login', 'refresh');
+        }
+
+
+        else {
+
+
+            $forms = $this->mymodel_model->select("forms", "1=1 order by name ");
+
+
+            if ($action_get == "get_group_forms") {
+                $g_id=$this->input->get("group_id");
+                $g_forms = $this->mymodel_model->select("groups_forms", "group_id=".$g_id." ");
+                echo json_encode($g_forms);
+                exit;
+            }
+            if ($action_post == "add_authority") {
+
+                $forms_ids=json_decode($this->input->post("forms_ids"));///multi values
+                $group_id=$this->input->post("group_id");
+                $h_r_w=$this->input->post("h_r_w");
+
+                $this->db->where("group_id",$group_id);
+                $this->db->delete("groups_forms");
+
+                //print_r($forms_ids);
+
+                $big_arr=array();
+                foreach($forms_ids as $f_id){
+                    $arr=array(
+                        "form_id"=>$f_id,
+                        "group_id"=>$group_id,
+                        "h_r_w"=>$h_r_w
+                    );
+                    $big_arr[]=$arr;
+                }
+                //  print_r($big_arr);
+                $this->db->insert_batch("groups_forms",$big_arr);
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                    echo json_encode(array("message" => "success"));
+                } else {
+                    echo json_encode(array("message" =>$this->db->_error_number()." * ". $this->db->_error_message()));
+                }
+
+                exit;
+            }
+
+            if ($action_get == "get_data") {
+
+                $back = array();
+                $this->db->select('*');
+                $this->db->start_cache();
+                $this->db->from("groups");
+
+
+                $flds_array = array(
+                    'id' => array('where' => "id", 'order' => "id", 'val_template' => '', 'lower' => false),
+                    'name' => array('where' => "name", 'order' => "name", 'val_template' => '', 'lower' => true),
+                    'birthday' => array('where' => "birthday", 'order' => "birthday", 'val_template' => '', 'lower' => true),
+                    'email' => array('where' => "email", 'order' => "email", 'val_template' => '', 'lower' => true),
+                    'sex' => array('where' => "sex", 'order' => "sex", 'val_template' => '', 'lower' => true),
+                    'religion' => array('where' => "religion", 'order' => "religion", 'val_template' => '', 'lower' => true),
+                    'address' => array('where' => "address", 'order' => "address", 'val_template' => '', 'lower' => true),
+                    'phone' => array('where' => "phone", 'order' => "phone", 'val_template' => '', 'lower' => true),
+                );
+                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 10;
+                if (empty($rows)) {
+                    $rows = 10;
+                }
+                if (empty($page)) {
+                    $page = 1;
+                }
+                $offset = (($page - 1) * $rows) + 1;
+                $sort = isset($_GET['sort']) ? $_GET['sort'] : 'no';
+                $order = isset($_GET['order']) ? $_GET['order'] : 'asc';
+                $filterRules = json_decode($this->input->get('filterRules'));
+                $sorting_array = explode(',', $sort);
+                $order_array = explode(',', $order);
+                if (is_array($filterRules)) {
+                    if (count($filterRules) > 0) {
+                        foreach ($filterRules as $value) {
+                            $where = "where";
+                            $op = $value->op;
+                            $f = $value->field;
+                            $v = $value->value;
+                            if (in_array($op, array('contains', 'beginwith', 'endwith'))) {
+                                $is_like = true;
+                                $where = 'like';
+                                if ($op == "beginwith") {
+                                    $like_p = 'after';
+                                } elseif ($op == "endwith") {
+                                    $like_p = 'before';
+                                } else {
+                                    $like_p = 'both';
+                                }
+                            } elseif (in_array($op, array('notcontains', 'notbeginwith', 'notendwith'))) {
+                                $is_like = true;
+                                $where = 'not_like';
+                                if ($op == "notbeginwith") {
+                                    $like_p = 'after';
+                                } elseif ($op == "notendwith") {
+                                    $like_p = 'before';
+                                } else {
+                                    $like_p = 'both';
+                                }
+                            } else {
+                                $is_like = false;
+                                if ($op == "notequal") {
+                                    $like_p = ' != ';
+                                } elseif ($op == "less") {
+                                    $like_p = ' < ';
+                                } elseif ($op == "lessorequal") {
+                                    $like_p = ' <= ';
+                                } elseif ($op == "greater") {
+                                    $like_p = ' > ';
+                                } elseif ($op == "greaterorequal") {
+                                    $like_p = ' >= ';
+                                } else {
+                                    $like_p = '';
+                                }
+                            }
+
+                            if (array_key_exists($f, $flds_array)) {
+                                if ($is_like) {
+                                    if (empty($flds_array[$f]["val_template"])) {
+                                        if ($flds_array[$f]["lower"]) {
+                                            $v = strtolower($v);
+                                        }
+                                        $this->db->$where($flds_array[$f]["where"], $v, $like_p);
+                                    } else {
+                                        if ($flds_array[$f]["lower"]) {
+                                            $v = strtolower($v);
+                                        }
+                                        $m = str_replace('{the_value}', $v, $flds_array[$f]["val_template"]);
+                                        if ($like_p == "after") {
+                                            $this->db->$where("{$flds_array[$f]["where"]} LIKE '%$m''");
+                                        } elseif ($like_p == "before") {
+                                            $this->db->$where("{$flds_array[$f]["where"]} LIKE '$m%'");
+                                        } else {
+                                            $this->db->$where("{$flds_array[$f]["where"]} LIKE '%$m%'");
+                                        }
+                                    }
+                                } else {
+                                    if ($flds_array[$f]["lower"]) {
+                                        $v = strtolower($v);
+                                    }
+                                    if (empty($like_p)) {
+                                        $like_p = "=";
+                                    }
+                                    if (empty($flds_array[$f]["val_template"])) {
+                                        if ($like_p == "=") {
+                                            $this->db->$where($flds_array[$f]["where"] . " $like_p '$v'");
+                                        } else {
+                                            $this->db->$where("{$flds_array[$f]["where"]} $like_p", $v);
+                                        }
+                                    } else {
+                                        $m = str_replace('{the_value}', $v, $flds_array[$f]["val_template"]);
+                                        $this->db->$where("{$flds_array[$f]["where"]} $like_p $m");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // End user filter
+                $this->db->stop_cache();
+                // start filter
+                if (is_array($sorting_array)) {
+                    foreach ($sorting_array as $key => $sort) {
+                        if (array_key_exists($sort, $flds_array)) {
+                            $ord = 'ASC';
+                            if (isset($order_array[$key])) {
+                                $ord = ($order_array[$key] == 'desc') ? 'DESC' : 'ASC';
+                            }
+                            $this->db->order_by($flds_array[$sort]["order"], $ord);
+                        }
+                    }
+                }
+                //Make limit
+                $this->db->limit($rows, $offset - 1);
+                $rs = $this->db->get();
+                //  echo $this->db->last_query();
+
+                if ($rs->num_rows() > 0) {
+                    $back = array('total' => $this->db->count_all_results(), 'rows' => $rs->result_array());
+
+                }
+
+                echo json_encode($back);
+                exit;
+            }
+            if ($action_post == "add") {
+
+                $dat = array(
+                    'name' => $row_add->name,
+                    'description' => $row_add->description,
+                    'show_front' => $row_add->show_front,
+                );
+                $this->db->insert("groups", $dat);
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
+                }
+                exit;
+            }
+            if ($action_post == "edit") {
+
+                $dat = array(
+                    'name' => $row_add->name,
+                    'description' => $row_add->description,
+                    'show_front' => $row_add->show_front,
+
+
+                );
+                $this->db->where("id", $row_add->id);
+                $this->db->update("groups", $dat);
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
+                }
+                exit;
+            }
+            if ($action_post == "delete") {
+                $this->db->where("id", $this->input->post('id'));
+                $this->db->delete("groups");
+                if ($this->db->affected_rows() > 0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" => "failed"));
+                }
+                // echo $this->db->last_query();
+                exit;
+            }
+        }
+
+
+        $data = array();
+        $data["js_vars"] = json_encode(array(
+            'current_link' => SITE_LINK . "/" . $this->uri->segments[1]. "/" . $this->uri->segments[2],
+            'details' => SITE_LINK . "/" . "student/" . "details/",
+            'main_url' => SITE_LINK . "/" . "security/",
+            'all_forms' => $forms
+
+        ));
+        $data['base_url'][] = SITE_LINK;
+        $data['js'][] = "usage/setup_groups.js";
+        $data['main_url'] = SITE_LINK;
+        $data['forms'] = $forms;
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Security";
+        $data['third_title'] = "Users Groups & Privilege ";
+        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'setup_groups', $data);
+
+
     }
 
 }

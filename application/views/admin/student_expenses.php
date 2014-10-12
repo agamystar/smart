@@ -41,7 +41,7 @@ include_once(
             </div>
         </div>
         <div class="col-sm-4" >
-            <label class="align-left col-sm-3 control-label"> expenses </label>
+            <label class="align-left col-sm-3 control-label"> Expenses </label>
             <div class="col-sm-9" >
                 <select id="expenses"  class="col-sm-12 FormElement ui-widget-content ui-corner-all">
 
@@ -54,14 +54,15 @@ include_once(
 
               <div class="form-group">
                   <div class="col-sm-4" >
-                      <label class="align-right col-sm-3 control-label"> installments </label>
+                      <label class="align-right col-sm-3 control-label"> Installments </label>
                       <div class="col-sm-9 align-right" >
                           <select id="installments"class="col-sm-12 FormElement ui-widget-content ui-corner-all">
                           </select>
                       </div>
                   </div>
-                  <div class="col-sm-3" > <b class="label label-success arrowed-in arrowed-in-right">  Installment Value  : &nbsp;&nbsp; <span id="installment_value"> </span>   LE</b></div>
                   <div class="col-sm-3" > <b class="label label-success arrowed-in arrowed-in-right">  Expenses  Value  : &nbsp;&nbsp; <span id="expenses_value"></span>    LE </b></div>
+                  <div class="col-sm-3" > <b class="label label-success arrowed-in arrowed-in-right">  Installment Value  : &nbsp;&nbsp; <span id="installment_value"> </span>   LE</b></div>
+
                   <div class="col-sm-2 align-right" ><button class="btn btn-primary" type="button" id="filter"><i class="icon-beaker align-top bigger-125"></i> Filter </button> </div>
               </div>
 

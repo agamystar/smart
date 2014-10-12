@@ -6,6 +6,7 @@ include_once(
         'common' . DIRECTORY_SEPARATOR .
         'header.php');
 ?>
+
 <br/>
 
  <div class="widget-box ">
@@ -19,6 +20,7 @@ include_once(
  <div class="widget-body">
  <div class="widget-main no-padding">
 <div id="tb">
+    <?php if($hrw=="w"){?>
     <a href="javascript:void(0);" id="open_new_dialog" class="easyui-linkbutton" plain="true">
         <img src="<?php echo SITE_LINK . "/assets" ?>/img/add-icon.png" alt=""/> <span id="add_text"></span> </a>
     <a href="javascript:void(0);" id="reset_password" class="easyui-linkbutton" plain="true">
@@ -44,15 +46,18 @@ include_once(
           </span>
     </a>
 
+    <?php }?>
     <span class="widget-toolbar">
   <span class="label label-danger  arrowed-right arrowed-in"> Select  User Group </span>
         <select id="select_group">
-            <!--  <option value="0">All Users</option>-->
-            <option value="student" selected>Student</option>
-            <option value="teacher">Teacher</option>
-            <option value="parent">Parent</option>
-            <option value="admin">Admin</option>
-            <option value="not_defined">Not Defined</option>
+            <?php
+            if (isset($groups)) {
+                foreach ($groups as $one) {
+                    echo "<option    value=\"$one->name\" > " . $one->description . "</option>";
+
+                }
+            } ?>
+
         </select>
 	</span>
 </div>

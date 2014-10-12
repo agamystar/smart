@@ -47,6 +47,14 @@ class classes extends MY_Controller
     public function all_classes($x=''){
 
 
+        $form_id=8;
+        $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
+
+        if($hrw=="h"){
+            echo "      No privilege ...    . Contact System Administrator ";
+            redirect(SITE_LINK."/security/login","refresh");
+        }
+
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
         $ajax_data = json_decode($this->input->post("data"));
@@ -104,7 +112,7 @@ class classes extends MY_Controller
                 $big_st_ids[]=array("class_id"=>$ajax_data->class,"student_id"=>$st);
 
             }
-            $imp= implode(",",$ajax_data->students_inclass) ;
+            $this->db->trans_begin();
 
             $this->db->where("class_id",$ajax_data->class);
             $this->db->delete("class_students");
@@ -115,8 +123,10 @@ class classes extends MY_Controller
             if($this->db->affected_rows()>0){
               $no =$this->db->affected_rows();
                     $message="success";
+                $this->db->trans_commit();
                 }else{
                     $message="failed  ";
+                $this->db->trans_rollback();
                 }
         }
            // echo $this->db->last_query();
@@ -132,15 +142,22 @@ class classes extends MY_Controller
             'details' => SITE_LINK . "/" . "student/" . "details/",
             'main_url' => SITE_LINK . "/" . "security/",
             'p_class' => $class,
-
+            'hrw' =>$hrw
         ));
+        $data['hrw'] = $hrw;
         $data['base_url'][] = SITE_LINK;
       // $data['classes'][] = $classes;
        $data['students'][] = $students;
         $data['p_class'][] = $class;
        $data['class_students'][] = $class_students;
         $data['js'][] = "usage/class.js";
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Class";
+        $data['third_title'] = "Distribute Students on Classes ";
        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'class', $data);
+
+
+
     }
     public function export($x='') {
         $objPHPExcel = new PHPExcel();

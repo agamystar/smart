@@ -100,57 +100,41 @@ include_once(
     <div class="space-6"></div>
 
     <div class="profile-contact-info">
-        <div class="profile-contact-links align-left">
+        <div class="profile-contact-links align-center">
             <a class="btn btn-link" id="change_photo" href="#">
 
                 Change Photo
             </a>
 
-            <a class="btn btn-link" href="#">
-                <i class="icon-envelope bigger-120 pink"></i>
-                Send a message
-            </a>
-
-            <a class="btn btn-link" href="#">
-                <i class="icon-globe bigger-125 blue"></i>
-                www.alexdoe.com
-            </a>
         </div>
 
         <div class="space-6"></div>
 
-        <div class="profile-social-links center">
-            <a href="#" class="tooltip-info" title="" data-original-title="Visit my Facebook">
-                <i class="middle icon-facebook-sign icon-2x blue"></i>
-            </a>
+        <div class="profile-contact-links align-center">
+            <?php
+            if($this->session->userdata("groups")=="student"){?>
+            <h5  class="tooltip-info" title="" >
+              Your Teachers ♥
+            </h5>
 
-            <a href="#" class="tooltip-info" title="" data-original-title="Visit my Twitter">
-                <i class="middle icon-twitter-sign icon-2x light-blue"></i>
-            </a>
+                <?php
+               // print_r($student_teachers);
+                if(isset($student_teachers)){
+                    foreach($student_teachers as $one ){
+                    ?>
+                    <h5></h5> <a  href="<?php echo SITE_LINK."/teacher/homework/".$one->teacher_id ?>" class="tooltip-info" title=""  style="cursor: pointer">
+                        ♥  <?php echo name_user($one->teacher_id)->name; ?>
+                    </a>
+</h5>
+                    <?php }
+                }?>
+          <?php }?>
 
-            <a href="#" class="tooltip-error" title="" data-original-title="Visit my Pinterest">
-                <i class="middle icon-pinterest-sign icon-2x red"></i>
-            </a>
         </div>
     </div>
 
     <div class="hr hr12 dotted"></div>
 
-    <div class="clearfix">
-        <div class="grid2">
-            <span class="bigger-175 blue">25</span>
-
-            <br>
-            Followers
-        </div>
-
-        <div class="grid2">
-            <span class="bigger-175 blue">12</span>
-
-            <br>
-            Following
-        </div>
-    </div>
 
     <div class="hr hr16 dotted"></div>
 </div>
@@ -285,6 +269,7 @@ include_once(
     <div class="space-6"></div>
 
     <div class="center">
+         <?php if($hrw=="w"){?>
         <a href="#" id="edit_profile" class="btn btn-sm btn-primary">
             <i class="icon-rss bigger-150 middle"></i>
             <span class="bigger-110">Edit Profile </span>
@@ -298,7 +283,7 @@ include_once(
 
             <i class="icon-on-right icon-arrow-right"></i>
         </a>
-
+<?php } ?>
     </div>
 </div>
 </div>

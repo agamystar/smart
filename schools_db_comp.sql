@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2014 at 04:20 PM
+-- Generation Time: Oct 12, 2014 at 10:08 AM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -110,8 +110,9 @@ CREATE TABLE IF NOT EXISTS `bus` (
 --
 
 INSERT INTO `bus` (`no`, `driver`, `supervisor`, `path`, `student_fees`, `school_fees`) VALUES
-('A1000', 'samy', 'ahmed', 'fayoum - 6 october', 9000, 900),
-('Z1000', 'mohamed', 'ali fouad', 'giza - cairo', 1000, 2000);
+('3000', 'hassan', '616', 'a b c', 333, 333333),
+('A1000', 'samy', '', 'fayoum - 6 october', 9000, 900),
+('Z1000', 'mohamed', '', 'giza - cairo', 1000, 2000);
 
 -- --------------------------------------------------------
 
@@ -152,7 +153,8 @@ CREATE TABLE IF NOT EXISTS `bus_students` (
 --
 
 INSERT INTO `bus_students` (`bus_no`, `student_id`) VALUES
-('Z1000', 616);
+('Z1000', 616),
+('3000', 618);
 
 -- --------------------------------------------------------
 
@@ -167,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `class` (
   `stage` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `level` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `teacher_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `class`
@@ -178,7 +180,17 @@ INSERT INTO `class` (`class_id`, `name`, `name_numeric`, `stage`, `level`, `teac
 (2, 'B', '2', '2', '1', 391),
 (3, 'C', '3', '2', '3', 393),
 (4, 'D4', '4', '2', '2', 391),
-(6, 'F1', '14', '1', '1', 64);
+(6, 'F1', '14', '1', '1', 64),
+(7, 'G1', '', '1', '1', 1),
+(8, 'G2', '', '1', '1', 1),
+(9, 'G3', '', '1', '1', 1),
+(10, 'G4', '', '1', '1', 1),
+(11, 'G5', '', '1', '1', 2),
+(12, 'G6', '', '1', '1', 3),
+(13, 'G7', '', '1', '1', 3),
+(14, 'G8', '', '1', '1', 1),
+(15, 'G9', '', '1', '1', 3),
+(16, 'G10', '', '1', '1', 2);
 
 -- --------------------------------------------------------
 
@@ -223,7 +235,8 @@ CREATE TABLE IF NOT EXISTS `class_students` (
 INSERT INTO `class_students` (`class_id`, `student_id`) VALUES
 (2, 524),
 (2, 525),
-(1, 616);
+(1, 616),
+(1, 618);
 
 -- --------------------------------------------------------
 
@@ -312,29 +325,46 @@ INSERT INTO `expenses` (`expenses_id`, `expenses_name`, `expenses_level`, `expen
 
 CREATE TABLE IF NOT EXISTS `forms` (
 `form_id` int(11) NOT NULL,
-  `name` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
+  `name` varchar(100) DEFAULT NULL,
+  `link` varchar(100) NOT NULL,
+  `icon` varchar(50) NOT NULL,
+  `parent` int(11) NOT NULL,
+  `sort` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=35 ;
 
 --
 -- Dumping data for table `forms`
 --
 
-INSERT INTO `forms` (`form_id`, `name`) VALUES
-(17, 'Dashboard'),
-(18, 'General Setting'),
-(19, 'Users&Security'),
-(20, 'profile'),
-(21, 'All Buses'),
-(22, 'Bus Absence'),
-(23, 'Bus Registration'),
-(24, 'Class'),
-(25, 'Absence'),
-(26, 'Finical'),
-(27, 'Inbox'),
-(28, 'Teacher'),
-(29, 'SMS'),
-(30, 'Setup'),
-(31, 'Chatting');
+INSERT INTO `forms` (`form_id`, `name`, `link`, `icon`, `parent`, `sort`) VALUES
+(1, 'Dashboard', 'dashboard', 'icon-dashboard', 0, 1),
+(3, 'Users&Security', '', 'icon-user', 0, 4),
+(4, 'profile', 'user/profile', 'icon-user-md ', 0, 3),
+(5, 'Bus', '', 'icon-truck ', 0, 7),
+(6, 'Bus Absence', 'bus/bus_absence', '', 5, 30),
+(7, 'Bus Registration', 'bus/bus_registration', '', 5, 30),
+(8, 'Class', '', 'icon-archive ', 0, 6),
+(9, 'Student Absence', 'user/student_absence', '', 18, 30),
+(10, 'Finical', '', 'icon-money ', 0, 5),
+(11, 'Inbox', 'user/inbox', 'icon-envelope ', 0, 9),
+(12, 'Homework', 'teacher/homework', '', 29, 30),
+(13, 'SMS', '', 'icon-mail-forward ', 0, 10),
+(14, 'Setup', '', 'icon-cogs ', 0, 30),
+(15, 'Chatting', '', 'icon-tasks', 0, 11),
+(16, 'Staff Absence', 'user/staff_absence', '', 18, 30),
+(17, 'Distribute Teacher on Classes', 'teacher/distribute_teachers', '', 29, 30),
+(18, 'Absence', '', 'icon-bar-chart ', 0, 8),
+(20, 'All Users', 'security', '', 3, 1),
+(21, 'Users Groups', 'security/users_groups', '', 3, 30),
+(22, 'All Classes', 'classes/all_classes', '', 8, 1),
+(26, 'All Buses', 'bus/all_buses', '', 5, 1),
+(28, 'Expenses', 'finance/expenses', '', 10, 30),
+(29, 'Teacher', '', 'icon-book ', 0, 30),
+(30, 'Time Line', '', 'icon-calendar ', 0, 30),
+(31, 'Classes', 'setup/classes', '', 14, 30),
+(32, 'Buses', 'setup/buses', '', 14, 30),
+(33, 'Expenses', 'setup/expenses', '', 14, 30),
+(34, 'Stages&Levels', 'setup/stages_levels', '', 14, 30);
 
 -- --------------------------------------------------------
 
@@ -370,19 +400,19 @@ CREATE TABLE IF NOT EXISTS `groups` (
 `id` mediumint(8) unsigned NOT NULL,
   `name` varchar(20) NOT NULL,
   `description` varchar(100) NOT NULL,
-  `show_front` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+  `show_front` int(11) NOT NULL,
+  `sort` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `groups`
 --
 
-INSERT INTO `groups` (`id`, `name`, `description`, `show_front`) VALUES
-(1, 'admin', 'Administrator', 0),
-(2, 'student', 'Student', 1),
-(3, 'teacher', 'Teacher\r\n', 1),
-(4, 'parent', 'Parents\r\n', 1),
-(5, 'supervisors', 'Supervisors', 0);
+INSERT INTO `groups` (`id`, `name`, `description`, `show_front`, `sort`) VALUES
+(1, 'admin', 'Administrator', 0, 5),
+(2, 'student', 'Student', 1, 1),
+(3, 'teacher', 'Teacher\r\n', 1, 2),
+(4, 'parent', 'Parents\r\n', 1, 3);
 
 -- --------------------------------------------------------
 
@@ -401,10 +431,54 @@ CREATE TABLE IF NOT EXISTS `groups_forms` (
 --
 
 INSERT INTO `groups_forms` (`group_id`, `form_id`, `h_r_w`) VALUES
+(1, 1, 'w'),
+(1, 2, 'w'),
+(1, 3, 'w'),
+(1, 4, 'w'),
+(1, 5, 'w'),
+(1, 6, 'w'),
+(1, 7, 'w'),
+(1, 8, 'w'),
+(1, 9, 'w'),
+(1, 10, 'w'),
+(1, 11, 'w'),
+(1, 12, 'w'),
+(1, 13, 'w'),
+(1, 14, 'w'),
+(1, 15, 'w'),
+(1, 16, 'w'),
+(1, 17, 'w'),
+(1, 18, 'w'),
+(1, 20, 'w'),
+(1, 21, 'w'),
 (1, 22, 'w'),
-(1, 25, 'w'),
-(2, 28, 'h'),
-(2, 30, 'h');
+(1, 26, 'w'),
+(1, 28, 'w'),
+(1, 29, 'w'),
+(1, 30, 'w'),
+(1, 31, 'w'),
+(1, 32, 'w'),
+(1, 33, 'w'),
+(1, 34, 'w'),
+(1, 35, 'w'),
+(2, 1, 'w'),
+(2, 4, 'w'),
+(2, 7, 'w'),
+(2, 11, 'w'),
+(2, 12, 'w'),
+(2, 15, 'w'),
+(2, 29, 'w'),
+(3, 1, 'w'),
+(3, 4, 'w'),
+(3, 11, 'w'),
+(3, 12, 'w'),
+(3, 15, 'w'),
+(3, 29, 'w'),
+(4, 1, 'w'),
+(4, 4, 'w'),
+(4, 11, 'w'),
+(5, 1, 'w'),
+(5, 4, 'w');
 
 -- --------------------------------------------------------
 
@@ -415,9 +489,25 @@ INSERT INTO `groups_forms` (`group_id`, `form_id`, `h_r_w`) VALUES
 CREATE TABLE IF NOT EXISTS `homework` (
 `h_id` int(11) NOT NULL,
   `teacher_id` int(11) NOT NULL,
-  `h_topic` varchar(1000) CHARACTER SET utf8 NOT NULL,
-  `h_date` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  `h_header` varchar(200) NOT NULL,
+  `h_body` varchar(1000) CHARACTER SET utf8 NOT NULL,
+  `h_date` varchar(50) NOT NULL,
+  `attachment` varchar(200) NOT NULL,
+  `read_un_read` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `homework`
+--
+
+INSERT INTO `homework` (`h_id`, `teacher_id`, `h_header`, `h_body`, `h_date`, `attachment`, `read_un_read`) VALUES
+(1, 616, 'Homework 1', 'solve the first exercise page 22', '12/12/2014', '', 0),
+(2, 616, 'Homework 2', 'solve the second exercise page 38', '19/12/2014', '', 0),
+(3, 616, 'hello ', '0', '10/10/2014', '', 0),
+(4, 616, 'hiii ', 'hiii students ', '10/10/2014', '', 0),
+(5, 616, 'first homework', 'solve page 22 ', '10/10/2014', '', 0),
+(6, 616, 'test', 'test form', '10/10/2014', '', 0),
+(7, 617, 'it is my first homework', 'solve all book ', '11/10/2014', '', 0);
 
 -- --------------------------------------------------------
 
@@ -804,6 +894,30 @@ CREATE TABLE IF NOT EXISTS `mark` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `messages`
+--
+
+CREATE TABLE IF NOT EXISTS `messages` (
+`m_id` int(11) NOT NULL,
+  `m_from` int(11) NOT NULL,
+  `m_to` int(11) NOT NULL,
+  `m_header` varchar(300) NOT NULL,
+  `m_body` varchar(2000) NOT NULL,
+  `m_attachment` varchar(200) NOT NULL,
+  `m_date` varchar(50) NOT NULL,
+  `read_un_read` int(1) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`m_id`, `m_from`, `m_to`, `m_header`, `m_body`, `m_attachment`, `m_date`, `read_un_read`) VALUES
+(1, 616, 0, 'homework ', 'solve page 29', '', '', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `noticeboard`
 --
 
@@ -1007,6 +1121,30 @@ INSERT INTO `subject` (`subject_id`, `name`, `class_id`, `teacher_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `teacher_classes`
+--
+
+CREATE TABLE IF NOT EXISTS `teacher_classes` (
+  `teacher_id` int(11) NOT NULL,
+  `class_id` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `teacher_classes`
+--
+
+INSERT INTO `teacher_classes` (`teacher_id`, `class_id`) VALUES
+(616, '1'),
+(616, '6'),
+(617, '6'),
+(619, '1'),
+(619, '6'),
+(619, '7'),
+(620, '8');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `translation`
 --
 
@@ -1091,16 +1229,20 @@ CREATE TABLE IF NOT EXISTS `users` (
   `blood_group` varchar(50) NOT NULL,
   `address` varchar(200) NOT NULL,
   `stage` varchar(50) NOT NULL DEFAULT '1',
-  `level` varchar(50) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=618 ;
+  `level` varchar(50) NOT NULL DEFAULT '1',
+  `profile_show` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=621 ;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `bus_fees`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `job`, `remember_code`, `class_id`, `last_login`, `active`, `name`, `groups`, `phone`, `national_id`, `photo`, `birthday`, `sex`, `religion`, `blood_group`, `address`, `stage`, `level`) VALUES
-(616, 2000, 'ahmed.gamal', '$2y$08$qhrvreS6FjagxBchWKR7FuzQdLOW1t62xwYZeKIu816boNMJ6P8FK', NULL, 'orcl.masr@hotmail.com', NULL, NULL, '', NULL, '1', '08/10/2014 02:10:25', 1, 'ahmed gamal', 'student', '64328726483', '593275982738', '14-10-08-02-10-21_77966877_10610761_836430199709651_3736104383196062703_n.jpg', '08/01/1991', 'male', 'Muslim', 'o', 'giza , Egypt', '1', '1'),
-(617, 0, 'admin', '$2y$08$AnCY.x9e7bYJIX5b15FN2.ynvYZuTLdZBlOkKmWr7G1w.o5/rA8hy', NULL, ' orcl.masr@hotmail.com ', NULL, NULL, 'admin', NULL, '1', '08/10/2014 02:10:54', 1, 'mohamed gomah', 'admin', ' 64328726483 ', '8979797', '14-10-07-11-10-56_84515683_Capture.PNG', '25/01/1991', 'male', 'Muslim', 'x', '            fayoum , Egypt         ', '1', '1');
+INSERT INTO `users` (`id`, `bus_fees`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `job`, `remember_code`, `class_id`, `last_login`, `active`, `name`, `groups`, `phone`, `national_id`, `photo`, `birthday`, `sex`, `religion`, `blood_group`, `address`, `stage`, `level`, `profile_show`) VALUES
+(616, 2000, 'ahmed.gamal', '$2y$08$41boFNr4JzAm7tUsyJPP7OHTxN3JnanxnMAdQyO.OrHwksTTE57Xm', NULL, ' ahmedgamal@hotmail.com ', NULL, NULL, 'English', NULL, '1', '11/10/2014 05:10:35', 1, 'ahmed gamal', 'teacher', ' 6432872648 ', '593275982738', '14-10-08-02-10-21_77966877_10610761_836430199709651_3736104383196062703_n.jpg', '08/01/1991', 'male', 'Muslim', 'o', '            giza,Egypt         ', '1', '1', 1),
+(617, 0, 'admin', '$2y$08$AnCY.x9e7bYJIX5b15FN2.ynvYZuTLdZBlOkKmWr7G1w.o5/rA8hy', NULL, 'orcl.masr@hotmail.com', NULL, NULL, 'admin', NULL, '1', '11/10/2014 05:10:16', 1, 'mohamed gomah ', 'admin', ' 64328726483 ', '8979797', '14-10-07-11-10-56_84515683_Capture.PNG', '25/01/1991', 'male', 'Muslim', 'x', '            fayoum , Egypt         ', '1', '1', 1),
+(618, 1000, 'ali', '$2y$08$J.H2etI2WeE9pa/I2XLzdOGpF8rRd3Kq27RXn5R6gVv6Gg1PhpK22', NULL, 'ali.said@yahoo.com', NULL, NULL, '', NULL, '1', '11/10/2014 05:10:37', 1, 'ali mohamed said', 'student', '88882222', '23672638162', '14-10-11-12-10-15_34981244_andrew.png', '17/10/2014', 'male', 'Muslim', 'x', 'giza , Egypt', '1', '1', 1),
+(619, 0, 'ismail', '$2y$08$G0zGQUqUT9LNoYpkSjLOy.h9gUtP0qRiWSKlBnAcEFmHDyst0v7QS', NULL, 'ismail@yahoo.com', NULL, NULL, 'Math', NULL, '1', '11/10/2014 03:10:54', 1, 'ismail mohamed ali', 'teacher', '643287787826483', '7987979797979', '14-10-11-03-10-52_39266638_Harry_Potter_7_Part_2.jpg', '04/10/1988', 'male', 'Muslim', 'o', 'giza , Egypt', '1', '1', 1),
+(620, 0, 'gemi', '$2y$08$C8CCNpC4E20kriPd5xUaQOs8xKBZpjPPoxhpC8opQyp409H2CnWze', NULL, 'gemi@gmail.com', NULL, NULL, 'Arabic', NULL, '1', '11/10/2014  03:10:51', 1, 'gamal saad', 'teacher', '68686868', '979797987979', '14-10-11-03-10-50_18119507_endgame.png', '23/10/1990', 'male', 'Muslim', 'o', 'douki , Egypt', '1', '1', 1);
 
 -- --------------------------------------------------------
 
@@ -1174,6 +1316,21 @@ CREATE TABLE IF NOT EXISTS `v_class_students` (
 ,`teacher_id` int(11)
 ,`stage_name` varchar(50)
 ,`level_name` varchar(50)
+);
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_groups_forms_menu`
+--
+CREATE TABLE IF NOT EXISTS `v_groups_forms_menu` (
+`group_id` int(11)
+,`form_id` int(11)
+,`h_r_w` varchar(10)
+,`name` varchar(100)
+,`link` varchar(100)
+,`icon` varchar(50)
+,`parent` int(11)
+,`sort` int(11)
 );
 -- --------------------------------------------------------
 
@@ -1256,6 +1413,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `v_class_students`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_class_students` AS select `class_students`.`student_id` AS `student_id`,`users`.`name` AS `student_name`,`users`.`stage` AS `stage`,`users`.`level` AS `level`,`users`.`sex` AS `sex`,`users`.`bus_fees` AS `bus_fees`,`users`.`photo` AS `photo`,`users`.`birthday` AS `birthday`,`users`.`national_id` AS `national_id`,`users`.`email` AS `email`,`users`.`phone` AS `phone`,`class`.`class_id` AS `class_id`,`class`.`name` AS `class_name`,`class`.`teacher_id` AS `teacher_id`,`v_stage_level_class`.`stage_name` AS `stage_name`,`v_stage_level_class`.`level_name` AS `level_name` from (((`users` join `class`) join `class_students`) join `v_stage_level_class`) where ((`class_students`.`class_id` = `class`.`class_id`) and (`class_students`.`student_id` = `users`.`id`) and (`class`.`class_id` = `v_stage_level_class`.`class_id`));
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_groups_forms_menu`
+--
+DROP TABLE IF EXISTS `v_groups_forms_menu`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_groups_forms_menu` AS select `gf`.`group_id` AS `group_id`,`gf`.`form_id` AS `form_id`,`gf`.`h_r_w` AS `h_r_w`,`f`.`name` AS `name`,`f`.`link` AS `link`,`f`.`icon` AS `icon`,`f`.`parent` AS `parent`,`f`.`sort` AS `sort` from (`groups_forms` `gf` join `forms` `f`) where (`gf`.`form_id` = `f`.`form_id`);
 
 -- --------------------------------------------------------
 
@@ -1433,6 +1599,12 @@ ALTER TABLE `mark`
  ADD PRIMARY KEY (`mark_id`);
 
 --
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+ ADD PRIMARY KEY (`m_id`);
+
+--
 -- Indexes for table `noticeboard`
 --
 ALTER TABLE `noticeboard`
@@ -1487,6 +1659,12 @@ ALTER TABLE `subject`
  ADD PRIMARY KEY (`subject_id`);
 
 --
+-- Indexes for table `teacher_classes`
+--
+ALTER TABLE `teacher_classes`
+ ADD PRIMARY KEY (`teacher_id`,`class_id`);
+
+--
 -- Indexes for table `translation`
 --
 ALTER TABLE `translation`
@@ -1528,7 +1706,7 @@ MODIFY `book_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `class`
 --
 ALTER TABLE `class`
-MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `class_routine`
 --
@@ -1558,7 +1736,7 @@ MODIFY `expenses_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 -- AUTO_INCREMENT for table `forms`
 --
 ALTER TABLE `forms`
-MODIFY `form_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
+MODIFY `form_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=35;
 --
 -- AUTO_INCREMENT for table `grade`
 --
@@ -1568,12 +1746,12 @@ MODIFY `grade_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-MODIFY `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `homework`
 --
 ALTER TABLE `homework`
-MODIFY `h_id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `h_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `installments`
 --
@@ -1599,6 +1777,11 @@ MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT;
 --
 ALTER TABLE `mark`
 MODIFY `mark_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+MODIFY `m_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `noticeboard`
 --
@@ -1648,7 +1831,7 @@ MODIFY `transport_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=618;
+MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=621;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

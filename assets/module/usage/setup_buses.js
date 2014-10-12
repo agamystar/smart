@@ -98,6 +98,12 @@ function edit_dialog(index) {
 
 $(function () {
 
+    var list_teachers=[];
+    $.each(js_var_object.teachers,function(x,y){
+        list_teachers[y.id]= y.name;
+    });
+
+
     $("#mymodal").dialog({
         width:550,
         height:450,
@@ -246,10 +252,11 @@ $(function () {
 
 
                 {field:'supervisor', align:'center', title:"Supervisor", width:200, sortable:true,
-                    editor:{
-                        type:'text'
 
-                    }},
+                    formatter:function(value,row,index){
+                        return list_teachers[value];
+                    }
+                },
                 {field:'path', align:'center', title:"Path", width:300, sortable:true,
                     editor:{
                         type:'text'

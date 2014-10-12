@@ -1,3 +1,10 @@
+<?php
+if (!$this->session->userdata("user_id")) {
+
+    redirect(option("site_url")."/security/login","refresh");
+    exit;
+}?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -135,10 +142,12 @@
             position: absolute;
             z-index: 2000;
             vertical-align: middle;
-            background-color: #000;
-            height: 100%;
-            width:100%;
-            opacity: 0.3
+            height: 98%;
+            width:98%;
+            background: none repeat scroll 0% 0% #CCC;
+            opacity: 0.2;
+            font-size: 1px;
+            overflow: hidden;
         }
 
 
@@ -169,16 +178,7 @@
         .window .window-header{
             height: 40px !important;
         }
-     /*
-        .ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix.ui-draggable-handle{
-            height: 50px !important;
-        }
-        .panel-title {padding: 10px !important;}
-        .datagrid-wrap.panel-body.panel-body-noheader{
-            width: auto !important;
 
-        }
-*/
         .modal-body{
                 padding: 8px 20px !important;
                 padding-bottom: 1px !important;
@@ -194,6 +194,17 @@
         .bootstrap-duallistbox-container .info{
             font-size: 21px;
             text-decoration: underline;
+        }
+        .tree li {
+            white-space: normal !important;
+        }
+
+
+        .menu-text{
+        font-size: 14px  !important;
+        padding-top: 8px !important;
+            padding-left: 8px!important;
+
         }
     </style>
 
@@ -224,76 +235,52 @@
 <div class="navbar-header pull-right" role="navigation">
 <ul class="nav ace-nav">
 <li class="grey">
+    <?php
+
+    $this->db->select("*");
+    $this->db->from("homework");
+    $this->db->where("read_un_read",0);
+    $res=$this->db->get();
+    $result=$res->result();
+    ?>
+
     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
         <i class="icon-tasks"></i>
-        <span class="badge badge-grey">4</span>
+        <span class="badge badge-grey" id="no_tasks"><?php echo count($result)?></span>
     </a>
 
+
+
     <ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
+
+
         <li class="dropdown-header">
             <i class="icon-ok"></i>
-            4 Tasks to complete
+              Homeworks
         </li>
 
+  <?php foreach($result as $li){?>
         <li>
-            <a href="#">
+            <a href="<?php echo SITE_LINK."/teacher/homework_details/".$li->h_id ?>">
                 <div class="clearfix">
-                    <span class="pull-left">Software Update</span>
-                    <span class="pull-right">65%</span>
+                    <span class="pull-left"></span>
+                    <span class="pull-right"><?php echo name_user($li->teacher_id)->name ?></span>
                 </div>
 
-                <div class="progress progress-mini ">
-                    <div style="width:65%" class="progress-bar "></div>
+                <div >
+                  <i class="icon-edit "></i>  <?php echo $li->h_header ?>
                 </div>
             </a>
         </li>
 
+        <?php }?>
         <li>
-            <a href="#">
-                <div class="clearfix">
-                    <span class="pull-left">Hardware Upgrade</span>
-                    <span class="pull-right">35%</span>
-                </div>
-
-                <div class="progress progress-mini ">
-                    <div style="width:35%" class="progress-bar progress-bar-danger"></div>
-                </div>
-            </a>
-        </li>
-
-        <li>
-            <a href="#">
-                <div class="clearfix">
-                    <span class="pull-left">Unit Testing</span>
-                    <span class="pull-right">15%</span>
-                </div>
-
-                <div class="progress progress-mini ">
-                    <div style="width:15%" class="progress-bar progress-bar-warning"></div>
-                </div>
-            </a>
-        </li>
-
-        <li>
-            <a href="#">
-                <div class="clearfix">
-                    <span class="pull-left">Bug Fixes</span>
-                    <span class="pull-right">90%</span>
-                </div>
-
-                <div class="progress progress-mini progress-striped active">
-                    <div style="width:90%" class="progress-bar progress-bar-success"></div>
-                </div>
-            </a>
-        </li>
-
-        <li>
-            <a href="#">
+            <a href="<?php echo SITE_LINK."/teacher/homework"?>">
                 See tasks with details
                 <i class="icon-arrow-right"></i>
             </a>
-        </li>
-    </ul>
+      </li>
+      </ul>
 </li>
 
 <li class="purple">
@@ -506,9 +493,9 @@
                 <ul class="breadcrumb">
                     <li>
                         <i class="icon-home home-icon"></i>
-                        <a href="#">Home</a>
+                        <a href="#"><?php if(isset($first_title)){echo $first_title ;}?></a>
                     </li>
-                    <li class="active">Dashboard</li>
+                    <li class="active"><?php if(isset($second_title)){echo $second_title ;}?></li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -518,10 +505,7 @@
             <div class="page-content">
                 <div class="page-header">
                   <h1>
-                      Dashboard
-                      <small>
-                          <i class="icon-double-angle-right"></i>
-                          overview &amp; stats
-                      </small>
+                      <?php if(isset($third_title)){echo $third_title ;}?>
+
                   </h1>
               </div>

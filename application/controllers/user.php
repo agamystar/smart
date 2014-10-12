@@ -3,8 +3,6 @@
 class User extends MY_Controller
 {
     const TABLE_NAME = "users";
-    private $image = "not";
-    private $user_frm_flag = "R";
 
     public function __construct()
     {
@@ -71,6 +69,14 @@ class User extends MY_Controller
 
     public function profile()
     {
+        $form_id=4;
+        $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
+
+        if($hrw=="h"){
+            echo "     No privilege ...    . Contact System Administrator ";
+            redirect(SITE_LINK."/security/login","refresh");
+        }
+
         $data = array();
 
         $action_get = $this->input->get("action");
@@ -110,6 +116,12 @@ class User extends MY_Controller
             if (isset($stb[0])) {
                 $data['student_bus'] = $stb[0];
             }
+
+           // print_r($vcs[0] );
+            $st_teachers = $this->mymodel_model->select("teacher_classes", 'class_id =' . $vcs[0]->class_id . ' ');
+            if (isset($st_teachers[0])) {
+                $data['student_teachers'] = $st_teachers;
+            }
         }
 
         $this->db->select("count(*) as count");
@@ -131,28 +143,46 @@ class User extends MY_Controller
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1],
             'details' => SITE_LINK . "/" . "student/" . "details/",
             'main_url' => SITE_LINK . "/" . "security/",
-
+            'hrw' =>$hrw
         ));
+
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Profile";
+        $data['third_title'] = "All User Information  ";
         $data['base_url'][] = SITE_LINK;
         $data['js'][] = "usage/profile.js";
         $data['main_url'] = SITE_LINK;
-
+        $data['hrw'] = $hrw;
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'profile', $data);
+
+
 
     }
 
     public function inbox(){
+
+        $form_id=11;
+        $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
+
+        if($hrw=="h"){
+            echo "    No privilege ... . Contact System Administrator ";
+            redirect(SITE_LINK."/security/login","refresh");
+        }
+
         $data["js_vars"] = json_encode(array(
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1] . "/" . $this->uri->segments[2],
             'controller_link' => SITE_LINK . "/" . $this->uri->segments[1],
-
             'main_url' => SITE_LINK . "/" . "security/",
-
+            'hrw' =>$hrw
 
         ));
         $data['base_url'][] = SITE_LINK;
-
+        $data['hrw'] = $hrw;
         $data['js'][] = "usage/inbox.js";
+
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Inbox ";
+        $data['third_title'] = " Messages   ";
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'inbox', $data);
     }
 
@@ -191,6 +221,13 @@ class User extends MY_Controller
 
     public function student_absence()
     {
+        $form_id=9;
+        $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
+
+        if($hrw=="h"){
+            echo "      No privilege ...   . Contact System Administrator ";
+            redirect(SITE_LINK."/security/login","refresh");
+        }
         $action_get = $this->input->get("action");
         $class = $this->input->get("class");
         $p_date = $this->input->get("date");
@@ -280,20 +317,36 @@ class User extends MY_Controller
             'p_class' => $p_class,
             'absence' => $absence,
             'p_date' => $today,
-
+            'hrw' =>$hrw
         ));
+        $data['hrw'] = $hrw;
         $data['base_url'][] = SITE_LINK;
         $data['classes'][] = $classes;
         $data['absence'][] = $absence;
         $data['p_class'][] = $p_class;
         $data['class_students'][] = $class_students;
         $data['js'][] = "usage/student_absence.js";
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Absence";
+        $data['third_title'] = "Student  Absence  ";
+
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'student_absence', $data);
+
+
+
     }
 
     public function staff_absence()
     {
 
+
+        $form_id=16;
+        $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
+
+        if($hrw=="h"){
+            echo "       No privilege ...   . Contact System Administrator ";
+            redirect(SITE_LINK."/security/login","refresh");
+        }
         $action_get = $this->input->get("action");
         $date = $this->input->get("date");
         $action_post = $this->input->post("action");
@@ -307,18 +360,22 @@ class User extends MY_Controller
 
         $data = array();
 
-        $set_users = $this->mymodel_model->select("users", "groups not  in ('student','not_defined','')"); //$class_students=staff_absence
-        $absence = $this->mymodel_model->select("v_user_absence", "groups not in ('student','not_defined','') and   day='$today' ");
+        $set_users = $this->mymodel_model->select("users", "groups not  in ('student','not_defined','parent')"); //$class_students=staff_absence
+        $absence = $this->mymodel_model->select("v_user_absence", "groups not in ('student','not_defined','parent') and   day='$today' ");
 
         if ($action_post == "add") { // take absence
             $no = "";
             $message = "";
             $big_st_ids = array();
+
+
+            $this->db->trans_begin();
+
             foreach ($ajax_data->selection as $st) {
                 $big_st_ids[] = array("day" => $ajax_data->date, "user_id" => $st);
 
             }
-            $imp = implode(",", $ajax_data->selection);
+
             $this->db->where("day", $ajax_data->date);
             $this->db->delete("absence");
 
@@ -328,8 +385,10 @@ class User extends MY_Controller
                 if ($this->db->affected_rows() > 0) {
                     $no = $this->db->affected_rows();
                     $message = "success";
+                    $this->db->trans_commit();
                 } else {
                     $message = "failed  ";
+                    $this->db->trans_rollback();
                 }
             }
             echo  json_encode(array("message" => $message, "no" => $no));
@@ -345,13 +404,20 @@ class User extends MY_Controller
             'set_users' => $set_users,
             'absence' => $absence,
             'p_date' => $today,
-
+            'hrw' =>$hrw
         ));
+        $data['hrw'] = $hrw;
         $data['base_url'][] = SITE_LINK;
 
         $data['absence'][] = $absence;
         $data['set_users'][] = $set_users;
         $data['js'][] = "usage/staff_absence.js";
+
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Absence";
+        $data['third_title'] = "Staff Absence  ";
+
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'staff_absence', $data);
+
     }
 }

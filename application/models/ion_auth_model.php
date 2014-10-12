@@ -1711,7 +1711,30 @@ class Ion_auth_model extends CI_Model
 		    'old_last_login'       => $user->last_login
 		);
 
+
+
+        $this->db->select("id");
+        $this->db->from("groups");
+        $this->db->where("name",$user->groups);
+        $rs=$this->db->get();
+        $res=$rs->row();
+
+
 		$this->session->set_userdata($session_data);
+		$this->session->set_userdata("group_id",$res->id);
+
+
+        $this->db->select("*");
+        $this->db->from("v_groups_forms_menu");
+        $this->db->where("group_id",$res->id);
+        $this->db->where("h_r_w !='h' ");
+        $m=$this->db->get();
+        $menu=$m->result();
+
+        $this->session->set_userdata("menu",$menu);
+
+
+        //echo $this->db->last_query();
 
 		$this->trigger_events('post_set_session');
 

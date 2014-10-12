@@ -29,24 +29,25 @@ $selected_class = $p_class[0];?>
 
     <div class="col-xs-12">
 
+        <div class="col-sm-12">
+            <div class="col-sm-6 align-right">
+                <a href="#" id="export_class" class=" label label-warning arrowed-right ">Export Absence
+                    Sheet </a>
+                <a href="#" id="import_class" class=" label label-primary arrowed-left arrowed-in ">Import
+                    Absence Sheet </a>
+            </div>
+        </div>
         <form class="form-horizontal" id="sample-form">
             <div class="form-group" >
-                <div class="col-sm-4">
+                <div class="col-sm-9">
                     <div class="col-sm-12">
-                        <span class="label label-info arrowed-right arrowed-in"> Select  Class </span>
-                        <input id="select_class" required="true" value="<?php // echo $selected_class?>"
-                               style="width:200px">
+                        <span class="col-sm-2"> Select  Class </span>
+                        <input id="select_class" class="col-sm-9" required="true" value="<?php // echo $selected_class?>"
+                             >
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="col-sm-12">
-                        <a href="#" id="export_class" class=" label label-warning arrowed-right ">Export Absence
-                            Sheet </a>
-                        <a href="#" id="import_class" class=" label label-primary arrowed-left arrowed-in ">Import
-                            Absence Sheet </a>
-                    </div>
-                </div>
-                <div class="col-sm-4">
+
+                <div class="col-sm-3">
                     <div class="input-group">
                         <div id='content'>
 

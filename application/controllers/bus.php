@@ -19,6 +19,14 @@ class Bus extends MY_Controller
 
     public function all_buses($x = '')
     {
+        $form_id=5;
+        $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
+
+        if($hrw=="h"){
+            echo "        No privilege ...   . Contact System Administrator ";
+            redirect(SITE_LINK."/security/login","refresh");
+
+        }
 
 
         $action_get = $this->input->get("action");
@@ -94,19 +102,33 @@ class Bus extends MY_Controller
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1] . "/" . $this->uri->segments[2],
             'controller_link' => SITE_LINK . "/" . $this->uri->segments[1],
             'main_url' => SITE_LINK . "/" . "security/",
-
+            'hrw' =>$hrw
         ));
+        $data['hrw'] = $hrw;
         $data['base_url'][] = SITE_LINK;
         $data['buses'][] = $buses;
         $data['students'][] = $students;
         $data['p_bus'][] = $bus;
         $data['bus_students'][] = $bus_students;
         $data['js'][] = "usage/bus.js";
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Bus";
+        $data['third_title'] = "Distribute Students on  Buses  ";
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'bus', $data);
+
+
     }
 
     public function bus_registration()
     {
+        $form_id=7;
+        $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
+
+        if($hrw=="h"){
+            echo "        No privilege ...  Don't Try Again  . Contact System Administrator ";
+            redirect(SITE_LINK."/security/login","refresh");
+        }
+
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
         $bus_no = $this->input->post("bus_no");
@@ -290,13 +312,17 @@ class Bus extends MY_Controller
         $data["js_vars"] = json_encode(array(
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1] . "/" . $this->uri->segments[2],
             'controller_link' => SITE_LINK . "/" . $this->uri->segments[1],
-            'main_url' => SITE_LINK . "/" . "security/",
             "mybus"=>$the_bus,
+            'hrw' =>$hrw
         ));
+        $data['hrw'] = $hrw;
         $data['base_url'][] = SITE_LINK;
-
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Bus";
+        $data['third_title'] = "Bus Registration ";
         $data['js'][] = "usage/bus_registration.js";
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'bus_registration', $data);
+
     }
 
     public function export($x = '')
@@ -385,7 +411,13 @@ class Bus extends MY_Controller
 
     public function bus_absence()
     {
+        $form_id=6;
+        $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
 
+        if($hrw=="h"){
+            echo "      No privilege ...   . Contact System Administrator ";
+            redirect(SITE_LINK."/security/login","refresh");
+        }
 
         $action_get = $this->input->get("action");
         $date = $this->input->get("date");
@@ -458,16 +490,23 @@ class Bus extends MY_Controller
             'main_url' => SITE_LINK . "/" . "security/",
             'set_users' => $set_users,
             'p_date' => $today,
-            'absence' => $absence
-
+            'absence' => $absence,
+            'hrw' =>$hrw
         ));
+        $data['hrw'] = $hrw;
         $data['base_url'][] = SITE_LINK;
         $data['buses'][] = $buses;
         $data['absence'][] = $absence;
         $data['p_bus'][] = $bus;
         $data['set_users'][] = $set_users;
         $data['js'][] = "usage/bus_absence.js";
+
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Bus";
+        $data['third_title'] = "Bus Absence ";
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'bus_absence', $data);
+
+
     }
 
 

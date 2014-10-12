@@ -30,7 +30,7 @@ $(function () {
     var loading = false;
     $('#select_class').combotree({
         url:js_var_object.current_link + "?action=load_classes",
-        editable:false,
+        height:30,
         onSelect:function (node) {
             if (node.id > 0 && loading == true) {
                 window.location = js_var_object.current_link + "?class=" + node.id+"&date="+$('input.date').datebox("getValue");
@@ -39,6 +39,11 @@ $(function () {
         },
         onLoadSuccess:function (node) {
             loading = true;
+            $('li ul li ul li').css({
+                "display":"inline-flex",
+                "width":"200px"
+            });
+
         }
     }).combotree("setValue", js_var_object.p_class);
 

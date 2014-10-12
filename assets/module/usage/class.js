@@ -10,7 +10,7 @@ $(function () {
     $('#select_class').combotree({
         url: js_var_object.current_link+"?action=load_classes",
         editable:false,
-        onSelect: function(node){  alert(JSON.stringify(node) );
+        onSelect: function(node){
             if(loading==true){
                 if(node.id==""||node.id==null){
 
@@ -24,9 +24,14 @@ $(function () {
         },
         onLoadSuccess:function(node){
             loading=true;
+            $('li ul li ul li').css({
+                "display":"inline-flex",
+                "width":"200px"
+            });
 
         }
     }).combotree("setValue",js_var_object.p_class);
+
 
 
     $('.class_students').bootstrapDualListbox({
