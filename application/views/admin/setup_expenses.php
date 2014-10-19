@@ -54,14 +54,14 @@ include_once(
                             <label class="align-left col-sm-3 control-label">Stage</label>
 
                             <div class="col-sm-9">
-                                <select class="form-control" id="stage" type="text"></select>
+                                <select class="form-control" id="stage" type="text" class="FormElement ui-widget-content ui-corner-all"></select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="align-left col-sm-3 control-label">Level</label>
 
                             <div class="col-sm-9">
-                                <select class="form-control" id="level" type="text"></select>
+                                <select class="form-control" id="level" type="text" class="FormElement ui-widget-content ui-corner-all"></select>
                             </div>
                         </div>
                         <div class="form-group">

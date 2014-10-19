@@ -41,7 +41,7 @@ include_once(
                                     $img_link="";
                                        echo '
                                        <label>
-														<input name="teachers" class="ace" value="'.$c_students->id.'" type="radio">
+														<input name="teachers" class="ace" value="'.$c_students->id.'" type="radio" >
 														<span class="lbl"> '.$c_students->name."&nbsp;&nbsp; (&nbsp;&nbsp;  ".$c_students->job ." &nbsp;&nbsp; )&nbsp;&nbsp;   ". '</span>
 													</label><br/>';
 

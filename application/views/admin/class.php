@@ -46,7 +46,7 @@ $selected_class=$p_class[0] ;?>
         <div class="form-group">
     <div class="col-md-12 ">
 
-        <select style="display: none;" multiple="multiple" size="10" name="class_students" class="class_students">
+        <select style="display: none;" multiple="multiple" size="10" name="class_students"  class="class_students">
             <?php
             if(isset($students[0])){
                 foreach($students[0] as $students){

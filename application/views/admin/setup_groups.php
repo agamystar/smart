@@ -15,13 +15,7 @@ include_once(
     <div id="tb">
 
         <a href="javascript:void(0);" id="open_new_dialog" class="easyui-linkbutton" plain="true"><img src="<?php echo SITE_LINK."/assets" ?>/img/add-icon.png" alt=""/> Add </a>
-        <a href="javascript:void(0);" id="import" name="imports" class="easyui-linkbutton" plain="true">
-            <img src="<?php echo SITE_LINK."/assets" ?>/img/import-icon.png" alt="Import"/>
-        <span id="import_text"></span>
-        </a>
-        <a href="javascript:void(0);" id="export" name="exports" >
-            <img src="<?php echo SITE_LINK."/assets" ?>/img/export-icon.png" alt="Export"/>
-            <span id="export_text"></span></a>
+
     <span class="widget-toolbar">
 
     </div>
@@ -104,7 +98,7 @@ include_once(
                             <label class="align-left col-sm-3 control-label">Show in front </label>
 
                             <div class="col-sm-9">
-                                <select class="form-control" id="show_front">
+                                <select class="form-control FormElement ui-widget-content ui-corner-all" id="show_front" >
                                     <option value="0"> NO </option>
                                     <option value="1"> Yes </option>
                                 </select>

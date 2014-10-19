@@ -247,6 +247,139 @@ class Setup extends MY_Controller
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'setup_buses', $data);
 
     }
+    function subjects()  {
+
+
+        $action_get = $this->input->get("action");
+        $action_post = $this->input->post("action");
+        $subject_name= $this->input->post("subject_name");
+        $subject_id= $this->input->post("subject_id");
+        $stage_id= $this->input->post("stage_id");
+
+        $stages=$this->mymodel_model->select("stages",'1=1 order by stage_id ');
+        if ($this->session->userdata("groups") != "admin") {
+            redirect(SITE_LINK . '/security/login', 'refresh');
+        }
+
+
+        else {
+
+            if ($action_get == "get_data") {
+
+                $back = array();
+                $this->db->select('*');
+                $this->db->start_cache();
+                $this->db->from("subjects");
+
+                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 10;
+                if (empty($rows)) {
+                    $rows = 10;
+                }
+                if (empty($page)) {
+                    $page = 1;
+                }
+                $offset = (($page - 1) * $rows) + 1;
+                $sort = isset($_GET['sort']) ? $_GET['sort'] : 'no';
+                $order = isset($_GET['order']) ? $_GET['order'] : 'asc';
+                $filterRules = json_decode($this->input->get('filterRules'));
+                $sorting_array = explode(',', $sort);
+                $order_array = explode(',', $order);
+                $flds_array=array();
+                // End user filter
+                $this->db->stop_cache();
+                // start filter
+                if (is_array($sorting_array)) {
+                    foreach ($sorting_array as $key => $sort) {
+                        if (array_key_exists($sort, $flds_array)) {
+                            $ord = 'ASC';
+                            if (isset($order_array[$key])) {
+                                $ord = ($order_array[$key] == 'desc') ? 'DESC' : 'ASC';
+                            }
+                            $this->db->order_by($flds_array[$sort]["order"], $ord);
+                        }
+                    }
+                }
+                //Make limit
+                $this->db->limit($rows, $offset - 1);
+                $rs = $this->db->get();
+                //  echo $this->db->last_query();
+
+                if ($rs->num_rows() > 0) {
+                    $back = array('total' => $this->db->count_all_results(), 'rows' => $rs->result_array());
+
+                }
+
+                echo json_encode($back);
+                exit;
+            }
+
+            if ($action_post == "add") {
+
+                $dat = array(
+
+                    'name' => $subject_name,
+                    'stage_id' => $stage_id
+
+                );
+                $this->db->insert("subjects", $dat);
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
+                }
+                exit;
+            }
+            if ($action_post == "edit") {
+
+                $dat = array(
+
+                    'name' => $subject_name,
+                    'stage_id' => $stage_id
+
+                );
+                $this->db->where("subject_id", $this->input->post("subject_id"));
+                $this->db->update("subjects", $dat);
+                if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
+                }
+                exit;
+            }
+
+            if ($action_post == "delete") {
+                $this->db->where("subject_id", $this->input->post("subject_id"));
+                $this->db->delete("subjects");
+                if ($this->db->affected_rows() > 0) {
+                    echo json_encode(array("result" => "success"));
+                } else {
+                    echo json_encode(array("result" => "failed"));
+                }
+                // echo $this->db->last_query();
+                exit;
+            }
+        }
+
+
+        $data = array();
+        $data["js_vars"] = json_encode(array(
+            'current_link' => SITE_LINK . "/" . $this->uri->segments[1]. "/" . $this->uri->segments[2],
+
+            'stages' => $stages,
+
+        ));
+        $data['stages'] = $stages;
+        $data['base_url'][] = SITE_LINK;
+        $data['js'][] = "usage/subjects.js";
+        $data['main_url'] = SITE_LINK;
+        $data['first_title'] = "Home";
+        $data['second_title'] = "Setup";
+        $data['third_title'] = " Subjects ";
+
+        $this->load->view('admin' . DIRECTORY_SEPARATOR . 'subjects', $data);
+
+    }
     function classes()  {
 
 
@@ -496,7 +629,6 @@ class Setup extends MY_Controller
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'setup_classes', $data);
 
     }
-
     function expenses()  {
 
 
@@ -926,8 +1058,6 @@ class Setup extends MY_Controller
 
     }
     function stages_levels()  {
-
-
         $action_get = $this->input->get("action");
         $action_post = $this->input->post("action");
 
@@ -970,93 +1100,7 @@ class Setup extends MY_Controller
                 $filterRules = json_decode($this->input->get('filterRules'));
                 $sorting_array = explode(',', $sort);
                 $order_array = explode(',', $order);
-                if (is_array($filterRules)) {
-                    if (count($filterRules) > 0) {
-                        foreach ($filterRules as $value) {
-                            $where = "where";
-                            $op = $value->op;
-                            $f = $value->field;
-                            $v = $value->value;
-                            if (in_array($op, array('contains', 'beginwith', 'endwith'))) {
-                                $is_like = true;
-                                $where = 'like';
-                                if ($op == "beginwith") {
-                                    $like_p = 'after';
-                                } elseif ($op == "endwith") {
-                                    $like_p = 'before';
-                                } else {
-                                    $like_p = 'both';
-                                }
-                            } elseif (in_array($op, array('notcontains', 'notbeginwith', 'notendwith'))) {
-                                $is_like = true;
-                                $where = 'not_like';
-                                if ($op == "notbeginwith") {
-                                    $like_p = 'after';
-                                } elseif ($op == "notendwith") {
-                                    $like_p = 'before';
-                                } else {
-                                    $like_p = 'both';
-                                }
-                            } else {
-                                $is_like = false;
-                                if ($op == "notequal") {
-                                    $like_p = ' != ';
-                                } elseif ($op == "less") {
-                                    $like_p = ' < ';
-                                } elseif ($op == "lessorequal") {
-                                    $like_p = ' <= ';
-                                } elseif ($op == "greater") {
-                                    $like_p = ' > ';
-                                } elseif ($op == "greaterorequal") {
-                                    $like_p = ' >= ';
-                                } else {
-                                    $like_p = '';
-                                }
-                            }
 
-                            if (array_key_exists($f, $flds_array)) {
-                                if ($is_like) {
-                                    if (empty($flds_array[$f]["val_template"])) {
-                                        if ($flds_array[$f]["lower"]) {
-                                            $v = strtolower($v);
-                                        }
-                                        $this->db->$where($flds_array[$f]["where"], $v, $like_p);
-                                    } else {
-                                        if ($flds_array[$f]["lower"]) {
-                                            $v = strtolower($v);
-                                        }
-                                        $m = str_replace('{the_value}', $v, $flds_array[$f]["val_template"]);
-                                        if ($like_p == "after") {
-                                            $this->db->$where("{$flds_array[$f]["where"]} LIKE '%$m''");
-                                        } elseif ($like_p == "before") {
-                                            $this->db->$where("{$flds_array[$f]["where"]} LIKE '$m%'");
-                                        } else {
-                                            $this->db->$where("{$flds_array[$f]["where"]} LIKE '%$m%'");
-                                        }
-                                    }
-                                } else {
-                                    if ($flds_array[$f]["lower"]) {
-                                        $v = strtolower($v);
-                                    }
-                                    if (empty($like_p)) {
-                                        $like_p = "=";
-                                    }
-                                    if (empty($flds_array[$f]["val_template"])) {
-                                        if ($like_p == "=") {
-                                            $this->db->$where($flds_array[$f]["where"] . " $like_p '$v'");
-                                        } else {
-                                            $this->db->$where("{$flds_array[$f]["where"]} $like_p", $v);
-                                        }
-                                    } else {
-                                        $m = str_replace('{the_value}', $v, $flds_array[$f]["val_template"]);
-                                        $this->db->$where("{$flds_array[$f]["where"]} $like_p $m");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                // End user filter
                 $this->db->stop_cache();
                 // start filter
                 if (is_array($sorting_array)) {
@@ -1083,18 +1127,63 @@ class Setup extends MY_Controller
                 echo json_encode($back);
                 exit;
             }
+            if ($action_get == "get_data_l") {
+
+                $back = array();
+                $this->db->select('*');
+                $this->db->start_cache();
+                $this->db->from("levels");
+                $this->db->where("stage_id",$this->input->get("stage_id"));
+
+
+                $flds_array = array(
+                      );
+                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 10;
+                if (empty($rows)) {
+                    $rows = 10;
+                }
+                if (empty($page)) {
+                    $page = 1;
+                }
+                $offset = (($page - 1) * $rows) + 1;
+                $sort = isset($_GET['sort']) ? $_GET['sort'] : 'no';
+                $order = isset($_GET['order']) ? $_GET['order'] : 'asc';
+                $filterRules = json_decode($this->input->get('filterRules'));
+                $sorting_array = explode(',', $sort);
+                $order_array = explode(',', $order);
+                $this->db->stop_cache();
+                // start filter
+                if (is_array($sorting_array)) {
+                    foreach ($sorting_array as $key => $sort) {
+                        if (array_key_exists($sort, $flds_array)) {
+                            $ord = 'ASC';
+                            if (isset($order_array[$key])) {
+                                $ord = ($order_array[$key] == 'desc') ? 'DESC' : 'ASC';
+                            }
+                            $this->db->order_by($flds_array[$sort]["order"], $ord);
+                        }
+                    }
+                }
+                //Make limit
+                $this->db->limit($rows, $offset - 1);
+                $rs = $this->db->get();
+                //  echo $this->db->last_query();
+                if ($rs->num_rows() > 0) {
+                    $back = array('total' => $this->db->count_all_results(), 'rows' => $rs->result_array());
+
+                }
+
+                echo json_encode($back);
+                exit;
+            }
             if ($action_post == "add_s") {
 
                 $dat = array(
-                    'no' => $row_add->no,
-                    'driver' => $row_add->driver,
-                    'supervisor' => $row_add->supervisor,
-                    'path' => $row_add->path,
-                    'student_fees' => $row_add->student_fees,
-                    'school_fees' => $row_add->school_fees,
+                    'stage_name' => $this->input->post('stage_name')
 
                 );
-                $this->db->insert("bus", $dat);
+                $this->db->insert("stages", $dat);
                 if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
                     echo json_encode(array("result" => "success"));
                 } else {
@@ -1105,16 +1194,10 @@ class Setup extends MY_Controller
             if ($action_post == "edit_s") {
 
                 $dat = array(
-                    'no' => $row_add->no,
-                    'driver' => $row_add->driver,
-                    'supervisor' => $row_add->supervisor,
-                    'path' => $row_add->path,
-                    'student_fees' => $row_add->student_fees,
-                    'school_fees' => $row_add->school_fees,
-
+                    'stage_name' => $this->input->post('stage_name')
                 );
-                $this->db->where("no", $row_add->id);
-                $this->db->update("bus", $dat);
+                $this->db->where("stage_id",$this->input->post('id'));
+                $this->db->update("stages", $dat);
                 if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
                     echo json_encode(array("result" => "success"));
                 } else {
@@ -1123,28 +1206,25 @@ class Setup extends MY_Controller
                 exit;
             }
             if ($action_post == "delete_s") {
-                $this->db->where("no", $this->input->post('id'));
-                $this->db->delete("bus");
+                $this->db->where("stage_id",$this->input->post('id'));
+                $this->db->delete("stages");
                 if ($this->db->affected_rows() > 0) {
                     echo json_encode(array("result" => "success"));
+                    exit;
                 } else {
                     echo json_encode(array("result" => "failed"));
+                    exit;
                 }
-                // echo $this->db->last_query();
+                echo $this->db->last_query();
                 exit;
             }
-         if ($action_post == "add_l") {
-
+            if ($action_post == "add_l"){
                 $dat = array(
-                    'no' => $row_add->no,
-                    'driver' => $row_add->driver,
-                    'supervisor' => $row_add->supervisor,
-                    'path' => $row_add->path,
-                    'student_fees' => $row_add->student_fees,
-                    'school_fees' => $row_add->school_fees,
-
+                    'stage_id' =>$this->input->post("stage_id") ,
+                    'level_id' =>$this->input->post("id_l") ,
+                    'level_name' =>$this->input->post("level_name")
                 );
-                $this->db->insert("bus", $dat);
+                $this->db->insert("levels", $dat);
                 if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
                     echo json_encode(array("result" => "success"));
                 } else {
@@ -1155,26 +1235,25 @@ class Setup extends MY_Controller
             if ($action_post == "edit_l") {
 
                 $dat = array(
-                    'no' => $row_add->no,
-                    'driver' => $row_add->driver,
-                    'supervisor' => $row_add->supervisor,
-                    'path' => $row_add->path,
-                    'student_fees' => $row_add->student_fees,
-                    'school_fees' => $row_add->school_fees,
-
+                   // 'stage_id' =>$this->input->post("stage_id") ,
+                   // 'level_id' =>$this->input->post("id_l") ,
+                    'level_name' =>$this->input->post("level_name")
                 );
-                $this->db->where("no", $row_add->id);
-                $this->db->update("bus", $dat);
+                $this->db->where("stage_id",$this->input->post("stage_id"));
+                $this->db->where("level_id",$this->input->post("id_l"));
+                $this->db->update("levels", $dat);
                 if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
                     echo json_encode(array("result" => "success"));
                 } else {
                     echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
                 }
+             //   echo $this->db->last_query();
                 exit;
             }
             if ($action_post == "delete_l") {
-                $this->db->where("no", $this->input->post('id'));
-                $this->db->delete("bus");
+                $this->db->where("stage_id", $this->input->post('stage_id'));
+                $this->db->where("level_id", $this->input->post('level_id'));
+                $this->db->delete("levels");
                 if ($this->db->affected_rows() > 0) {
                     echo json_encode(array("result" => "success"));
                 } else {

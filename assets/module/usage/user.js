@@ -189,7 +189,7 @@ $(function () {
         btn_change:null,
         no_icon:'icon-cloud-upload',
         droppable:true,
-        thumbnail:'small',//large | fit|small
+        thumbnail:'fit',//large | fit|small
         //,icon_remove:null//set null, to hide remove/reset button
         before_change:function(files, dropped) {
 
@@ -494,7 +494,6 @@ $(function () {
 
 
 
-
     $('#datagrid').datagrid({
             url:js_var_object.current_link,
             singleSelect:true,
@@ -538,8 +537,6 @@ $(function () {
                     },
                     {field:'username', title:"User Name", width:200, align:'center', sortable:true
                     },
-
-
                     {field:'email', align:'center', title:"Email", width:210, sortable:true},
                     {field:'phone', align:'center', title:"Phone", width:140, sortable:true},
                     {field:'national_id', align:'center', title:"National No", width:170, sortable:true},
@@ -548,6 +545,7 @@ $(function () {
                 ]
             ],
             onBeforeLoad:function (param) {
+
             },
             onLoadSuccess:function (data) {
 
@@ -573,9 +571,11 @@ $(function () {
                 }
 
 
-            }, onDblClickRow:function (rowIndex, rowData) {
+            },
+            onDblClickRow:function (rowIndex, rowData) {
 
-            }, onSelect:function (rowIndex, rowData) {
+            },
+        onSelect:function (rowIndex, rowData) {
 
             if(rowData.active=="1"){
 
@@ -599,66 +599,53 @@ $(function () {
                 row.editing = false;
                 updateActions(index);
             }
-        })
-
-   .datagrid('enableFilter', [
-
-    {
-        field:'id',
-        type:'text',
-        op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-    },
+        }).datagrid('enableFilter', [
+        {
+            field:'action',
+            type:'label',
+            width:1
+        },
     {
         field:'name',
         type:'text',
+        width:200,
 
         op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
     },
-    {
-        field:'birthday',
+        {
+        field:'username',
         type:'text',
-
+            width:200,
         op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
     },
+
     {
         field:'email',
         type:'text',
-
+        width:200,
         op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
     }
     ,
     {
         field:'phone',
         type:'text',
-
+        width:200,
+        op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
+    } ,
+    {
+        field:'national_id',
+        type:'text',
+        width:200,
         op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
     },
-    {
-        field:'address',
-        type:'text',
-
-        op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-    },
-    {
-        field:'sex',
-        type:'text',
-
-        op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-    },
-    {
-        field:'religion',
-        type:'text',
-
-        op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-    }
-
-
-
+        {
+            field:'last_login',
+            type:'label',
+            width:1
+           }
 ]);
 
-    $('input#active_0').on('click', function(){
-        alert("ok");
-    });
+
 
 
 

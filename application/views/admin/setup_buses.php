@@ -15,13 +15,7 @@ include_once(
     <div id="tb">
 
         <a href="javascript:void(0);" id="open_new_dialog" class="easyui-linkbutton" plain="true"><img src="<?php echo SITE_LINK."/assets" ?>/img/add-icon.png" alt=""/> Add </a>
-        <a href="javascript:void(0);" id="import" name="imports" class="easyui-linkbutton" plain="true">
-            <img src="<?php echo SITE_LINK."/assets" ?>/img/import-icon.png" alt="Import"/>
-        <span id="import_text"></span>
-        </a>
-        <a href="javascript:void(0);" id="export" name="exports" >
-            <img src="<?php echo SITE_LINK."/assets" ?>/img/export-icon.png" alt="Export"/>
-            <span id="export_text"></span></a>
+
     <span class="widget-toolbar">
 
     </div>
@@ -58,7 +52,9 @@ include_once(
 
                             <div class="col-sm-9">
 
-                                <select id="supervisor" style="min-width: 125px;" class="FormElement ui-widget-content ui-corner-all">
+                                <select id="supervisor" style="min-width: 125px;"
+
+                                        class="FormElement ui-widget-content ui-corner-all">
                                     <?php
                                     if(isset($teachers)){
                                         foreach($teachers as $one){

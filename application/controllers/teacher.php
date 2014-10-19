@@ -87,7 +87,7 @@ class Teacher  extends MY_Controller
 
     public function homework($id='')
     {
-     //  echo  name_user(616);
+     //  echo  data_user(616);
 
         $data = array();
          $st_teachers=array();
@@ -118,6 +118,7 @@ class Teacher  extends MY_Controller
         $this->db->select("*");
         $this->db->where("teacher_id",$t);
         $this->db->from("homework");
+
         $this->db->order_by("h_id","desc");
         $this->db->limit("30");
         $res=$this->db->get();
@@ -133,34 +134,53 @@ class Teacher  extends MY_Controller
                $this->db->from("users");
                $result=$this->db->get();
                $st_teachers=$result->result();
+               if (isset($st_teachers[0])) {
+                   $st=array();
+                   foreach($st_teachers as $one){
+                       $st[]=$one->teacher_id;
+                   }
+                   if($id){
+                       $filter=$id;
+                   }else{
+                       $filter=$st[0];
+                   }
+                   $myhomework = $this->mymodel_model->select("homework","teacher_id in(".$filter.") order by h_id desc limit 30");
+                   /// echo  $this->db->last_query();
+               }
 
            }else{
-               $st_teachers = $this->mymodel_model->select("teacher_classes", 'class_id =' . name_user($this->session->userdata("user_id"))->class_id . ' ');
 
-           }
 
-           if (isset($st_teachers[0])) {
+               $st_teachers = $this->mymodel_model->select("teacher_classes",
+                   'class_id in (select class_id from class_students where student_id="'.$this->session->userdata("user_id").'" ) ');
                $st=array();
                foreach($st_teachers as $one){
-                  $st[]=$one->teacher_id;
+                   $st[]=$one->teacher_id;
                }
-               //implode(",",$st)
                if($id){
                    $filter=$id;
                }else{
                    $filter=$st[0];
                }
+               $this->db->select("*");
+               $this->db->from("homework");
+               $this->db->where('teacher_id in('.$filter.') and h_id in (select h_id from class_homeworks where class_id in (select class_id from class_students where student_id="'.$this->session->userdata("user_id").'" )) ');
+               $this->db->order_by("h_id","desc");
+               $res=$this->db->get();
+               /// echo  $this->db->last_query();
+               $myhomework=$res->result();
 
-               $myhomework = $this->mymodel_model->select("homework","teacher_id in(".$filter.") order by h_id desc limit 30");
 
            }
+
+
 
        }
 
         else{
 
         }
-       if ($action_get == "load_classes") {
+        if ($action_get == "load_classes") {
 
            $arr = array();
            $stage_level_class = array();
@@ -185,17 +205,35 @@ class Teacher  extends MY_Controller
                 'h_body' => $h_body,
                 'teacher_id' =>$this->session->userdata("user_id"),
                 'h_date' =>date("d/m/Y"),
-                'attachment' =>'',
+                'attachment' =>  $this->session->userdata("file_upload"),
 
             );
             $this->db->insert("homework", $dat);
 
+            $big_st_ids=array();
+            $classes=json_decode($this->input->post("classes"));
+
+            foreach ($classes as $one) {
+                if(array_key_exists("id",$one)){
+                    $big_st_ids[] = array( "h_id" =>$this->db->insert_id(),"class_id"=>$one->id);
+                }
+
+            }
+            //   print_r($classes);
+            //  print_r($big_st_ids);
+          if(!empty($big_st_ids)){
+            $this->db->insert_batch("class_homeworks", $big_st_ids);
+
+          }
 
             if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
                 echo json_encode(array("result" => "success"));
             } else {
                 echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
             }
+
+
+            $this->session->unset_userdata('file_upload');
             exit;
         }
 
@@ -227,10 +265,6 @@ class Teacher  extends MY_Controller
         }else{
             $this->load->view("admin/student_homework",$data);
         }
-
-
-
-
     }
 
     public function distribute_teachers()
@@ -247,7 +281,7 @@ class Teacher  extends MY_Controller
         $action_post = $this->input->post("action");
         $classes = json_decode($this->input->post("classes"));
         $teacher = $this->input->post("teacher");
-        $set_users = $this->mymodel_model->select("users", "groups not  in ('student','not_defined','parent')"); //$class_students=staff_absence
+        $set_users = $this->mymodel_model->select("users", "groups not  in ('student','not_defined','parent','admin')"); //$class_students=staff_absence
         if ($action_get == "load_classes") {
 
             $arr = array();
@@ -333,19 +367,49 @@ class Teacher  extends MY_Controller
     }
 
     public function homework_details($id=''){
+        $action_get = $this->input->get("action");
+        $action_post = $this->input->post("action");
+        $m_header= $this->input->post("m_header");
+        $m_body= $this->input->post("m_body");
+        $m_to= $this->input->post("m_to");
 
         $data = array();
-
+         $m_h="";
         if($id){
             $h_details= $this->mymodel_model->select("homework", "h_id=".$id."  ");
             $data['h_details'] = $h_details[0];
+
+            $this->db->insert("homework_read",array("h_id"=>$id,"user_id"=>$this->session->userdata("user_id")));
         }
+
+        if ($action_post == "add") {
+
+            $dat = array(
+                'm_header' => "RE ".$m_header,
+                'm_body' => $m_body,
+                'm_from' =>$this->session->userdata("user_id"),
+                'm_to' =>$m_to,
+                'm_date' =>date("d/m/Y    h:m:s "),
+                'm_attachment' =>  $this->session->userdata("file_upload"),
+
+            );
+            $this->db->insert("messages", $dat);
+
+            if ($this->db->affected_rows() > 0 || $this->db->affected_rows()==0) {
+                echo json_encode(array("result" => "success"));
+            } else {
+                echo json_encode(array("result" =>$this->db->_error_number()." * ". $this->db->_error_message()));
+            }
+            exit;
+        }
+
+
         $data["js_vars"] = json_encode(array(
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1]. "/" . $this->uri->segments[2],
             'controller_link' => SITE_LINK . "/" . $this->uri->segments[1]
         ));
         $data['base_url'][] = SITE_LINK;
-        $data['js'][] = "usage/teacher_distribution.js";
+        $data['js'][] = "usage/teacher_homework.js";
         $data['first_title'] = "Home";
         $data['second_title'] = "HomeWork";
         $data['third_title'] = "HomeWork Details ";

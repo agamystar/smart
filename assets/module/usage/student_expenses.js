@@ -196,8 +196,8 @@ $(function () {
             autoRowHeight:true,
             columns:[
                 [
-                    {field:'name', align:'center', title:" Name", width:200, sortable:true },
-                    {field:'national_id', title:"National No", width:150, align:'center', sortable:true}
+                    {field:'name', align:'center', title:" Name", width:220, sortable:true },
+                    {field:'national_id', title:"National No", width:170, align:'center', sortable:true}
                 ]
             ],
             onLoadSuccess:function (data) {
@@ -355,11 +355,14 @@ if(am>=parseInt($('#installment_value').text())){
             row.editing = false;
             updateActions(index);
         }
-    }).datagrid('enableFilter', [
+    }).
+
+
+        datagrid('enableFilter', [
 
         {
-            field:'id',
-            type:'text',
+            field:'action',
+            type:'label',
             op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
         },
         {
@@ -369,38 +372,26 @@ if(am>=parseInt($('#installment_value').text())){
             op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
         },
         {
-            field:'birthday',
+            field:'national_id',
             type:'text',
 
             op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
         },
         {
-            field:'email',
+            field:'discount',
             type:'text',
 
             op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
         }
         ,
         {
-            field:'phone',
+            field:'paid_date',
             type:'text',
 
             op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
         },
         {
-            field:'address',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'sex',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'religion',
+            field:'amount',
             type:'text',
 
             op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']

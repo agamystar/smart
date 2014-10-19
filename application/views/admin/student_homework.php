@@ -20,9 +20,9 @@ include_once(
                 foreach($teachers as $one){
 
                     if($one->teacher_id==$filter){
-                        echo "<option   selected  value=\"$one->teacher_id\" > " . name_user($one->teacher_id)->name."</option>";
+                        echo "<option   selected  value=\"$one->teacher_id\" > " . data_user($one->teacher_id)->name."</option>";
                     }else{
-                    echo "<option    value=\"$one->teacher_id\" > " .name_user($one->teacher_id)->name."</option>";
+                    echo "<option    value=\"$one->teacher_id\" > " .data_user($one->teacher_id)->name."</option>";
                     }
                 }
             } ?>
@@ -52,23 +52,30 @@ include_once(
                     <div class="itemdiv dialogdiv">
                         <div class="user">
 
-                            <img alt="Alexa's Avatar"
-                                 src="<?php echo SITE_LINK . "/assets/uploads/" . name_user($one->teacher_id)->photo ?>">
+                            <img alt="<?php echo data_user($one->teacher_id)->name ?> "
+                                 src="<?php echo SITE_LINK . "/assets/uploads/" . data_user($one->teacher_id)->photo ?>">
                         </div>
 
                         <div class="body">
                             <div class="time">
                                 <i class="icon-time"></i>
                                 <span class="green"> <?php echo $one->h_date ?></span>
+                                <?php if(strlen($one->attachment)>3){ ?>
+                                <span class="attachment">
+																		<i class="icon-paper-clip"></i>
+																	</span>
+                                <?php } ?>
                             </div>
 
+
+
                             <div class="name">
-                                <a href="#"><?php echo $one->h_header ?></a>
+                                <a href="<?php echo SITE_LINK."/teacher/homework_details/".$one->h_id; ?>"><?php echo $one->h_header ?></a>
                             </div>
                             <div class="text"> <?php echo $one->h_body ?>   </div>
 
                             <div class="tools">
-                                <a href="#" class="btn btn-minier btn-info">
+                                <a href="<?php echo SITE_LINK . "/teacher/homework_details/" . $one->h_id; ?>" class="btn btn-minier btn-info">
                                     <i class="icon-only icon-share-alt"></i>
                                 </a>
                             </div>

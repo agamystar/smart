@@ -69,6 +69,32 @@ class Security extends MY_Controller
 
         exit;
     }
+
+    public function files_upload($id='')
+    {
+        if (!empty($_FILES)) {
+
+
+
+            $tempFile = $_FILES['file']['tmp_name'];
+            $fileName = $_FILES['file']['name'];
+
+            $ext = explode('.', $fileName);
+
+
+                $targetPath = './assets/uploads/';
+                $new_file_name = date("y-m-d-h-m-s") . "_" . rand(100000, 90000000) . "_" . $fileName;
+                $targetFile = $targetPath . $new_file_name;
+                move_uploaded_file($tempFile, $targetFile);
+
+                $this->session->set_userdata("file_upload",$new_file_name);
+
+                echo json_encode(array("message"=>"success"));
+                exit;
+
+    }
+    }
+
     function index()
     {
 
@@ -107,14 +133,12 @@ class Security extends MY_Controller
                 //User filter
 
                 $flds_array = array(
-                    'id' => array('where' => "id", 'order' => "id", 'val_template' => '', 'lower' => false),
+
                     'name' => array('where' => "name", 'order' => "name", 'val_template' => '', 'lower' => true),
-                    'birthday' => array('where' => "birthday", 'order' => "birthday", 'val_template' => '', 'lower' => true),
+                    'username' => array('where' => "username", 'order' => "username", 'val_template' => '', 'lower' => true),
                     'email' => array('where' => "email", 'order' => "email", 'val_template' => '', 'lower' => true),
-                    'sex' => array('where' => "sex", 'order' => "sex", 'val_template' => '', 'lower' => true),
-                    'religion' => array('where' => "religion", 'order' => "religion", 'val_template' => '', 'lower' => true),
-                    'address' => array('where' => "address", 'order' => "address", 'val_template' => '', 'lower' => true),
                     'phone' => array('where' => "phone", 'order' => "phone", 'val_template' => '', 'lower' => true),
+                    'national_id' => array('where' => "national_id", 'order' => "national_id", 'val_template' => '', 'lower' => true)
                 );
                 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
                 $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 10;
@@ -750,13 +774,21 @@ class Security extends MY_Controller
 
 
         }
+        $message="";
+        $this->db->trans_begin();
         $this->db->insert_batch("users",$table);
-        echo json_encode(array("rows"=>count($table)));
+
+        if ($this->db->affected_rows() > 0) {
+            $message = "success";
+            $this->db->trans_commit();
+        } else {
+            $message = "failed";
+            $this->db->trans_rollback();
+
+        }
+        echo json_encode(array("messsage"=>$message,"rows"=>count($table)));
         exit;
     }
-
-
-
     function users_groups()  {
 
 

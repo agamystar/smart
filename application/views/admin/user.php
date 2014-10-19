@@ -20,6 +20,7 @@ include_once(
  <div class="widget-body">
  <div class="widget-main no-padding">
 <div id="tb">
+
     <?php if($hrw=="w"){?>
     <a href="javascript:void(0);" id="open_new_dialog" class="easyui-linkbutton" plain="true">
         <img src="<?php echo SITE_LINK . "/assets" ?>/img/add-icon.png" alt=""/> <span id="add_text"></span> </a>
@@ -62,8 +63,14 @@ include_once(
 	</span>
 </div>
 
+<table class="" style="
 
-<table id="datagrid" toolbar="#tb"></table>
+background: linear-gradient(to bottom, #FFF 0px, rgba(187, 248, 111, 1) 100%) repeat-x scroll 0% 0% #F7F7F7;
+width: 100% !important;
+
+"  id="filter_row"></table>
+
+<table id="datagrid" ></table>
 
 <div id="mymodal" class=" ">
     <div class="loading-indicator" style="display:none;"><img
@@ -166,7 +173,7 @@ include_once(
 
                                 </div>
 
-                                <form action="" class="col-sm-12" method="post" enctype="multipart/form-data" id="upload_form">
+                                <form action="#" class="col-sm-12" method="post" enctype="multipart/form-data" id="upload_form">
 
                                     <input multiple="" type="file" name="file" id="id-input-file-3"/>
 

@@ -5006,7 +5006,8 @@ button.btn:active {
 
 .dropdown-navbar .msg-photo {
     margin-right: 6px;
-    max-width: 42px
+    max-width: 42px;
+    float: left;
 }
 
 .dropdown-navbar .msg-body {
@@ -10366,7 +10367,7 @@ li.item-default {
     vertical-align: middle;
     color: #467287;
     display: inline-block;
-    width: 110px;
+    width: 180px;
     height: 18px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -10423,7 +10424,7 @@ li.item-default {
 
 .message-item .time {
     float: right;
-    width: 60px;
+    width: 150px;
     height: 18px;
     text-overflow: ellipsis;
     overflow: hidden;

@@ -1,7 +1,7 @@
 var loading=false;
 $(function(){
 
-
+    $('input[name="teachers"]:first').attr("checked","");
     $('#select_class').tree({
         url: js_var_object.current_link+"?action=load_classes",
         multiple:true,
@@ -17,45 +17,53 @@ $(function(){
                 "display":"inline-flex",
                 "width":"200px"
             });
+
+            $.ajax( {
+                url:js_var_object.current_link,
+                beforeSend : function() {
+
+                    var nodes = $('#select_class').tree('getChecked');
+
+                    $.each(nodes,function(x,y){
+                        $('#select_class').tree('remove', y.target);
+                    });
+               $('.loading-indicator').show();
+                },
+                complete : function(result) {
+
+
+                }, success : function(result) {
+                   $('.loading-indicator').hide();
+                    var  resultObj = eval (result);
+                    // alert( resultObj );
+
+                    $.each(resultObj,function(x,yy){
+                       // alert(yy.class_id);
+                        var myNode = $('#select_class').tree('find',yy.class_id);
+                        $('#select_class').tree('check', myNode.target);
+                    });
+
+
+
+                },
+                type: 'POST',
+                data:{
+                    action:'get_teacher_classes',
+                    teacher:  $('input[name="teachers"]:checked').val()
+                }
+                // ,dataTypes:'JSON'
+            } );
+
+
         }
     });
 
 
 
 
-    $('input[name="teachers"]').click(function(){
+    $('input[name="teachers"]').change(function(){
 
-        alert(2);
-        $.ajax( {
-            url:js_var_object.current_link,
-            beforeSend : function() {
-             //   $('#select_class').tree({cascadeCheck:$(this).is(':checked')});
-              //  $('.loading-indicator').show();
-            },
-            complete : function(result) {
-
-
-            }, success : function(result) {
-
-                var res=JSON.stringify(result);
-                alert(res[0]);
-                $.each(result,function(x,y){
-                    var myNode = $('#select_class').tree('find',y.class_id);
-                    alert(y.class_id);
-                    $('#select_class').tree('check', myNode.target);
-                });
-
-                $('.loading-indicator').hide();
-
-            },
-            type: 'POST',
-            data:{
-                action:'get_teacher_classes',
-                teacher: $(this).val()
-            }
-          // ,dataTypes:'JSON'
-        } );
-
+        $('#select_class').tree('reload');
 
 
     });

@@ -13,7 +13,7 @@ class Dashboard extends MY_Controller
     {
         $data=array();
         $data['first_title'] = "Home";
-        $data['second_title'] = "Security";
+        $data['second_title'] = "Dashboard";
         $data['third_title'] = "Dashboard ";
         $this->load->view('admin/index',$data);
     }

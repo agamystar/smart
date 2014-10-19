@@ -5,6 +5,10 @@ if (!$this->session->userdata("user_id")) {
     exit;
 }?>
 
+<?php
+$your_messages=get_unread_messages();
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,6 +27,7 @@ if (!$this->session->userdata("user_id")) {
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/module/multi_select_list/bootstrap-duallistbox.css"/>
     <link rel="stylesheet" href="<?php echo SITE_LINK."/assets" ?>/module/jq_widgets/jqx.base.css"/>
     <link rel="stylesheet" type="text/css" href="<?php echo SITE_LINK . "/assets/module/css"; ?>/easyui.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITE_LINK . "/assets/module/css"; ?>/icons.css">
 
 
 
@@ -55,10 +60,8 @@ if (!$this->session->userdata("user_id")) {
     <script type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/easyui/jquery.easyui.min.js"></script>
 
 
-    <!--
 
-    <script type="text/javascript" src="<?php //echo SITE_LINK."/assets" ?>/easyui/filter.js"></script>
--->
+
     <script type="text/javascript" src="<?php echo SITE_LINK . "/assets/module/multi_select_list/jquery.bootstrap-duallistbox.js"; ?>"></script>
 
 
@@ -66,10 +69,9 @@ if (!$this->session->userdata("user_id")) {
     <link href="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.min.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo SITE_LINK . "/assets/toastr"; ?>/toastr.css" rel="stylesheet" type="text/css" />
 
-
     <script src="<?php echo SITE_LINK."/assets" ?>/js/ace-elements.min.js"></script>
     <script src="<?php echo SITE_LINK."/assets" ?>/js/ace.min.js"></script>
-
+    <script type="text/javascript" src="<?php echo SITE_LINK."/assets" ?>/module/js/filter.js"></script>
 
     <script type="text/javascript">
         try {
@@ -133,10 +135,6 @@ if (!$this->session->userdata("user_id")) {
     <style type="text/css">
 
 
-        .panel.datagrid {
-            /*  width: 1050px !important;
-       /* border: 0px solid #CCC !important;*/
-        }
 
         .loading-indicator {
             position: absolute;
@@ -149,12 +147,39 @@ if (!$this->session->userdata("user_id")) {
             font-size: 1px;
             overflow: hidden;
         }
+             .datagrid-htable{height:35px !important;}
+            .datagrid-header td ,.datagrid-htable td{border:0px}
+            .datagrid-header-inner{
+                background-color: #87B87F !important;
+            }
 
-
-
-        .datagrid-view .datagrid-editable-input,.datagrid-toolbar{
+        .datagrid-view .datagrid-editable-input,.datagrid-toolbar,.datagrid-row,.datagrid-header-row{
             height: 35px !important;
         }
+
+        .datagrid-header{
+            height: 72px !important;
+        }
+
+
+       .datagrid-filter-row {
+           width: 100%;
+            background: linear-gradient(to bottom, #FFF 0px, rgba(219, 246, 185, 1) 100%) repeat-x scroll 0% 0% #F7F7F7 !important;
+            width: 100% !important;
+        }
+        .datagrid-header .datagrid-cell span {
+            font-size: 16px !important;
+            color: #FFF !important;
+        }
+        .datagrid-row,.datagrid-htable {
+            height: 35px !important;
+        }
+
+
+        .datagrid-pager, .datagrid-footer-inner {
+            background: linear-gradient(to bottom, #FFF 0px, rgba(195, 222, 162, 1) 100%) repeat-x scroll 0% 0% #F7F7F7 !important;
+        }
+
         .modal-header{
             background-color: #87B87F !important;
         }
@@ -162,19 +187,7 @@ if (!$this->session->userdata("user_id")) {
             margin-top: 5px !important;
         }
 
-        .datagrid-header,.datagrid-htable{height:35px !important;}
-        .datagrid-header td ,.datagrid-htable td{border:0px}
-        .datagrid-header-inner{
-            background-color: #438EB9  !important;
-        }
 
-        .datagrid-header .datagrid-cell span {
-            font-size: 16px !important;
-            color: #FFF !important;
-        }
-        .datagrid-row,.datagrid-htable,.datagrid-header {
-            height: 35px !important;
-        }
         .window .window-header{
             height: 40px !important;
         }
@@ -206,6 +219,15 @@ if (!$this->session->userdata("user_id")) {
             padding-left: 8px!important;
 
         }
+
+
+        .form-horizontal , .panel-body, .panel-body-noborder ,.window-body{
+            _overflow-x: hidden !important;
+        }
+
+        .tabs,.tabs-wrap,.tabs li{
+            height: 45 !important;
+        }
     </style>
 
 
@@ -234,21 +256,33 @@ if (!$this->session->userdata("user_id")) {
 
 <div class="navbar-header pull-right" role="navigation">
 <ul class="nav ace-nav">
-<li class="grey">
+
+
+<!--get all home work of all teachers that in student's class   -->
+<?php if($this->session->userdata("groups")=="student"){?>
+
     <?php
+
+    $st_teachers = $this->mymodel_model->select("teacher_classes", 'class_id in (select class_id from class_students where student_id="'.$this->session->userdata("user_id").'" ) ');
+    $st=array();
+    foreach($st_teachers as $one){
+        $st[]=$one->teacher_id;
+    }
 
     $this->db->select("*");
     $this->db->from("homework");
-    $this->db->where("read_un_read",0);
+    $this->db->where('teacher_id in ('.implode(",",$st).') and h_id
+    in (select h_id from class_homeworks where class_id in (select class_id from class_students where student_id="'.$this->session->userdata("user_id").'" ) and h_id not in (select h_id from homework_read where user_id='.$this->session->userdata('user_id').' )) ');
     $res=$this->db->get();
     $result=$res->result();
     ?>
 
+
+<li class="grey">
     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
         <i class="icon-tasks"></i>
         <span class="badge badge-grey" id="no_tasks"><?php echo count($result)?></span>
     </a>
-
 
 
     <ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
@@ -264,7 +298,7 @@ if (!$this->session->userdata("user_id")) {
             <a href="<?php echo SITE_LINK."/teacher/homework_details/".$li->h_id ?>">
                 <div class="clearfix">
                     <span class="pull-left"></span>
-                    <span class="pull-right"><?php echo name_user($li->teacher_id)->name ?></span>
+                    <span class="pull-right"><?php echo data_user($li->teacher_id)->name ?></span>
                 </div>
 
                 <div >
@@ -282,7 +316,7 @@ if (!$this->session->userdata("user_id")) {
       </li>
       </ul>
 </li>
-
+<?php } ?>
 <li class="purple">
     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
         <i class="icon-bell-alt icon-animated-bell"></i>
@@ -350,72 +384,46 @@ if (!$this->session->userdata("user_id")) {
 <li class="green">
     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
         <i class="icon-envelope icon-animated-vertical"></i>
-        <span class="badge badge-success">5</span>
+        <span class="badge badge-success"> <?php echo sizeof($your_messages)?></span>
     </a>
 
+
+
     <ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
+
         <li class="dropdown-header">
             <i class="icon-envelope-alt"></i>
-            5 Messages
+           <?php echo sizeof($your_messages)?>Messages
+
+
         </li>
 
-        <li>
-            <a href="#">
-                <img src="<?php echo SITE_LINK?>/assets/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar"/>
+        <?php foreach($your_messages  as $one_m){?>
+        <li style="width: 100%; display: block;">
+            <a href="<?php echo SITE_LINK."/user/inbox/".$one_m->m_id ?>">
+                <img src="<?php echo SITE_LINK."/assets/uploads/".data_user($one_m->m_from)->photo ?>" class="msg-photo" alt="Alex's Avatar"/>
 										<span class="msg-body">
 											<span class="msg-title">
-												<span class="blue">Alex:</span>
-												Ciao sociis natoque penatibus et auctor ...
+												<span class="blue"> <?php echo data_user($one_m->m_from)->name ?></span>
+                                                <?php echo $one_m->m_header ?>
 											</span>
 
 											<span class="msg-time">
 												<i class="icon-time"></i>
-												<span>a moment ago</span>
+												<span> <?php echo $one_m->m_date ?></span>
 											</span>
 										</span>
             </a>
         </li>
+         <?php }?>
+        <li class="dropdown-header">
+            <a href="<?php echo SITE_LINK."/user/inbox";?>" >
+                <i class="icon-envelope-alt"></i>
+        See all Messages </a>
 
-        <li>
-            <a href="#">
-                <img src="<?php echo SITE_LINK?>/assets/avatars/avatar3.png" class="msg-photo" alt="Susan's Avatar"/>
-										<span class="msg-body">
-											<span class="msg-title">
-												<span class="blue">Susan:</span>
-												Vestibulum id ligula porta felis euismod ...
-											</span>
 
-											<span class="msg-time">
-												<i class="icon-time"></i>
-												<span>20 minutes ago</span>
-											</span>
-										</span>
-            </a>
         </li>
 
-        <li>
-            <a href="#">
-                <img src="<?php echo SITE_LINK?>/assets/avatars/avatar4.png" class="msg-photo" alt="Bob's Avatar"/>
-										<span class="msg-body">
-											<span class="msg-title">
-												<span class="blue">Bob:</span>
-												Nullam quis risus eget urna mollis ornare ...
-											</span>
-
-											<span class="msg-time">
-												<i class="icon-time"></i>
-												<span>3:15 pm</span>
-											</span>
-										</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="inbox.html">
-                See all messages
-                <i class="icon-arrow-right"></i>
-            </a>
-        </li>
     </ul>
 </li>
 

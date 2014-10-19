@@ -123,7 +123,7 @@ include_once(
                     foreach($student_teachers as $one ){
                     ?>
                     <h5></h5> <a  href="<?php echo SITE_LINK."/teacher/homework/".$one->teacher_id ?>" class="tooltip-info" title=""  style="cursor: pointer">
-                        ♥  <?php echo name_user($one->teacher_id)->name; ?>
+                        ♥  <?php echo data_user($one->teacher_id)->name; ?>
                     </a>
 </h5>
                     <?php }

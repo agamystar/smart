@@ -251,25 +251,25 @@ $(function () {
                 },
 
 
-                {field:'supervisor', align:'center', title:"Supervisor", width:200, sortable:true,
+                {field:'supervisor', align:'center', title:"Supervisor", width:190, sortable:true,
 
                     formatter:function(value,row,index){
                         return list_teachers[value];
                     }
                 },
-                {field:'path', align:'center', title:"Path", width:300, sortable:true,
+                {field:'path', align:'center', title:"Path", width:320, sortable:true,
                     editor:{
                         type:'text'
 
                     }},
 
-                {field:'student_fees', align:'center', title:"Student Fees", width:100, sortable:true,
+                {field:'student_fees', align:'center', title:"Student Fees", width:120, sortable:true,
                     editor:{
                         type:'text'
 
                     }
                 },
-                {field:'school_fees', align:'center', title:"School Fees", width:100, sortable:true,
+                {field:'school_fees', align:'center', title:"School Fees", width:120, sortable:true,
                     editor:{
                         type:'text'
 
@@ -301,65 +301,8 @@ $(function () {
             row.editing = false;
             updateActions(index);
         }
-    })
-
-        .datagrid('enableFilter', [
-
-        {
-            field:'id',
-            type:'text',
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'name',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'birthday',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'email',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        }
-        ,
-        {
-            field:'phone',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'address',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'sex',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'religion',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        }
-
-
-    ]);
-
-    $('input#active_0').on('click', function () {
-        alert("ok");
     });
+
 
 
 });

@@ -267,8 +267,7 @@ $(function () {
 
                             var e = '<a href="javascript:void(0);" onclick="edit_dialog(' + index + ')"><i class="icon-pencil bigger-130"></i></a> ';
                             var d = '<a href="javascript:void(0);" onclick="_delete(' + index +',\''+row.class_id+'\')"><i class="icon-trash bigger-130"></i></a>';
-                            var v = '<a href="javascript:void(0);" onclick="_show_details(' + index + ')" ></a>';
-                            return "<div>" + e + d + "</div>";
+                           return "<div>" + e + d + "</div>";
                     }
 
                 },
@@ -345,61 +344,8 @@ $(function () {
             row.editing = false;
             updateActions(index);
         }
-    })
+    });
 
-        .datagrid('enableFilter', [
-
-        {
-            field:'id',
-            type:'text',
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'name',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'birthday',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'email',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        }
-        ,
-        {
-            field:'phone',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'address',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'sex',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        },
-        {
-            field:'religion',
-            type:'text',
-
-            op:['equal', 'notequal', 'contains', 'notcontains', 'beginwith', 'notbeginwith', 'endwith', 'notendwith', 'or_equal', 'or_notequal', 'or_contains', 'or_notcontains', 'or_beginwith', 'or_notbeginwith', 'or_endwith', 'or_notendwith']
-        }
-
-
-    ]);
 
     $('input#active_0').on('click', function () {
         alert("ok");

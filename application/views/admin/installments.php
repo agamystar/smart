@@ -52,7 +52,7 @@ $selected_class=$p_class[0] ;?>
 
     <div class="col-md-12">
 
-        <select style="display: none;" multiple="multiple" size="10" name="class_students" class="class_students">
+        <select style="display: none;" multiple="multiple" size="10" name="class_students" class="FormElement ui-widget-content ui-corner-all class_students">
             <?php
             if(isset($students[0])){
                 foreach($students[0] as $students){

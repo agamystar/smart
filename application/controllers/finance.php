@@ -61,15 +61,12 @@ class Finance extends MY_Controller
                 $this->db->where("installment_id",$installment);
 
                 $flds_array = array(
-                    'id' => array('where' => "id", 'order' => "id", 'val_template' => '', 'lower' => false),
                     'name' => array('where' => "name", 'order' => "name", 'val_template' => '', 'lower' => true),
-                    'birthday' => array('where' => "birthday", 'order' => "birthday", 'val_template' => '', 'lower' => true),
-                    'email' => array('where' => "email", 'order' => "email", 'val_template' => '', 'lower' => true),
-                    'sex' => array('where' => "sex", 'order' => "sex", 'val_template' => '', 'lower' => true),
-                    'religion' => array('where' => "religion", 'order' => "religion", 'val_template' => '', 'lower' => true),
-                    'address' => array('where' => "address", 'order' => "address", 'val_template' => '', 'lower' => true),
-                    'phone' => array('where' => "phone", 'order' => "phone", 'val_template' => '', 'lower' => true),
-                );
+                    'amount' => array('where' => "amount", 'order' => "amount", 'val_template' => '', 'lower' => true),
+                    'discount' => array('where' => "discount", 'order' => "discount", 'val_template' => '', 'lower' => true),
+                    'national_id' => array('where' => "national_id", 'order' => "national_id", 'val_template' => '', 'lower' => true),
+                    'paid_date' => array('where' => "religion", 'order' => "paid_date", 'val_template' => '', 'lower' => true),
+                     );
                 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
                 $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 10;
                 if (empty($rows)) {

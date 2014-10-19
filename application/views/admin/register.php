@@ -65,7 +65,7 @@
                     <fieldset>
                         <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<select  class="form-control"  id="r_group" name="r_group" >
+															<select  class="form-control"  class="FormElement ui-widget-content ui-corner-all" id="r_group" name="r_group" >
                                                                 <option value="student">Student</option>
                                                                 <option value="student">Teacher</option>
                                                                 <option value="student">Parents</option>

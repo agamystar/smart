@@ -32,15 +32,10 @@ class User extends MY_Controller
                 exit;
             }else{
 
-                if($this->sesstion->userdata("user_id")){
+                if(strlen($this->session->userdata("photo"))>3){
 
-                    $this->db->select("photo");
-                    $this->db->from("users");
-                    $this->db->where("id",$id);
-                    $pho=$this->db->get();
-                    $res_pho=$pho->row();
-                    if(file_exists(SITE_LINK.'/assets/uploads/'.$res_pho->photo)){
-                        unlink(SITE_LINK.'/assets/uploads/'.$res_pho->photo);
+                    if(file_exists(SITE_LINK.'/assets/uploads/'.data_user($this->session->userdata("user_id"))->photo)){
+                        unlink(SITE_LINK.'/assets/uploads/'.data_user($this->session->userdata("user_id"))->photo);
                     }
                 }
 
@@ -159,7 +154,7 @@ class User extends MY_Controller
 
     }
 
-    public function inbox(){
+    public function inbox($p_m_id=''){
 
         $form_id=11;
         $hrw=get_form_authority($this->session->userdata('group_id'),$form_id);
@@ -169,18 +164,101 @@ class User extends MY_Controller
             redirect(SITE_LINK."/security/login","refresh");
         }
 
+        $this->db->select("m_id");
+        $this->db->where('user_id', $this->session->userdata('user_id'));
+        $this->db->from("message_read");
+        $read = $this->db->get();
+        $messages_read = $read->result();
+
+
+
+        $this->db->select("*");
+        $this->db->where('m_to', $this->session->userdata('user_id'));
+        $this->db->from("messages");
+        $this->db->order_by("m_id","desc");
+        $res_c = $this->db->get();
+        $messages = $res_c->result();
+
+        $this->db->select("*");
+        $this->db->where('m_from', $this->session->userdata('user_id'));
+        $this->db->from("messages");
+        $res_sent = $this->db->get();
+        $messages_sent = $res_sent->result();
+
+        $action_get = $this->input->get("action");
+        $action_post = $this->input->post("action");
+        $m_id = $this->input->post("m_id");
+        $m_to = $this->input->post("m_to");
+        $m_header = $this->input->post("m_header");
+        $m_body = $this->input->post("m_body");
+        $m_id = $this->input->post("m_id");
+
+
+        if ($action_post == "read") {
+
+            $this->db->insert("message_read",array("m_id"=>$m_id,"user_id"=>$this->session->userdata('user_id')));
+        }
+
+
+        elseif ($action_post == "add") {
+
+            $arr_rec=explode(',',$m_to);
+            $receiver=array();
+            foreach($arr_rec as $ar){
+                $resa=$this->db->query("select id from users where username='".$ar."' ");
+                $u_id=$resa->row();
+                if($u_id){
+                    $receiver[] =$u_id ;
+                }
+            }
+
+            if($receiver){
+                $big_arr=array();
+                foreach($receiver as $r){
+
+                    $arr=array("m_from"=>$this->session->userdata('user_id'),
+                        "m_to"=>$r->id,
+                        "m_header"=>$m_header,
+                        "m_body"=>$m_body,
+                        "m_attachment"=>$this->session->userdata("file_upload"),
+                        "m_date"=>date("d/m/Y   h:m:s "),
+                    ) ;
+                    $big_arr[]=$arr;
+                }
+
+            $this->db->insert_batch("messages",$big_arr);
+            $messages="";
+            if($this->db->affected_rows()>0){
+                $messages="success";
+            }else{
+                $messages="failed";
+            }
+
+            }else{
+                $messages="This username not Correct  ";
+            }
+            $this->session->unset_userdata('file_upload');
+            echo json_encode(array("message"=>$messages));
+            exit;
+        }
+
         $data["js_vars"] = json_encode(array(
             'current_link' => SITE_LINK . "/" . $this->uri->segments[1] . "/" . $this->uri->segments[2],
             'controller_link' => SITE_LINK . "/" . $this->uri->segments[1],
             'main_url' => SITE_LINK . "/" . "security/",
-            'hrw' =>$hrw
+            'hrw' =>$hrw,
+            'messages' =>$messages,
+            'p_m_id' =>$p_m_id,
 
         ));
         $data['base_url'][] = SITE_LINK;
         $data['hrw'] = $hrw;
-        $data['js'][] = "usage/inbox.js";
+        $data['messages'] = $messages;
+        $data['messages_sent'] = $messages_sent;
+        $data['js'][] = "usage/mails.js";
 
         $data['first_title'] = "Home";
+        $data['messages_read'] = $messages_read;
         $data['second_title'] = "Inbox ";
         $data['third_title'] = " Messages   ";
         $this->load->view('admin' . DIRECTORY_SEPARATOR . 'inbox', $data);
